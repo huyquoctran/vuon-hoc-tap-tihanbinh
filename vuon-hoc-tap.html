@@ -2933,7 +2933,7 @@ async function vAdminData(){
     khtml+=`<button class="btn g sm" onclick="admAddKhoi('${sid}')">+ Thêm Khối</button>`;
     klEl.innerHTML=khtml;
   }
-  const{data:gvs}=await sb.from('profiles').select('id,ten,role,lop_id,lops(name)').eq('school_id',sid).neq('role','hoc_sinh').neq('role','phu_huynh').order('role');
+  const{data:gvs}=await sb.from('profiles').select('id,ten,role,lop_id,lops(name)').or(`school_id.eq.${sid},and(school_id.is.null,role.eq.pending)`).neq('role','hoc_sinh').neq('role','phu_huynh').order('role');
   const gvEl=$('#admGV');
   if(gvEl){
     const pending=(gvs||[]).filter(g=>g.role==='pending');
