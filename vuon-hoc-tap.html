@@ -372,6 +372,165 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
   #btnLogin{padding:5px 9px!important;font-size:.78rem!important}
 }
 
+/* ============================================================
+   THI DAU (BATTLE) — Full CSS
+   All classes prefixed with .td- to avoid collisions
+   ============================================================ */
+
+/* ---- Base overlay screens ---- */
+.td-screen{display:none;position:fixed;inset:0;z-index:9100;background:#0d0d1a;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.td-screen.active{display:flex;flex-direction:column;}
+
+/* ---- Header bar ---- */
+.td-header{background:linear-gradient(135deg,#e84393 0%,#7c3aed 100%);padding:14px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,.4);}
+.td-header h2{color:#fff;font-size:1.3rem;margin:0;flex:1;font-weight:800;}
+.td-back-btn{background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:.9rem;font-weight:600;}
+.td-back-btn:hover{background:rgba(255,255,255,.3);}
+
+/* ---- Scrollable body ---- */
+.td-body{flex:1;padding:16px;max-width:760px;width:100%;margin:0 auto;box-sizing:border-box;}
+
+/* ---- Cards ---- */
+.td-card{background:#16213e;border-radius:18px;padding:20px;margin-bottom:14px;border:1px solid rgba(255,255,255,.06);}
+.td-card label{display:block;color:#9ca3af;font-size:.82rem;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.td-card select,.td-card input[type=text]{width:100%;padding:12px 14px;border-radius:12px;border:2px solid #1e3a5f;background:#0f3460;color:#fff;font-size:1rem;box-sizing:border-box;appearance:none;cursor:pointer;}
+.td-card select:focus,.td-card input:focus{outline:none;border-color:#e84393;}
+
+/* ---- Primary action button ---- */
+.td-btn-primary{width:100%;padding:18px;background:linear-gradient(135deg,#f72585,#7209b7);color:#fff;border:none;border-radius:16px;font-size:1.25rem;font-weight:800;cursor:pointer;margin-top:8px;letter-spacing:.5px;transition:transform .15s,box-shadow .15s;}
+.td-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(247,37,133,.4);}
+.td-btn-primary:active{transform:scale(.97);}
+.td-btn-primary:disabled{opacity:.5;cursor:default;transform:none;box-shadow:none;}
+
+/* ---- Secondary button ---- */
+.td-btn-sec{width:100%;padding:14px;background:#1e3a5f;color:#fff;border:none;border-radius:14px;font-size:1rem;font-weight:600;cursor:pointer;margin-top:8px;}
+.td-btn-sec:hover{background:#2a4a6f;}
+
+/* ---- Room code display ---- */
+.td-room-box{text-align:center;background:linear-gradient(135deg,#0f3460,#16213e);border-radius:22px;padding:28px 20px;margin:14px 0;border:2px solid rgba(232,67,147,.3);}
+.td-room-box .td-code-label{color:#9ca3af;font-size:.85rem;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;}
+.td-room-box .td-code{font-size:4.5rem;font-weight:900;color:#f72585;letter-spacing:20px;font-family:'Courier New',monospace;text-shadow:0 0 30px rgba(247,37,133,.5);}
+.td-room-box .td-code-hint{color:#6b7280;font-size:.85rem;margin-top:10px;}
+
+/* ---- Lobby participant grid ---- */
+.td-lobby-header{color:#9ca3af;font-size:.9rem;margin:14px 0 8px;}
+.td-lobby-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:14px;}
+.td-lobby-chip{background:#0f3460;border-radius:12px;padding:12px 10px;text-align:center;color:#fff;font-size:.95rem;font-weight:600;animation:tdPop .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes tdPop{from{transform:scale(0) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+
+/* ---- Teacher game panel ---- */
+.td-q-panel{background:#16213e;border-radius:18px;padding:20px;margin-bottom:12px;}
+.td-q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.td-q-num{color:#e84393;font-size:.9rem;font-weight:700;}
+.td-q-timer-num{font-size:1.8rem;font-weight:900;color:#fff;min-width:40px;text-align:right;}
+.td-timer-wrap{background:#1e3a5f;border-radius:8px;height:10px;overflow:hidden;margin:8px 0 14px;}
+.td-timer-fill{height:100%;border-radius:8px;transition:width 1s linear,background .5s;}
+.td-q-text-teacher{font-size:1.4rem;color:#fff;font-weight:700;text-align:center;padding:8px 0 14px;}
+.td-ans-grid-teacher{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.td-ans-chip{border-radius:14px;padding:14px 10px;color:#fff;font-size:1rem;font-weight:700;text-align:center;transition:background .3s;}
+.td-ac-0{background:#c0392b;} .td-ac-1{background:#2471a3;} .td-ac-2{background:#d68910;} .td-ac-3{background:#1e8449;}
+.td-ac-correct{background:#10b981 !important;box-shadow:0 0 0 3px #10b981,0 0 20px rgba(16,185,129,.4);}
+
+/* ---- Live answer stats ---- */
+.td-live-panel{background:#0f1f3a;border-radius:16px;padding:16px;margin:10px 0;}
+.td-live-title{color:#6b7280;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+.td-stat-row{display:flex;align-items:center;gap:10px;margin:6px 0;}
+.td-stat-lbl{color:#fff;font-size:.9rem;font-weight:700;width:24px;}
+.td-stat-track{flex:1;background:#1e3a5f;border-radius:6px;height:28px;overflow:hidden;position:relative;}
+.td-stat-fill-bar{height:100%;border-radius:6px;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:28px;}
+.td-stat-fill-bar span{color:#fff;font-size:.8rem;font-weight:700;}
+.td-sb-0{background:#c0392b;} .td-sb-1{background:#2471a3;} .td-sb-2{background:#d68910;} .td-sb-3{background:#1e8449;}
+.td-stat-hint{color:#6b7280;font-size:.8rem;margin-top:8px;}
+
+/* ---- Leaderboard ---- */
+.td-lb-title{text-align:center;color:#fff;font-size:1.3rem;font-weight:800;padding:20px 0 10px;}
+.td-lb-item{display:flex;align-items:center;gap:14px;background:#16213e;border-radius:14px;padding:14px 16px;margin-bottom:10px;transition:transform .2s;}
+.td-lb-item:first-child{background:linear-gradient(135deg,#7c3aed22,#e8439322);border:1px solid rgba(232,67,147,.3);}
+.td-lb-medal{font-size:1.6rem;width:38px;text-align:center;}
+.td-lb-name{flex:1;color:#fff;font-size:1rem;font-weight:600;}
+.td-lb-score{color:#f72585;font-weight:800;font-size:1.05rem;}
+.td-lb-stars{font-size:.9rem;margin-left:6px;}
+
+/* ============================================================
+   STUDENT SCREENS
+   ============================================================ */
+
+/* Join screen */
+.td-join-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center;}
+.td-join-emoji{font-size:5rem;margin-bottom:12px;animation:tdFloat 3s ease-in-out infinite;}
+@keyframes tdFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.td-join-title{color:#fff;font-size:2rem;font-weight:900;margin-bottom:6px;}
+.td-join-sub{color:#6b7280;margin-bottom:28px;font-size:1rem;}
+.td-join-code-input{width:100%;max-width:320px;padding:20px;border-radius:18px;border:3px solid #1e3a5f;background:#16213e;color:#f72585;font-size:2.5rem;text-align:center;letter-spacing:14px;font-weight:900;font-family:'Courier New',monospace;text-transform:uppercase;margin-bottom:12px;box-sizing:border-box;transition:border-color .2s;}
+.td-join-code-input:focus{outline:none;border-color:#e84393;box-shadow:0 0 0 4px rgba(232,67,147,.2);}
+.td-join-name-input{width:100%;max-width:320px;padding:16px;border-radius:14px;border:2px solid #1e3a5f;background:#16213e;color:#fff;font-size:1.2rem;text-align:center;margin-bottom:16px;box-sizing:border-box;}
+.td-join-name-input:focus{outline:none;border-color:#7c3aed;}
+.td-join-btn{width:100%;max-width:320px;padding:18px;background:linear-gradient(135deg,#f72585,#7209b7);border:none;border-radius:16px;color:#fff;font-size:1.3rem;font-weight:800;cursor:pointer;transition:transform .15s;}
+.td-join-btn:hover{transform:scale(1.03);}
+.td-join-back{margin-top:16px;background:transparent;border:1px solid #333;color:#6b7280;padding:10px 22px;border-radius:10px;cursor:pointer;font-size:.9rem;}
+
+/* Wait lobby (student) */
+.td-wait-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center;}
+.td-wait-spinner{font-size:5rem;animation:tdPulse 1.5s ease-in-out infinite;}
+@keyframes tdPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
+.td-wait-greeting{font-size:1.8rem;color:#f72585;font-weight:800;margin:20px 0 6px;}
+.td-wait-msg{color:#9ca3af;font-size:1rem;}
+.td-wait-count{color:#6b7280;margin-top:10px;font-size:.9rem;}
+
+/* Active game (student) */
+.td-game-wrap{display:flex;flex-direction:column;min-height:100vh;padding:14px;box-sizing:border-box;}
+.td-game-top{display:flex;justify-content:space-between;align-items:center;padding:6px 0 10px;}
+.td-game-qnum{color:#9ca3af;font-size:.9rem;}
+.td-game-tscore{color:#fbbf24;font-weight:700;font-size:1rem;}
+.td-game-tnum{font-size:2rem;font-weight:900;color:#fff;min-width:36px;text-align:center;}
+.td-game-q-box{background:#16213e;border-radius:20px;padding:22px 18px;margin:10px 0;border:1px solid rgba(255,255,255,.06);}
+.td-game-q-text{font-size:1.7rem;color:#fff;font-weight:800;text-align:center;line-height:1.3;}
+.td-game-ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;margin-top:10px;}
+.td-game-ans-btn{border:none;border-radius:18px;padding:0 12px;font-size:1.3rem;font-weight:800;color:#fff;cursor:pointer;min-height:88px;transition:transform .1s,opacity .2s;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;}
+.td-game-ans-btn:active{transform:scale(.93);}
+.td-game-ans-btn:disabled{cursor:default;}
+.td-ga-0{background:linear-gradient(135deg,#e74c3c,#c0392b);}
+.td-ga-1{background:linear-gradient(135deg,#3498db,#2471a3);}
+.td-ga-2{background:linear-gradient(135deg,#f39c12,#d68910);}
+.td-ga-3{background:linear-gradient(135deg,#2ecc71,#1e8449);}
+.td-ga-correct{box-shadow:0 0 0 4px #10b981,0 0 28px rgba(16,185,129,.5);transform:scale(1.04) !important;z-index:2;}
+.td-ga-wrong{opacity:.35 !important;}
+.td-ga-timeout{opacity:.5 !important;}
+
+/* Per-question result (student) */
+.td-qresult-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center;}
+.td-qresult-icon{font-size:7rem;animation:tdBounce .6s cubic-bezier(.34,1.56,.64,1);}
+@keyframes tdBounce{0%{transform:scale(0) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.td-qresult-text{font-size:2rem;color:#fff;font-weight:800;margin:10px 0 6px;}
+.td-qresult-pts{color:#fbbf24;font-size:1.5rem;font-weight:700;margin-bottom:6px;}
+.td-qresult-rank{color:#9ca3af;font-size:1rem;}
+.td-qresult-streak{color:#e84393;font-size:.9rem;margin-top:6px;}
+
+/* Final screen (student) */
+.td-final-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;text-align:center;}
+.td-final-stars{font-size:4.5rem;animation:tdBounce .8s .2s cubic-bezier(.34,1.56,.64,1) both;}
+.td-final-rank-num{font-size:3.5rem;font-weight:900;color:#f72585;margin:14px 0 4px;text-shadow:0 0 20px rgba(247,37,133,.5);}
+.td-final-rank-of{color:#6b7280;font-size:1rem;}
+.td-final-name{color:#fff;font-size:1.3rem;font-weight:700;margin:12px 0 4px;}
+.td-final-score{color:#fbbf24;font-size:1rem;}
+.td-final-correct{color:#10b981;font-size:.9rem;margin-top:4px;}
+.td-final-btn{margin-top:32px;padding:16px 44px;background:linear-gradient(135deg,#f72585,#7209b7);border:none;border-radius:16px;color:#fff;font-size:1.1rem;font-weight:700;cursor:pointer;}
+
+/* ---- Flying score particles ---- */
+.td-fly-score{position:fixed;font-size:1.8rem;font-weight:900;color:#fbbf24;pointer-events:none;z-index:9999;animation:tdFlyUp 1.2s ease forwards;}
+@keyframes tdFlyUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(1.4)}}
+
+/* ---- Nav entry point (main app) ---- */
+.td-nav-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f72585,#7209b7);color:#fff;border:none;border-radius:14px;padding:12px 20px;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s;text-decoration:none;}
+.td-nav-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(247,37,133,.4);}
+
+/* ---- Responsive ---- */
+@media(max-width:480px){
+  .td-room-box .td-code{font-size:3rem;letter-spacing:12px;}
+  .td-game-q-text{font-size:1.4rem;}
+  .td-game-ans-btn{font-size:1.1rem;min-height:76px;}
+  .td-join-code-input{font-size:2rem;letter-spacing:10px;}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -389,6 +548,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
       <span class="pill" id="starPill" title="Ngôi sao tiến bộ">⭐ <b id="starCount">0</b></span>
       <button class="icon-btn" id="btnVoice" title="Chọn giọng đọc" aria-label="Chọn giọng đọc">🗣️</button>
       <button class="icon-btn" id="btnSound" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button>
+      <button class="td-nav-btn" onclick="tdMo()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;margin-right:4px">&#127942; Thi Dau</button>
       <button id="btnLogin" onclick="btnLoginClick()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(120,80,200,.25);border:none;cursor:pointer;transition:.15s">Đăng nhập</button>
     </div>
   </div>
@@ -11217,6 +11377,637 @@ function hpPage(ch){
     hpMount(ch);
   };
 })();
+// ============================================================
+// THI DAU (BATTLE) MODULE
+// All globals/functions prefixed with td / _td
+// ============================================================
+
+// --- State ---
+let _tdPhong       = null;   // current room data
+let _tdThiSinh     = null;   // my participant row (student)
+let _tdChannel     = null;   // Supabase Realtime channel
+let _tdTimer       = null;   // setInterval handle
+let _tdTimeLeft    = 0;
+let _tdDaTraLoi    = false;
+let _tdDiem        = 0;      // running score (student)
+let _tdStreak      = 0;
+let _tdStreakMax    = 0;
+let _tdAnswerCnt   = {};     // answer counts for teacher live stats {phong_cau: [0,0,0,0]}
+
+// --- Navigation ---
+function tdMo() {
+  if (isGV()) { tdMoTeacher(); } else { tdMoStudent(); }
+}
+
+function tdMoTeacher() {
+  const s = document.getElementById('vThiDauTeacher');
+  if (!s) return;
+  s.classList.add('active');
+  _tdShowStep('tdStepConfig');
+}
+
+function tdDongTeacher() {
+  const s = document.getElementById('vThiDauTeacher');
+  if (s) s.classList.remove('active');
+  _tdCleanup();
+}
+
+function tdMoStudent() {
+  const s = document.getElementById('vThiDauStudent');
+  if (!s) return;
+  s.classList.add('active');
+  _tdStudShow('tdStudJoin');
+}
+
+function tdDongStudent() {
+  const s = document.getElementById('vThiDauStudent');
+  if (s) s.classList.remove('active');
+  _tdCleanup();
+  _tdThiSinh = null; _tdDiem = 0; _tdStreak = 0; _tdStreakMax = 0;
+}
+
+function _tdCleanup() {
+  if (_tdTimer) { clearInterval(_tdTimer); _tdTimer = null; }
+  if (_tdChannel) { try { sb.removeChannel(_tdChannel); } catch(e){} _tdChannel = null; }
+  _tdAnswerCnt = {};
+}
+
+function _tdShowStep(id) {
+  ['tdStepConfig','tdStepLobby','tdStepGame','tdStepFinal'].forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.style.display = (s === id) ? '' : 'none';
+  });
+}
+
+function _tdStudShow(id) {
+  ['tdStudJoin','tdStudWait','tdStudGame','tdStudQRes','tdStudFinal'].forEach(s => {
+    const el = document.getElementById(s);
+    if (!el) return;
+    const isJoin = (s === id);
+    el.style.display = isJoin ? (s.includes('Game') ? 'flex' : 'flex') : 'none';
+  });
+}
+
+// --- Question bank generator ---
+function tdNganHang(mon, khoi, soCau) {
+  const qs = [];
+  const k = parseInt(khoi) || 2;
+
+  function addToan(n) {
+    const caps = [0, 10, 30, 50, 100, 200];
+    const cap = caps[Math.min(k, 5)];
+    const hasMul = k >= 3, hasDiv = k >= 4;
+    const ops = hasMul ? (hasDiv ? ['+','-','×','÷'] : ['+','-','×']) : ['+','-'];
+
+    for (let i = 0; i < n; i++) {
+      const op = ops[Math.floor(Math.random() * ops.length)];
+      let a, b, ans;
+      if (op === '+') {
+        a = _rnd(1, cap); b = _rnd(1, cap); ans = a + b;
+      } else if (op === '-') {
+        b = _rnd(1, cap); a = b + _rnd(1, Math.max(1, cap)); ans = a - b;
+      } else if (op === '×') {
+        const maxF = k <= 3 ? 9 : 12;
+        a = _rnd(2, maxF); b = _rnd(2, maxF); ans = a * b;
+      } else {
+        b = _rnd(2, 9); ans = _rnd(1, 9); a = b * ans;
+      }
+      const wrongs = _wrongNums(ans, 3, Math.max(3, Math.floor(ans * 0.3) + 2));
+      const chon = _shuffle([ans, ...wrongs]);
+      qs.push({ loai:'toan', cau:`${a} ${op} ${b} = ?`, chon, dung: chon.indexOf(ans) });
+    }
+  }
+
+  function addViet(n) {
+    const bang = [
+      {q:'Chu nao la "A" trong bang chu cai?', chon:['A','B','C','D'], dung:0},
+      {q:'Chu nao la "B" trong bang chu cai?', chon:['B','A','C','E'], dung:0},
+      {q:'Chu nao la "C" trong bang chu cai?', chon:['C','B','D','G'], dung:0},
+      {q:'"con ga" viet thu nay?', chon:['G','A','N','H'], dung:0},
+      {q:'"Bong" - chu cai dau la gi?', chon:['B','D','G','K'], dung:0},
+      {q:'"Qua cam" - qua gi day?', chon:['Cam','Mit','Xoai','Oi'], dung:0},
+      {q:'"2 + 2" bang bao nhieu?', chon:['4','3','5','6'], dung:0},
+      {q:'Chu "D" doc la gi?', chon:['De','Xe','Be','Me'], dung:0},
+      {q:'"Me" - am cuoi la gi?', chon:['E','A','O','U'], dung:0},
+      {q:'Tieng nao co am "O"?', chon:['Bo','Ca','De','Ga'], dung:0},
+      {q:'"Ba" + "n" = ?', chon:['Ban','Can','Dan','Fan'], dung:0},
+      {q:'Chu nao ghep voi "a" thanh "ba"?', chon:['b','d','g','m'], dung:0},
+      {q:'"Hoa" - chu cai cuoi la gi?', chon:['A','O','E','U'], dung:0},
+      {q:'Tieng "Nam" co may am?', chon:['3','2','4','1'], dung:0},
+      {q:'"Cat" khac voi "Cat" diem gi?', chon:['Dau','Am dau','Van','Thanh'], dung:3},
+    ];
+    const used = new Set();
+    for (let i = 0; i < n; i++) {
+      let pick;
+      do { pick = Math.floor(Math.random() * bang.length); } while (used.has(pick) && used.size < bang.length);
+      used.add(pick);
+      const q = bang[pick % bang.length];
+      const chon = _shuffle([...q.chon]);
+      qs.push({ loai:'viet', cau: q.q, chon, dung: chon.indexOf(q.chon[q.dung]) });
+    }
+  }
+
+  if (mon === 'toan') { addToan(soCau); }
+  else if (mon === 'viet') { addViet(soCau); }
+  else {
+    const nT = Math.ceil(soCau / 2);
+    addToan(nT); addViet(soCau - nT);
+    for (let i = qs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [qs[i], qs[j]] = [qs[j], qs[i]];
+    }
+  }
+  return qs.slice(0, soCau);
+}
+
+function _rnd(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+function _wrongNums(ans, count, spread) {
+  const s = new Set();
+  let tries = 0;
+  while (s.size < count && tries++ < 100) {
+    const d = _rnd(1, spread) * (Math.random() < .5 ? 1 : -1);
+    const w = ans + d;
+    if (w !== ans && w >= 0 && !s.has(w)) s.add(w);
+  }
+  while (s.size < count) s.add(ans + s.size + 1);
+  return [...s];
+}
+function _shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+function _tdRandCode() {
+  const c = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let r = '';
+  for (let i = 0; i < 4; i++) r += c[Math.floor(Math.random() * c.length)];
+  return r;
+}
+
+// ============================================================
+// TEACHER FLOW
+// ============================================================
+
+async function tdTaoPhong() {
+  if (!sb) { alert('Can dang nhap!'); return; }
+  if (!_profile) { alert('Can dang nhap de tao phong thi!'); return; }
+
+  const mon      = document.getElementById('tdSelMon').value;
+  const khoi     = parseInt(document.getElementById('tdSelKhoi').value);
+  const soCau    = parseInt(document.getElementById('tdSelSoCau').value);
+  const thoiGian = parseInt(document.getElementById('tdSelThoiGian').value);
+  const cauHoi   = tdNganHang(mon, khoi, soCau);
+  const maPhong  = _tdRandCode();
+
+  const btn = document.querySelector('#tdStepConfig .td-btn-primary');
+  if (btn) { btn.disabled = true; btn.textContent = 'Dang tao...'; }
+
+  const { data: phong, error } = await sb.from('thi_dau_phong').insert({
+    ma_phong: maPhong, tao_boi: _profile.id,
+    mon, khoi, so_cau: soCau, thoi_gian_cau: thoiGian,
+    cau_hoi: cauHoi, trang_thai: 'lobby', cau_hien_tai: -1
+  }).select().single();
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Tao Phong Thi Dau'; }
+  if (error) { alert('Loi tao phong: ' + error.message); return; }
+
+  _tdPhong = phong;
+  document.getElementById('tdMaPhongHien').textContent = maPhong;
+  _tdShowStep('tdStepLobby');
+
+  _tdChannel = sb.channel('td-gv-' + phong.id)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public',
+        table: 'thi_dau_thi_sinh', filter: `phong_id=eq.${phong.id}` },
+      p => _tdGVThemHS(p.new))
+    .subscribe();
+}
+
+function _tdGVThemHS(ts) {
+  const grid = document.getElementById('tdLobbyGrid');
+  if (!grid) return;
+  const div = document.createElement('div');
+  div.className = 'td-lobby-chip';
+  div.textContent = ts.ten;
+  grid.appendChild(div);
+  const n = grid.children.length;
+  const lbl = document.getElementById('tdLobbyCountLbl');
+  if (lbl) lbl.textContent = n + ' hoc sinh da tham gia';
+  const btn = document.getElementById('tdBtnBatDau');
+  if (btn) { btn.disabled = false; btn.textContent = 'Bat Dau! (' + n + ' nguoi)'; }
+}
+
+async function tdGVBatDau() {
+  if (!_tdPhong) return;
+  const now = new Date().toISOString();
+  await sb.from('thi_dau_phong').update({
+    trang_thai: 'active', cau_hien_tai: 0,
+    bat_dau_luc: now, cau_bat_dau_luc: now
+  }).eq('id', _tdPhong.id);
+  _tdPhong.cau_hien_tai = 0;
+  _tdPhong.trang_thai = 'active';
+
+  if (_tdChannel) { try { sb.removeChannel(_tdChannel); } catch(e){} _tdChannel = null; }
+  _tdChannel = sb.channel('td-gv-game-' + _tdPhong.id)
+    .on('postgres_changes', { event: 'INSERT', schema: 'public',
+        table: 'thi_dau_tra_loi', filter: `phong_id=eq.${_tdPhong.id}` },
+      p => _tdGVXuLyTL(p.new))
+    .subscribe();
+
+  _tdShowStep('tdStepGame');
+  _tdGVHienCau(0);
+}
+
+function _tdGVHienCau(idx) {
+  if (!_tdPhong) return;
+  const q = _tdPhong.cau_hoi[idx];
+  const total = _tdPhong.cau_hoi.length;
+  const T = _tdPhong.thoi_gian_cau;
+  const cauKey = _tdPhong.id + '_' + idx;
+  _tdAnswerCnt[cauKey] = [0, 0, 0, 0];
+
+  document.getElementById('tdGVCauSo').textContent = 'Cau ' + (idx + 1) + '/' + total;
+  document.getElementById('tdGVCauHoi').textContent = q.cau;
+  document.getElementById('tdBtnNext').style.display = 'none';
+  document.getElementById('tdStatHint').textContent = 'Dang cho cau tra loi...';
+  document.getElementById('tdStatRows').innerHTML = '';
+
+  const colors = ['td-ac-0','td-ac-1','td-ac-2','td-ac-3'];
+  document.getElementById('tdGVDapAn').innerHTML = q.chon.map((ans, i) =>
+    '<div class="td-ans-chip ' + colors[i] + '" id="tdAC' + i + '">' + ans + '</div>'
+  ).join('');
+
+  _tdTimeLeft = T;
+  const bar = document.getElementById('tdGVTimerBar');
+  const num = document.getElementById('tdGVTimerNum');
+  if (bar) { bar.style.transition = 'none'; bar.style.width = '100%'; bar.style.background = 'linear-gradient(90deg,#f72585,#7209b7)'; }
+
+  if (_tdTimer) clearInterval(_tdTimer);
+  _tdTimer = setInterval(() => {
+    _tdTimeLeft--;
+    if (num) num.textContent = Math.max(0, _tdTimeLeft);
+    if (bar) {
+      bar.style.transition = 'width 1s linear';
+      bar.style.width = (Math.max(0, _tdTimeLeft) / T * 100) + '%';
+      if (_tdTimeLeft <= 5) bar.style.background = 'linear-gradient(90deg,#ef4444,#dc2626)';
+    }
+    if (_tdTimeLeft <= 0) {
+      clearInterval(_tdTimer); _tdTimer = null;
+      _tdGVHetGio(idx);
+    }
+  }, 1000);
+}
+
+function _tdGVXuLyTL(tl) {
+  if (!_tdPhong) return;
+  const cauKey = _tdPhong.id + '_' + tl.so_cau;
+  if (!_tdAnswerCnt[cauKey]) return;
+  _tdAnswerCnt[cauKey][tl.dap_an] = (_tdAnswerCnt[cauKey][tl.dap_an] || 0) + 1;
+
+  const counts = _tdAnswerCnt[cauKey];
+  const total = counts.reduce((a, b) => a + b, 0);
+  const sbColors = ['td-sb-0','td-sb-1','td-sb-2','td-sb-3'];
+  const maxW = 200;
+  const maxC = Math.max(...counts, 1);
+  const rows = document.getElementById('tdStatRows');
+  if (rows) {
+    rows.innerHTML = counts.map((c, i) =>
+      '<div class="td-stat-row">' +
+        '<div class="td-stat-lbl">' + String.fromCharCode(65 + i) + '</div>' +
+        '<div class="td-stat-track">' +
+          '<div class="td-stat-fill-bar ' + sbColors[i] + '" style="width:' + Math.round(c / maxC * maxW) + 'px">' +
+            '<span>' + c + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    ).join('');
+  }
+  const hint = document.getElementById('tdStatHint');
+  if (hint) hint.textContent = total + ' nguoi da tra loi';
+}
+
+function _tdGVHetGio(idx) {
+  if (!_tdPhong) return;
+  const q = _tdPhong.cau_hoi[idx];
+  const el = document.getElementById('tdAC' + q.dung);
+  if (el) el.classList.add('td-ac-correct');
+  const btn = document.getElementById('tdBtnNext');
+  if (btn) btn.style.display = '';
+  window._tdAutoNext = setTimeout(() => tdGVNext(), 5000);
+}
+
+async function tdGVNext() {
+  if (window._tdAutoNext) { clearTimeout(window._tdAutoNext); window._tdAutoNext = null; }
+  if (!_tdPhong) return;
+  const next = (_tdPhong.cau_hien_tai || 0) + 1;
+  if (next >= _tdPhong.cau_hoi.length) {
+    await sb.from('thi_dau_phong').update({
+      trang_thai: 'finished', ket_thuc_luc: new Date().toISOString()
+    }).eq('id', _tdPhong.id);
+    _tdGVFinal();
+    return;
+  }
+  const now = new Date().toISOString();
+  await sb.from('thi_dau_phong').update({ cau_hien_tai: next, cau_bat_dau_luc: now }).eq('id', _tdPhong.id);
+  _tdPhong.cau_hien_tai = next;
+  _tdGVHienCau(next);
+}
+
+async function _tdGVFinal() {
+  if (_tdTimer) { clearInterval(_tdTimer); _tdTimer = null; }
+  _tdShowStep('tdStepFinal');
+  const { data: list } = await sb.from('thi_dau_thi_sinh')
+    .select('*').eq('phong_id', _tdPhong.id)
+    .order('tong_diem', { ascending: false });
+  const medals = ['🥇','🥈','🥉'];
+  const stars = (pts, maxPts) => {
+    const p = pts / maxPts;
+    return p >= .8 ? '⭐⭐⭐' : p >= .5 ? '⭐⭐' : '⭐';
+  };
+  const maxPts = _tdPhong.so_cau * 1500;
+  const lbEl = document.getElementById('tdLbList');
+  if (lbEl) lbEl.innerHTML = (list || []).map((ts, i) =>
+    '<div class="td-lb-item">' +
+      '<div class="td-lb-medal">' + (medals[i] || (i + 1) + '.') + '</div>' +
+      '<div class="td-lb-name">' + _esc(ts.ten) + '</div>' +
+      '<div class="td-lb-score">' + (ts.tong_diem || 0).toLocaleString() + ' diem</div>' +
+      '<div class="td-lb-stars">' + stars(ts.tong_diem || 0, maxPts) + '</div>' +
+    '</div>'
+  ).join('');
+}
+
+async function tdKetThucThi() {
+  if (_tdPhong) {
+    await sb.from('thi_dau_phong').update({ trang_thai: 'finished' }).eq('id', _tdPhong.id);
+    _tdPhong = null;
+  }
+  tdDongTeacher();
+}
+
+// ============================================================
+// STUDENT FLOW
+// ============================================================
+
+async function tdStudVao() {
+  if (!sb) { alert('Loi ket noi!'); return; }
+  const ma  = (document.getElementById('tdInputMa').value || '').trim().toUpperCase();
+  const ten = (document.getElementById('tdInputTen').value || '').trim();
+  if (ma.length !== 4) { alert('Ma phong gom dung 4 ky tu!'); return; }
+  if (!ten) { alert('Em hay nhap ten truoc nhe!'); return; }
+
+  const btn = document.querySelector('#tdStudJoin .td-join-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Dang ket noi...'; }
+
+  const { data: phong, error: e1 } = await sb.from('thi_dau_phong')
+    .select('*').eq('ma_phong', ma).single();
+  if (e1 || !phong) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Vao Phong!'; }
+    alert('Khong tim thay phong "' + ma + '"!\nKiem tra lai ma phong nhe.'); return;
+  }
+  if (phong.trang_thai === 'finished') {
+    if (btn) { btn.disabled = false; btn.textContent = 'Vao Phong!'; }
+    alert('Phong nay da ket thuc roi!'); return;
+  }
+
+  const { data: ts, error: e2 } = await sb.from('thi_dau_thi_sinh').insert({
+    phong_id: phong.id, ten,
+    profile_id: _profile ? _profile.id : null
+  }).select().single();
+  if (e2) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Vao Phong!'; }
+    alert('Loi tham gia: ' + e2.message); return;
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Vao Phong!'; }
+  _tdPhong   = phong;
+  _tdThiSinh = ts;
+  _tdDiem    = 0; _tdStreak = 0; _tdStreakMax = 0;
+
+  _tdChannel = sb.channel('td-stud-' + phong.id)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public',
+        table: 'thi_dau_phong', filter: `id=eq.${phong.id}` },
+      p => _tdStudCapNhat(p.new))
+    .on('postgres_changes', { event: 'INSERT', schema: 'public',
+        table: 'thi_dau_thi_sinh', filter: `phong_id=eq.${phong.id}` },
+      () => {
+        const el = document.getElementById('tdWaitCount');
+        if (el) {
+          const m = el.textContent.match(/\d+/);
+          el.textContent = ((m ? parseInt(m[0]) : 0) + 1) + ' ban trong phong';
+        }
+      })
+    .subscribe();
+
+  // Handle already-active room
+  if (phong.trang_thai === 'active' && phong.cau_hien_tai >= 0) {
+    _tdStudHienCau(phong.cau_hien_tai, true);
+    return;
+  }
+
+  const wg = document.getElementById('tdWaitGreeting');
+  if (wg) wg.textContent = 'Xin chao, ' + ten + '!';
+  const { count } = await sb.from('thi_dau_thi_sinh')
+    .select('*', { count: 'exact', head: true }).eq('phong_id', phong.id);
+  const wc = document.getElementById('tdWaitCount');
+  if (wc) wc.textContent = (count || 1) + ' ban trong phong';
+  _tdStudShow('tdStudWait');
+}
+
+function _tdStudCapNhat(phong) {
+  if (!phong) return;
+  _tdPhong = { ..._tdPhong, ...phong };
+  if (phong.trang_thai === 'active' && typeof phong.cau_hien_tai === 'number' && phong.cau_hien_tai >= 0) {
+    _tdStudHienCau(phong.cau_hien_tai, false);
+  }
+  if (phong.trang_thai === 'finished') {
+    _tdStudFinal();
+  }
+}
+
+function _tdStudHienCau(idx, late) {
+  if (!_tdPhong) return;
+  const q = _tdPhong.cau_hoi[idx];
+  if (!q) return;
+  const total = _tdPhong.cau_hoi.length;
+  const T = _tdPhong.thoi_gian_cau;
+  _tdDaTraLoi = false;
+
+  const cSo = document.getElementById('tdStudCauSo');
+  const cHoi = document.getElementById('tdStudCauHoi');
+  const cSco = document.getElementById('tdStudScore');
+  if (cSo)  cSo.textContent  = 'Cau ' + (idx + 1) + '/' + total;
+  if (cHoi) cHoi.textContent = q.cau;
+  if (cSco) cSco.textContent = _tdDiem.toLocaleString() + ' diem';
+
+  const colors = ['td-ga-0','td-ga-1','td-ga-2','td-ga-3'];
+  const ans = document.getElementById('tdStudDapAn');
+  if (ans) ans.innerHTML = q.chon.map((a, i) =>
+    '<button class="td-game-ans-btn ' + colors[i] + '" id="tdSA' + i + '" onclick="tdStudTL(' + i + ',this)">' + a + '</button>'
+  ).join('');
+
+  // Determine time remaining (if joining late)
+  let timeLeft = T;
+  if (late && _tdPhong.cau_bat_dau_luc) {
+    const elapsed = Math.floor((Date.now() - new Date(_tdPhong.cau_bat_dau_luc).getTime()) / 1000);
+    timeLeft = Math.max(0, T - elapsed);
+  }
+  _tdTimeLeft = timeLeft;
+
+  const bar = document.getElementById('tdStudTimerBar');
+  const num = document.getElementById('tdStudTimerNum');
+  if (bar) { bar.style.transition = 'none'; bar.style.width = (timeLeft / T * 100) + '%'; bar.style.background = 'linear-gradient(90deg,#f72585,#7209b7)'; }
+  if (num) num.textContent = timeLeft;
+
+  _tdStudShow('tdStudGame');
+
+  if (_tdTimer) clearInterval(_tdTimer);
+  _tdTimer = setInterval(() => {
+    _tdTimeLeft--;
+    const t = Math.max(0, _tdTimeLeft);
+    if (num) num.textContent = t;
+    if (bar) {
+      bar.style.transition = 'width 1s linear';
+      bar.style.width = (t / T * 100) + '%';
+      if (t <= 5) bar.style.background = 'linear-gradient(90deg,#ef4444,#dc2626)';
+    }
+    if (_tdTimeLeft <= 0) {
+      clearInterval(_tdTimer); _tdTimer = null;
+      if (!_tdDaTraLoi) {
+        _tdDaTraLoi = true;
+        const ansBtns = document.querySelectorAll('.td-game-ans-btn');
+        ansBtns.forEach(b => { b.disabled = true; b.classList.add('td-ga-timeout'); });
+        const correct = document.getElementById('tdSA' + q.dung);
+        if (correct) correct.classList.add('td-ga-correct');
+        setTimeout(() => _tdStudQRes(false, 0, idx), 800);
+      }
+    }
+  }, 1000);
+}
+
+async function tdStudTL(idx, btn) {
+  if (_tdDaTraLoi || !_tdPhong || !_tdThiSinh) return;
+  _tdDaTraLoi = true;
+  if (_tdTimer) { clearInterval(_tdTimer); _tdTimer = null; }
+
+  const q    = _tdPhong.cau_hoi[_tdPhong.cau_hien_tai];
+  const dung = (idx === q.dung);
+  const T    = _tdPhong.thoi_gian_cau;
+  const tLeft = Math.max(0, _tdTimeLeft);
+  const tMs  = (T - tLeft) * 1000;
+
+  // Disable all buttons immediately
+  document.querySelectorAll('.td-game-ans-btn').forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.dung) b.classList.add('td-ga-correct');
+    else if (i === idx && !dung) b.classList.add('td-ga-wrong');
+  });
+
+  let diem = 0;
+  if (dung) {
+    const bonus = Math.floor(500 * tLeft / T);
+    _tdStreak++;
+    if (_tdStreak > _tdStreakMax) _tdStreakMax = _tdStreak;
+    const mult = _tdStreak >= 5 ? 1.5 : _tdStreak >= 3 ? 1.2 : 1;
+    diem = Math.floor((1000 + bonus) * mult);
+    _tdDiem += diem;
+    _tdFlyScore('+' + diem.toLocaleString());
+  } else {
+    _tdStreak = 0;
+  }
+
+  // DB writes (fire and forget)
+  sb.from('thi_dau_tra_loi').insert({
+    phong_id: _tdPhong.id, thi_sinh_id: _tdThiSinh.id,
+    so_cau: _tdPhong.cau_hien_tai, dap_an: idx,
+    dung, diem, thoi_gian_ms: tMs
+  }).then(() => {
+    sb.from('thi_dau_thi_sinh')
+      .update({ tong_diem: _tdDiem, streak_max: _tdStreakMax })
+      .eq('id', _tdThiSinh.id);
+  });
+
+  setTimeout(() => _tdStudQRes(dung, diem, _tdPhong.cau_hien_tai), 500);
+}
+
+async function _tdStudQRes(dung, diem, idx) {
+  _tdStudShow('tdStudQRes');
+  const q = _tdPhong.cau_hoi[idx];
+
+  const icon = document.getElementById('tdResIcon');
+  const text = document.getElementById('tdResText');
+  const pts  = document.getElementById('tdResPts');
+  const rank = document.getElementById('tdResRank');
+  const str  = document.getElementById('tdResStreak');
+
+  if (icon) icon.textContent = dung ? '✓' : '✗';
+  if (icon) icon.style.color = dung ? '#10b981' : '#ef4444';
+  if (text) { text.textContent = dung ? 'Dung roi!' : 'Chua dung...'; text.style.color = dung ? '#10b981' : '#ef4444'; }
+  if (pts)  pts.textContent  = dung ? '+' + diem.toLocaleString() + ' diem' : 'Dap an dung: ' + q.chon[q.dung];
+  if (str && _tdStreak >= 3) { str.textContent = 'Streak x' + _tdStreak + '! Tuyet voi!'; }
+  else if (str) str.textContent = '';
+
+  // Get live rank
+  try {
+    const { data: ranks } = await sb.from('thi_dau_thi_sinh')
+      .select('tong_diem').eq('phong_id', _tdPhong.id)
+      .order('tong_diem', { ascending: false });
+    if (ranks) {
+      const myRank = ranks.findIndex(r => r.tong_diem <= _tdDiem);
+      const r = myRank < 0 ? ranks.length : myRank + 1;
+      if (rank) rank.textContent = 'Hang #' + r + ' / ' + ranks.length + ' nguoi';
+    }
+  } catch(e) {}
+  // Stay on result screen; next question comes via Realtime _tdStudCapNhat
+}
+
+async function _tdStudFinal() {
+  if (_tdTimer) { clearInterval(_tdTimer); _tdTimer = null; }
+  _tdStudShow('tdStudFinal');
+
+  const { data: ranks } = await sb.from('thi_dau_thi_sinh')
+    .select('ten,tong_diem').eq('phong_id', _tdPhong.id)
+    .order('tong_diem', { ascending: false });
+
+  const ten   = _tdThiSinh ? _tdThiSinh.ten : '?';
+  const total = ranks ? ranks.length : 1;
+  let myRank  = ranks ? ranks.findIndex(r => r.ten === ten && r.tong_diem === _tdDiem) + 1 : 1;
+  if (myRank < 1) myRank = total;
+
+  const maxPts = (_tdPhong.so_cau || 10) * 1500;
+  const pct = _tdDiem / maxPts;
+  const stars = pct >= .8 ? '⭐⭐⭐' : pct >= .5 ? '⭐⭐' : '⭐';
+
+  const fn = document.getElementById('tdFinalStars');  if (fn) fn.textContent = stars;
+  const fr = document.getElementById('tdFinalRankNum'); if (fr) fr.textContent = '#' + myRank;
+  const fo = document.getElementById('tdFinalRankOf');  if (fo) fo.textContent = '/ ' + total + ' nguoi';
+  const nm = document.getElementById('tdFinalName');    if (nm) nm.textContent = ten;
+  const sc = document.getElementById('tdFinalScore');   if (sc) sc.textContent = _tdDiem.toLocaleString() + ' diem';
+  const co = document.getElementById('tdFinalCorrect');
+  if (co) {
+    try {
+      const { count } = await sb.from('thi_dau_tra_loi')
+        .select('*', { count: 'exact', head: true })
+        .eq('thi_sinh_id', _tdThiSinh.id).eq('dung', true);
+      co.textContent = (count || 0) + ' / ' + _tdPhong.so_cau + ' cau dung';
+    } catch(e) {}
+  }
+}
+
+// Flying score particle
+function _tdFlyScore(txt) {
+  const el = document.createElement('div');
+  el.className = 'td-fly-score';
+  el.textContent = txt;
+  el.style.left = (40 + Math.random() * 30) + 'vw';
+  el.style.top  = '55vh';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1300);
+}
+
+function _esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 </script>
 <div class="adm-modal" id="admModal">
   <div class="adm-box">
@@ -11264,5 +12055,159 @@ function openTool(b64){var by=Uint8Array.from(atob(b64),function(c){return c.cha
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('admModal').classList.contains('open'))admLogin();});
 })();
 </script>
+<!-- ============================================================
+   THI DAU HTML PANELS — inject before </body>
+   ============================================================ -->
+
+<!-- ===== TEACHER PANEL ===== -->
+<div id="vThiDauTeacher" class="td-screen">
+  <div class="td-header">
+    <button class="td-back-btn" onclick="tdDongTeacher()">&#8592; Quay lai</button>
+    <h2>&#127942; To Chuc Thi Dau</h2>
+  </div>
+  <div class="td-body">
+
+    <!-- Step 1: Config -->
+    <div id="tdStepConfig">
+      <div class="td-card">
+        <label>Mon thi</label>
+        <select id="tdSelMon">
+          <option value="toan">Toan hoc</option>
+          <option value="viet">Tieng Viet</option>
+          <option value="hon_hop" selected>Hon hop (Toan + TV)</option>
+        </select>
+      </div>
+      <div class="td-card">
+        <label>Khoi lop</label>
+        <select id="tdSelKhoi">
+          <option value="1">Khoi 1 &mdash; 6-7 tuoi (so 1-10)</option>
+          <option value="2" selected>Khoi 2 &mdash; 7-8 tuoi (so 1-100)</option>
+          <option value="3">Khoi 3 &mdash; 8-9 tuoi (nhan chia)</option>
+          <option value="4">Khoi 4 &mdash; 9-10 tuoi (kho hon)</option>
+          <option value="5">Khoi 5 &mdash; 10-11 tuoi (nang cao)</option>
+        </select>
+      </div>
+      <div class="td-card">
+        <label>So cau hoi</label>
+        <select id="tdSelSoCau">
+          <option value="5">5 cau (~2 phut)</option>
+          <option value="10" selected>10 cau (~4 phut)</option>
+          <option value="15">15 cau (~6 phut)</option>
+          <option value="20">20 cau (~8 phut)</option>
+        </select>
+      </div>
+      <div class="td-card">
+        <label>Thoi gian moi cau</label>
+        <select id="tdSelThoiGian">
+          <option value="10">10 giay (nhanh)</option>
+          <option value="15">15 giay</option>
+          <option value="20" selected>20 giay (chuan)</option>
+          <option value="30">30 giay (thoai mai)</option>
+        </select>
+      </div>
+      <button class="td-btn-primary" onclick="tdTaoPhong()">&#127939; Tao Phong Thi Dau</button>
+    </div>
+
+    <!-- Step 2: Lobby -->
+    <div id="tdStepLobby" style="display:none">
+      <div class="td-room-box">
+        <div class="td-code-label">Ma phong &mdash; hoc sinh nhap ma nay</div>
+        <div class="td-code" id="tdMaPhongHien">????</div>
+        <div class="td-code-hint">Chieu len man hinh hoac doc to cho ca lop</div>
+      </div>
+      <div class="td-lobby-header" id="tdLobbyCountLbl">Dang cho hoc sinh tham gia...</div>
+      <div class="td-lobby-grid" id="tdLobbyGrid"></div>
+      <button class="td-btn-primary" id="tdBtnBatDau" onclick="tdGVBatDau()" disabled>Cho it nhat 1 hoc sinh...</button>
+    </div>
+
+    <!-- Step 3: Game control (teacher) -->
+    <div id="tdStepGame" style="display:none">
+      <div class="td-q-panel">
+        <div class="td-q-meta">
+          <span class="td-q-num" id="tdGVCauSo">Cau 1/10</span>
+          <span class="td-game-tnum" id="tdGVTimerNum">20</span>
+        </div>
+        <div class="td-timer-wrap"><div class="td-timer-fill" id="tdGVTimerBar" style="width:100%;background:linear-gradient(90deg,#f72585,#7209b7);"></div></div>
+        <div class="td-q-text-teacher" id="tdGVCauHoi">...</div>
+        <div class="td-ans-grid-teacher" id="tdGVDapAn"></div>
+      </div>
+      <div class="td-live-panel">
+        <div class="td-live-title">Ket qua truc tiep</div>
+        <div id="tdStatRows"></div>
+        <div class="td-stat-hint" id="tdStatHint">Dang cho...</div>
+      </div>
+      <button class="td-btn-sec" id="tdBtnNext" onclick="tdGVNext()" style="display:none;margin-top:10px;">Cau tiep &#8594;</button>
+    </div>
+
+    <!-- Step 4: Final leaderboard (teacher) -->
+    <div id="tdStepFinal" style="display:none">
+      <div class="td-lb-title">&#127942; Bang Xep Hang Cuoi</div>
+      <div id="tdLbList"></div>
+      <button class="td-btn-sec" onclick="tdKetThucThi()" style="margin-top:20px;">Ket Thuc &amp; Dong Phong</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== STUDENT PANEL ===== -->
+<div id="vThiDauStudent" class="td-screen">
+
+  <!-- Join form -->
+  <div id="tdStudJoin" class="td-join-wrap">
+    <div class="td-join-emoji">&#127918;</div>
+    <div class="td-join-title">Phong Thi Dau</div>
+    <div class="td-join-sub">Nhap ma phong tu co giao / thay giao</div>
+    <input class="td-join-code-input" id="tdInputMa" maxlength="4" placeholder="XXXX"
+           oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+           autocomplete="off" autocorrect="off" spellcheck="false">
+    <input class="td-join-name-input" id="tdInputTen" placeholder="Ten cua em" maxlength="24" autocomplete="off">
+    <button class="td-join-btn" onclick="tdStudVao()">Vao Phong!</button>
+    <button class="td-join-back" onclick="tdDongStudent()">Quay lai</button>
+  </div>
+
+  <!-- Waiting lobby -->
+  <div id="tdStudWait" class="td-wait-wrap" style="display:none">
+    <div class="td-wait-spinner">&#9203;</div>
+    <div class="td-wait-greeting" id="tdWaitGreeting">Xin chao!</div>
+    <div class="td-wait-msg">Cho co giao bat dau...</div>
+    <div class="td-wait-count" id="tdWaitCount"></div>
+  </div>
+
+  <!-- Active game -->
+  <div id="tdStudGame" class="td-game-wrap" style="display:none">
+    <div class="td-game-top">
+      <div class="td-game-qnum" id="tdStudCauSo">Cau 1/10</div>
+      <div class="td-game-tnum" id="tdStudTimerNum">20</div>
+      <div class="td-game-tscore" id="tdStudScore">0 diem</div>
+    </div>
+    <div class="td-timer-wrap"><div class="td-timer-fill" id="tdStudTimerBar" style="width:100%;background:linear-gradient(90deg,#f72585,#7209b7);"></div></div>
+    <div class="td-game-q-box">
+      <div class="td-game-q-text" id="tdStudCauHoi">...</div>
+    </div>
+    <div class="td-game-ans-grid" id="tdStudDapAn"></div>
+  </div>
+
+  <!-- Per-question result -->
+  <div id="tdStudQRes" class="td-qresult-wrap" style="display:none">
+    <div class="td-qresult-icon" id="tdResIcon">&#10003;</div>
+    <div class="td-qresult-text" id="tdResText">Dung roi!</div>
+    <div class="td-qresult-pts" id="tdResPts">+1000 diem</div>
+    <div class="td-qresult-rank" id="tdResRank">Hang #3</div>
+    <div class="td-qresult-streak" id="tdResStreak"></div>
+  </div>
+
+  <!-- Final result -->
+  <div id="tdStudFinal" class="td-final-wrap" style="display:none">
+    <div class="td-final-stars" id="tdFinalStars">&#11088;</div>
+    <div class="td-final-rank-num" id="tdFinalRankNum">#1</div>
+    <div class="td-final-rank-of" id="tdFinalRankOf">/ ? nguoi</div>
+    <div class="td-final-name" id="tdFinalName"></div>
+    <div class="td-final-score" id="tdFinalScore"></div>
+    <div class="td-final-correct" id="tdFinalCorrect"></div>
+    <button class="td-final-btn" onclick="tdDongStudent()">Hoan thanh!</button>
+  </div>
+
+</div>
+
 </body>
 </html>
