@@ -331,6 +331,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 @media(max-width:560px){.compare{grid-template-columns:1fr}.font-lab .btn{width:100%}}
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 <header class="top">
@@ -721,6 +722,12 @@ function capNhatSao(){ const e=document.getElementById("starCount"); if(e) e.tex
 
 /* ---------- 3. ÂM THANH (Web Audio, không tự phát khi mở trang) ---------- */
 let AC=null;
+const SUPA_URL='https://wbcszbyhsvhrkyyvkzfc.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiY3N6Ynloc3Zocmt5eXZremZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4OTA1MDcsImV4cCI6MjEwNTQ2NjUwN30.K0uYmd7HjjQTMSjipkTQdxnrzuE0CCby2GeEX872l8I';
+const sb=window.supabase?supabase.createClient(SUPA_URL,SUPA_KEY):null;
+let _profile=null;
+function isAdmin(){return _profile&&_profile.role==='admin';}
+function isGV(){return _profile&&(_profile.role==='giao_vien'||_profile.role==='admin'||_profile.role==='to_truong');}
 function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } 
   if(AC && AC.state==="suspended") AC.resume(); return AC; }
 function tone(freq, dur, type, vol){
@@ -1959,7 +1966,7 @@ function chayViet(ch){
 
 /* ---------- THƯ VIỆN ĐỌC ---------- */
 function vDoc(){
-  const isAdm=sessionStorage.getItem('admOk')==='1';
+  const isAdm=isAdmin();
   const all=allStories();
   return crumb([["Trang chủ","#/"],["Đọc sách",""]]) + `
   <div class="note">Mỗi ngày một câu chuyện ngắn. Bấm vào bìa sách để bắt đầu đọc nhé!</div>
@@ -2586,7 +2593,7 @@ function veTrang(){
   else if(p[0]==="nho")  set(vNho());
   else if(p[0]==="thuthach") set(vThuThach(), chayThuThach);
   else if(p[0]==="co")   set(vCo(), chayCo);
-  else if(p[0]==="admin") set(sessionStorage.getItem('admOk')==='1'?vAdmin():vHome(), sessionStorage.getItem('admOk')==='1'?null:veHeroScene);
+  else if(p[0]==="admin") set(isAdmin()?vAdmin():vHome(), isAdmin()?null:veHeroScene);
   else set(vHome(), veHeroScene);
 
   danhDauMenu(); capNhatSao();
@@ -2655,7 +2662,7 @@ function vAdmin(){
       ⚠️ Các công cụ cần <b>skeleton_editor.html</b> và <b>V6_4_HP001_Web_Demo_2.html</b> nằm cùng thư mục.
     </div>
     <div class="row center" style="margin-top:16px">
-      <button class="btn sm" onclick="sessionStorage.removeItem('admOk');sangTrang('#/')">Đăng xuất</button>
+      <button class="btn sm" onclick="sb&&sb.auth.signOut();_profile=null;sangTrang('#/')">Đăng xuất</button>
     </div>
   </div>`;
 }
@@ -11010,7 +11017,7 @@ function hpPage(ch){
 <div class="adm-modal" id="admModal">
   <div class="adm-box">
     <h3>🔐 Khu vực Quản trị</h3>
-    <input type="text" id="admUser" placeholder="Tên đăng nhập" autocomplete="off"/>
+    <input type="email" id="admUser" placeholder="Email" autocomplete="email"/>
     <input type="password" id="admPass" placeholder="Mật khẩu" autocomplete="off"/>
     <div class="adm-err" id="admErr"></div>
     <div class="row center" style="gap:10px">
@@ -11033,16 +11040,21 @@ function openTool(b64){var by=Uint8Array.from(atob(b64),function(c){return c.cha
     const b=document.querySelector('.brand');if(b)b.addEventListener('click',_bump,true);
   });
 
-  const _h='YWRtaW46YWRtaW4xMjM=';
-  function _check(u,p){try{return btoa(u+':'+p)===_h}catch(e){return false}}
-
   window.admOpen=function(){document.getElementById('admModal').classList.add('open');setTimeout(()=>document.getElementById('admUser').focus(),80);}
   window.admClose=function(){document.getElementById('admModal').classList.remove('open');document.getElementById('admErr').textContent='';}
   window.admLogin=function(){
     const u=(document.getElementById('admUser').value||'').trim();
     const p=(document.getElementById('admPass').value||'');
-    if(_check(u,p)){sessionStorage.setItem('admOk','1');admClose();sangTrang('#/admin');}
-    else{document.getElementById('admErr').textContent='Sai tên đăng nhập hoặc mật khẩu.';}
+    if(!sb){document.getElementById('admErr').textContent='Lỗi kết nối Supabase.';return;}
+    (async()=>{
+      const{error}=await sb.auth.signInWithPassword({email:u,password:p});
+      if(error){document.getElementById('admErr').textContent='Email hoặc mật khẩu không đúng.';return;}
+      const{data:{user}}=await sb.auth.getUser();
+      const{data:pd}=await sb.from('profiles').select('*').eq('id',user.id).single();
+      _profile=pd;
+      if(isAdmin()){admClose();refreshBrand();sangTrang('#/admin');}
+      else{document.getElementById('admErr').textContent='Tài khoản này không có quyền admin.';await sb.auth.signOut();}
+    })();
   };
   // Enter key on password
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('admModal').classList.contains('open'))admLogin();});
