@@ -12094,8 +12094,10 @@ function openTool(b64){var by=Uint8Array.from(atob(b64),function(c){return c.cha
       const{data:{user}}=await sb.auth.getUser();
       const{data:pd}=await sb.from('profiles').select('*').eq('id',user.id).single();
       _profile=pd;
-      if(isAdmin()){admClose();refreshBrand();sangTrang('#/admin');}
-      else{document.getElementById('admErr').textContent='Tài khoản này không có quyền admin.';await sb.auth.signOut();}
+      if(_profile&&_profile.role==='pending'){document.getElementById('admErr').textContent='Tài khoản đang chờ Admin duyệt. Vui lòng thử lại sau.';await sb.auth.signOut();_profile=null;return;}
+      if(!isGV()){document.getElementById('admErr').textContent='Tài khoản không có quyền truy cập.';await sb.auth.signOut();_profile=null;return;}
+      admClose();refreshBrand();
+      if(isAdmin())sangTrang('#/admin');
     })();
   };
   // Enter key on password
