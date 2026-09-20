@@ -2813,12 +2813,17 @@ window.admSignup=async function(){
   const u=(document.getElementById('admUser').value||'').trim();
   const p=(document.getElementById('admPass').value||'');
   const ten=((document.getElementById('admTen')||{}).value||'').trim();
-  if(!u||!p||!ten){document.getElementById('admErr').textContent='Vui lòng điền đầy đủ Email, Mật khẩu và Họ tên.';return;}
-  if(!sb){document.getElementById('admErr').textContent='Lỗi kết nối Supabase.';return;}
-  const{error}=await sb.auth.signUp({email:u,password:p,options:{data:{ten}}});
-  if(error){document.getElementById('admErr').textContent=error.message;return;}
-  document.getElementById('admErr').style.color='var(--green-d)';
-  document.getElementById('admErr').textContent='Đăng ký thành công! Chờ admin duyệt tài khoản.';
+  const code=((document.getElementById('admSchoolCode')||{}).value||'').trim().toUpperCase();
+  const errEl=document.getElementById('admErr');
+  if(!u||!p||!ten||!code){errEl.style.color='';errEl.textContent='Vui lòng điền đầy đủ Email, Mật khẩu, Họ tên và Mã trường.';return;}
+  if(!sb){errEl.textContent='Lỗi kết nối Supabase.';return;}
+  const{data,error}=await sb.auth.signUp({email:u,password:p,options:{data:{ten,school_code:code}}});
+  if(error){errEl.style.color='';errEl.textContent=error.message;return;}
+  // Check if school_code was valid (trigger sets school_id)
+  const{data:pd}=await sb.from('profiles').select('school_id').eq('id',data.user.id).single();
+  await sb.auth.signOut(); // sign out so admin session isn't replaced
+  if(!pd||!pd.school_id){errEl.style.color='orange';errEl.textContent='Đăng ký xong nhưng mã trường không đúng — liên hệ Admin.';}
+  else{errEl.style.color='var(--green-d)';errEl.textContent='Đăng ký thành công! Chờ Admin trường duyệt tài khoản.';}
 };
 
 function khoiDong(){
@@ -11181,6 +11186,7 @@ function hpPage(ch){
       <button class="btn" onclick="admToggleSignup()" style="font-size:.85rem;margin-top:6px;width:100%">Chưa có tài khoản? Đăng ký</button>
       <div id="admSignupExtra" style="display:none;margin-top:8px">
         <input type="text" id="admTen" placeholder="Họ và tên *" style="width:100%;padding:10px;border:2px solid var(--line);border-radius:12px;font-size:.95rem;font-family:inherit;margin-bottom:6px"/>
+        <input type="text" id="admSchoolCode" placeholder="Mã trường * (VD: TAB001)" style="width:100%;padding:10px;border:2px solid var(--line);border-radius:12px;font-size:.95rem;font-family:inherit;margin-bottom:6px;text-transform:uppercase"/>
         <button class="btn" style="width:100%;background:var(--green);color:#fff" onclick="admSignup()">Tạo tài khoản giáo viên</button>
       </div>
       <button class="btn" onclick="admClose()">Hủy</button>
