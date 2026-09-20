@@ -531,6 +531,13 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
   .td-game-ans-btn{font-size:1.1rem;min-height:76px;}
   .td-join-code-input{font-size:2rem;letter-spacing:10px;}
 }
+#modalPassReset{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:20px;}
+.pr-box{background:#1e1e2e;border-radius:20px;padding:30px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.pr-box h3{color:#fff;margin:0 0 20px;font-size:1.3rem;text-align:center;}
+.pr-input{width:100%;padding:14px;border-radius:12px;border:2px solid #333;background:#0f0f1a;color:#fff;font-size:1rem;margin-bottom:12px;box-sizing:border-box;}
+.pr-input:focus{outline:none;border-color:#7c3aed;}
+.pr-btn{width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#e84393);border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;margin-top:4px;}
+#prMsg{color:#ef4444;font-size:.9rem;margin-top:10px;text-align:center;min-height:20px;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -955,6 +962,7 @@ let _profile=null;
 function isAdmin(){return _profile&&_profile.role==='admin';}
 function isGV(){return _profile&&(_profile.role==='giao_vien'||_profile.role==='admin'||_profile.role==='to_truong');}
 function tenGV(){return (_profile&&_profile.ten)?_profile.ten:(loadTeacher().name||'Cô Quỳnh');}
+if(sb){sb.auth.onAuthStateChange(function(event){if(event==='PASSWORD_RECOVERY'){_showPassReset();}});}
 function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } 
   if(AC && AC.state==="suspended") AC.resume(); return AC; }
 function tone(freq, dur, type, vol){
@@ -12022,6 +12030,31 @@ function _esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// ---- Password Reset ----
+function _showPassReset() {
+  const m = document.getElementById('modalPassReset');
+  if (m) m.style.display = 'flex';
+}
+async function _doPassReset() {
+  const p1  = document.getElementById('prPwd1').value;
+  const p2  = document.getElementById('prPwd2').value;
+  const msg = document.getElementById('prMsg');
+  msg.style.color = '#ef4444';
+  if (!p1 || p1.length < 6) { msg.textContent = 'Mat khau phai co it nhat 6 ky tu!'; return; }
+  if (p1 !== p2)             { msg.textContent = 'Mat khau xac nhan khong khop!'; return; }
+  msg.style.color = '#fff';
+  msg.textContent = 'Dang luu...';
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  if (error) { msg.style.color = '#ef4444'; msg.textContent = 'Loi: ' + error.message; return; }
+  msg.style.color = '#10b981';
+  msg.textContent = 'Da cap nhat mat khau! Dang tai lai...';
+  setTimeout(() => {
+    document.getElementById('modalPassReset').style.display = 'none';
+    try { history.replaceState(null, '', window.location.pathname); } catch(e) {}
+    window.location.reload();
+  }, 2000);
+}
+
 </script>
 <div class="adm-modal" id="admModal">
   <div class="adm-box">
@@ -12223,5 +12256,14 @@ function openTool(b64){var by=Uint8Array.from(atob(b64),function(c){return c.cha
 
 </div>
 
+<div id="modalPassReset">
+  <div class="pr-box">
+    <h3>Dat mat khau moi</h3>
+    <input class="pr-input" id="prPwd1" type="password" placeholder="Mat khau moi (it nhat 6 ky tu)" autocomplete="new-password">
+    <input class="pr-input" id="prPwd2" type="password" placeholder="Nhap lai mat khau" autocomplete="new-password">
+    <button class="pr-btn" onclick="_doPassReset()">Luu mat khau</button>
+    <div id="prMsg"></div>
+  </div>
+</div>
 </body>
 </html>
