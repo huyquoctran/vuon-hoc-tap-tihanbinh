@@ -360,7 +360,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 <div class="tipbar">
   <div class="tipbar-in">
     <span id="tipAvatar"></span>
-    <div class="txt"><b>Cô Quỳnh dặn em:</b> <span id="tipText">Chào em! Hôm nay mình học gì nhỉ?</span></div>
+    <div class="txt"><b id="tipLabel">Cô Quỳnh dặn em:</b> <span id="tipText">Chào em! Hôm nay mình học gì nhỉ?</span></div>
     <button class="icon-btn" id="btnTipSpeak" title="Nghe cô đọc" aria-label="Nghe cô đọc lời dặn">🔊</button>
     <button class="icon-btn" id="btnTipNext" title="Lời dặn khác" aria-label="Xem lời dặn khác">🔁</button>
   </div>
@@ -618,6 +618,7 @@ function refreshBrand(){
   const displayName=(_profile&&_profile.ten)?_profile.ten:(t.name||'Cô Quỳnh');
   const avatarImg=(_profile&&_profile.avatar_url)?_profile.avatar_url:t.avatarImg;
   if(nm) nm.textContent=displayName.toUpperCase();
+  const tl=$('#tipLabel');if(tl) tl.textContent=displayName+' dặn em:';
   if(av){
     if(avatarImg){
       av.innerHTML=`<div style="width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid #c3b0ff"><img src="${avatarImg}" style="width:100%;height:100%;object-fit:cover"></div>`;
@@ -728,6 +729,7 @@ const sb=window.supabase?supabase.createClient(SUPA_URL,SUPA_KEY):null;
 let _profile=null;
 function isAdmin(){return _profile&&_profile.role==='admin';}
 function isGV(){return _profile&&(_profile.role==='giao_vien'||_profile.role==='admin'||_profile.role==='to_truong');}
+function tenGV(){return (_profile&&_profile.ten)?_profile.ten:(loadTeacher().name||'Cô Quỳnh');}
 function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } 
   if(AC && AC.state==="suspended") AC.resume(); return AC; }
 function tone(freq, dur, type, vol){
@@ -841,7 +843,7 @@ function phanHoi(box, dung, chu){
 const MENU=[
   ["#/","🏠","Trang chủ"],["#/tv","🩷","Tiếng Việt"],["#/toan","💙","Toán"],
   ["#/viet","✏️","Luyện viết"],["#/doc","📚","Đọc sách"],["#/choi","🎮","Vui học"],
-  ["#/nho","⭐","Em cần nhớ"],["#/thuthach","🏆","Thử thách"],["#/co","👩🏻‍🏫","Cô Quỳnh"]
+  ["#/nho","⭐","Em cần nhớ"],["#/thuthach","🏆","Thử thách"],["#/co","👩🏻‍🏫",tenGV()]
 ];
 function veMenu(){
   $("#navMain").innerHTML = MENU.map(([h,i,t])=>`<a href="${h}" data-h="${h}">${i}<span>${t}</span></a>`).join("");
@@ -915,7 +917,7 @@ const ZONES=[
   ["#/viet","z-yellow","💛","LUYỆN VIẾT","Em viết thật đẹp"],
   ["#/doc","z-green","💚","ĐỌC SÁCH","Mỗi ngày một câu chuyện"],
   ["#/choi","z-purple","🧩","VUI HỌC","Chơi mà học – Học mà nhớ"],
-  ["#/thuthach","z-orange","🏆","THỬ THÁCH","Chinh phục nhiệm vụ của Cô Quỳnh"]
+  ["#/thuthach","z-orange","🏆","THỬ THÁCH",`Chinh phục nhiệm vụ của ${tenGV()}`]
 ];
 function vHome(){
   const hh = BADGES.filter(b=>ST.huyhieu.includes(b.id));
@@ -923,8 +925,8 @@ function vHome(){
   <section class="hero">
     <div class="hero-grid">
       <div>
-        <span class="pill">🌿 Lớp Một · Cùng Cô Quỳnh</span>
-        <h1>VƯỜN HỌC TẬP<br>CÔ QUỲNH</h1>
+        <span class="pill">🌿 Lớp Một · Cùng ${tenGV()}</span>
+        <h1>VƯỜN HỌC TẬP<br>${tenGV().toUpperCase()}</h1>
         <p class="slogan">Cùng học – Cùng chơi – Cùng tiến bộ</p>
         <div class="row" style="margin-top:12px">
           <button class="btn xl y" onclick="SFX.tap();doc('Chào em! Mình cùng học nhé!');sangTrang('#/tv')">🌟 HỌC NGAY</button>
@@ -1464,7 +1466,7 @@ function vToan(){
   <div class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
     ${cqFull(150,false)}
     <div style="flex:1;min-width:220px">
-      <h2>🔢 Thế giới Toán học của Cô Quỳnh</h2>
+      <h2>🔢 Thế giới Toán học của ${tenGV()}</h2>
       <p style="color:var(--ink-soft);font-weight:600">Em chọn một kỹ năng. Mỗi phần đều có <b>Học – Luyện – Nhớ</b> và luôn có hình minh hoạ trước khi có số.</p>
       ${nutNghe("Mình cùng khám phá thế giới những con số nhé!","Cô chào em","b")}
     </div>
@@ -1799,11 +1801,11 @@ function veLuoiOLi(cv, soDong){
 }
 
 function vViet(){
-  return crumb([["Trang chủ","#/"],["Xưởng bút của Cô Quỳnh",""]]) + `
+  return crumb([["Trang chủ","#/"],[`Xưởng bút của ${tenGV()}`,""]])+`
   <div class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
     ${cqFull(140,false)}
     <div style="flex:1;min-width:220px">
-      <h2>✏️ Xưởng bút của Cô Quỳnh</h2>
+      <h2>✏️ Xưởng bút của ${tenGV()}</h2>
       <p style="color:var(--ink-soft);font-weight:600">Em chọn một chữ. Cô viết mẫu trên khung ô li, đầu bút chạy từng nét: <b>đặt bút ➜ kéo nét ➜ chuyển hướng ➜ dừng bút</b>. Em có thể tạm dừng để nhìn kĩ.</p>
       ${nutNghe("Em nhớ ngồi thẳng lưng và cầm bút bằng ba ngón tay nhé!","Cô dặn em","y")}
     </div>
@@ -2352,7 +2354,7 @@ function theGhiNho(g){
 
 /* ---------- THỬ THÁCH CỦA CÔ QUỲNH ---------- */
 function vThuThach(){
-  return crumb([["Trang chủ","#/"],["Thử thách của Cô Quỳnh",""]]) + `
+  return crumb([["Trang chủ","#/"],[`Thử thách của ${tenGV()}`,""]])+`
   <div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
     ${cqFull(130)}
     <div style="flex:1;min-width:220px"><h2>🏆 Nhiệm vụ hôm nay</h2>
@@ -2423,11 +2425,11 @@ function napGV(){                       // gộp nội dung giáo viên thêm v�
 function vCo(){
   const daHoc = Object.keys(ST.xong);
   const dem = t=>daHoc.filter(k=>k.startsWith(t)).length;
-  return crumb([["Trang chủ","#/"],["Cô Quỳnh",""]]) + `
+  return crumb([["Trang chủ","#/"],[tenGV(),""]])+`
   <div class="card" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
     ${cqFull(190)}
     <div style="flex:1;min-width:240px">
-      <h2>👩🏻‍🏫 Cô Quỳnh</h2>
+      <h2>👩🏻‍🏫 ${tenGV()}</h2>
       <p style="font-weight:600;color:var(--ink-soft)">Cô là người bạn đồng hành của em trong Vườn Học Tập. Cô sẽ hướng dẫn, khen ngợi và nhắc em những điều cần nhớ.</p>
       ${nutNghe("Chào em! Cô là cô Quỳnh. Mình cùng học, cùng chơi và cùng tiến bộ nhé!","Nghe cô chào","p")}
     </div>
