@@ -556,7 +556,10 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
       <button class="icon-btn" id="btnVoice" title="Chọn giọng đọc" aria-label="Chọn giọng đọc">🗣️</button>
       <button class="icon-btn" id="btnSound" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button>
       <button class="td-nav-btn" onclick="tdMo()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;margin-right:4px">&#127942; Thi Dau</button>
-      <button id="btnLogin" onclick="btnLoginClick()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(120,80,200,.25);border:none;cursor:pointer;transition:.15s">Đăng nhập</button>
+      <div style="position:relative;display:inline-block">
+        <button id="btnLogin" onclick="btnLoginClick()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(120,80,200,.25);border:none;cursor:pointer;transition:.15s">Đăng nhập</button>
+        <div id="gvMenu" style="display:none;position:absolute;top:calc(100% + 6px);right:0;background:#1e1e2e;border-radius:14px;padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.55);min-width:220px;z-index:2000;border:1px solid rgba(255,255,255,.08)"></div>
+      </div>
     </div>
   </div>
 </header>
@@ -719,7 +722,7 @@ const STORIES = [
 function getCustomStories(){try{return JSON.parse(localStorage.getItem('vg_custom_stories')||'[]');}catch(e){return[];}}
 function allStories(){return[...STORIES,...getCustomStories()];}
 function deleteCustomStory(id){localStorage.setItem('vg_custom_stories',JSON.stringify(getCustomStories().filter(s=>s.id!==id)));}
-window.admDelStory=function(id){if(confirm('Xoá câu chuyện này?')){deleteCustomStory(id);sangTrang('#/admin');}};
+window.admDelStory=function(id){if(confirm('Xoá câu chuyện này?')){deleteCustomStory(id);sangTrang(isAdmin()?'#/admin':'#/addstory');}};
 window.admAddCau=function(){
   const list=document.getElementById('admCauList');if(!list)return;
   const n=list.querySelectorAll('.adm-cau-inp').length+1;
@@ -740,7 +743,7 @@ window.admSaveStory=function(){
   if(!q||!a0||!a1){alert('Cần câu hỏi và ít nhất 2 đáp án.');return;}
   const st={id:'custom_'+Date.now(),ten:title,hinh:emoji,muc:muc||'Câu chuyện của giáo viên',cau:sentences,hoi:{q,a:[a0,a1,a2].filter(Boolean),dung:0},custom:true};
   const list=getCustomStories();list.push(st);localStorage.setItem('vg_custom_stories',JSON.stringify(list));
-  sangTrang('#/admin');
+  sangTrang(isAdmin()?'#/admin':'#/addstory');
 };
 
 /* ---------- 6. THẺ GHI NHỚ "EM CẦN NHỚ" ---------- */
@@ -847,16 +850,36 @@ function refreshBrand(){
       btn.style.background='var(--purple)';
     }
   }
+  if(isGV()) setTimeout(_buildGvMenu, 0);
 }
 function btnLoginClick(){
   if(_profile){
-    // Logged in: show options
-    if(isAdmin()) sangTrang('#/admin');
-    else{ if(sb&&confirm('Đăng xuất?')){sb.auth.signOut();_profile=null;refreshBrand();sangTrang('#/');} }
+    if(isAdmin()){ sangTrang('#/admin'); return; }
+    if(isGV()){
+      const m=document.getElementById('gvMenu');
+      if(m) m.style.display=(m.style.display==='none'||!m.style.display)?'block':'none';
+      return;
+    }
+    if(sb&&confirm('Đăng xuất?')){sb.auth.signOut();_profile=null;refreshBrand();sangTrang('#/');}
   } else {
     admOpen();
   }
 }
+function _gvMenuBtn(lbl,fn){
+  return `<button onclick="${fn};document.getElementById('gvMenu').style.display='none'" style="display:block;width:100%;text-align:left;padding:10px 14px;background:transparent;border:none;border-radius:10px;color:#fff;font-size:.95rem;cursor:pointer;font-family:inherit;transition:.12s" onmouseover="this.style.background='#2a2a4a'" onmouseout="this.style.background='transparent'">${lbl}</button>`;
+}
+function _buildGvMenu(){
+  const m=document.getElementById('gvMenu');
+  if(!m)return;
+  m.innerHTML=_gvMenuBtn('&#128218; Quản lý câu chuyện',"sangTrang('#/addstory')")+
+    _gvMenuBtn('&#127942; Tổ chức Thi Đấu',"tdMoTeacher()")+
+    '<hr style="border:none;border-top:1px solid #333;margin:4px 6px">'+
+    _gvMenuBtn('&#128275; Đăng xuất',"if(sb&&confirm('Đăng xuất?')){sb.auth.signOut();_profile=null;refreshBrand();sangTrang('#/');}");
+}
+document.addEventListener('click',e=>{
+  const m=document.getElementById('gvMenu');
+  if(m&&m.style.display==='block'&&!m.contains(e.target)&&e.target.id!=='btnLogin')m.style.display='none';
+});
 function _resizeTcImg(file,cb){
   const r=new FileReader();
   r.onload=e=>{const img=new Image();img.onload=()=>{const sc=Math.min(200/img.width,200/img.height,1);const c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);c.getContext('2d').drawImage(img,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',0.80));};img.src=e.target.result;};
@@ -2201,7 +2224,7 @@ function chayViet(ch){
 
 /* ---------- THƯ VIỆN ĐỌC ---------- */
 function vDoc(){
-  const isAdm=isAdmin();
+  const isAdm=isGV();
   const all=allStories();
   return crumb([["Trang chủ","#/"],["Đọc sách",""]]) + `
   <div class="note">Mỗi ngày một câu chuyện ngắn. Bấm vào bìa sách để bắt đầu đọc nhé!</div>
@@ -2212,11 +2235,51 @@ function vDoc(){
       <b style="font-size:1rem;display:block">${esc(s.ten)}</b>
       <div class="cap" style="margin-top:4px">${esc(s.muc)}</div>
     </button>`).join("")}
-    ${isAdm?`<button class="tile" style="text-align:center;padding:18px;border:2.5px dashed #c3b0ff;color:#9a7cf0;background:#f8f5ff" onclick="SFX.tap();sangTrang('#/admin')">
+    ${isAdm?`<button class="tile" style="text-align:center;padding:18px;border:2.5px dashed #c3b0ff;color:#9a7cf0;background:#f8f5ff" onclick="SFX.tap();sangTrang('#/addstory')">
       <div style="font-size:2.8rem;margin-bottom:6px">+</div>
       <b>Thêm câu chuyện</b>
       <div class="cap">Dành cho giáo viên</div>
     </button>`:''}
+  </div>`;
+}
+function vGVStory(){
+  if(!isGV()) return vDoc();
+  const custom=getCustomStories();
+  const inp='width:100%;box-sizing:border-box;padding:9px 13px;border-radius:10px;border:2px solid #e5e7eb;font-family:inherit;font-size:.93rem;margin-bottom:8px;outline:none';
+  const list=custom.length===0?'<p style="color:var(--ink-soft);font-size:.9rem;margin:4px 0 8px">Chưa có câu chuyện nào. Hãy thêm câu chuyện đầu tiên!</p>':
+    custom.map(s=>`<div class="adm-st-item">
+      <span style="font-size:1.6rem">${s.hinh}</span>
+      <span style="flex:1;font-weight:700">${esc(s.ten)}</span>
+      <span style="font-size:.8rem;color:var(--ink-soft)">${s.cau.length} câu</span>
+      <button onclick="admDelStory('${s.id}')" style="background:#ffe0e8;border:none;border-radius:8px;padding:5px 10px;font-weight:700;cursor:pointer;color:#c0566f;font-size:.82rem;font-family:inherit">Xoá</button>
+    </div>`).join('');
+  return crumb([["Trang chủ","#/"],["Đọc sách","#/doc"],["Quản lý câu chuyện",""]]) +
+  `<div class="stage">
+    <h3 style="color:var(--purple-d)">&#128218; Câu chuyện của tôi</h3>
+    <div class="adm-panel" style="margin-bottom:16px">${list}</div>
+    <div class="adm-panel">
+      <h4>+ Thêm câu chuyện mới</h4>
+      <div style="display:flex;flex-direction:column">
+        <input class="adm-inp" id="admStTitle" placeholder="Tên câu chuyện *" maxlength="60" style="${inp}">
+        <div style="display:flex;gap:8px">
+          <input class="adm-inp" id="admStEmoji" placeholder="Emoji bìa" value="&#128218;" style="${inp};width:90px;flex-shrink:0;text-align:center">
+          <input class="adm-inp" id="admStMuc" placeholder="Mục tiêu học tập" style="${inp};flex:1">
+        </div>
+        <b style="font-size:.87rem;margin:2px 0 6px;color:var(--ink-soft)">Các câu trong câu chuyện * (ít nhất 2):</b>
+        <div id="admCauList">
+          <input class="adm-inp adm-cau-inp" placeholder="Câu 1..." style="${inp}">
+          <input class="adm-inp adm-cau-inp" placeholder="Câu 2..." style="${inp}">
+          <input class="adm-inp adm-cau-inp" placeholder="Câu 3..." style="${inp}">
+        </div>
+        <button onclick="admAddCau()" style="background:#f0ebff;border:2px dashed #c3b0ff;border-radius:10px;padding:7px;font-weight:700;cursor:pointer;font-family:inherit;color:#7a5ab0;margin-bottom:12px;font-size:.9rem">+ Thêm câu</button>
+        <b style="font-size:.87rem;margin:2px 0 6px;color:var(--ink-soft)">Câu hỏi hiểu bài *:</b>
+        <input class="adm-inp" id="admHoiQ" placeholder="Câu hỏi..." style="${inp}">
+        <input class="adm-inp" id="admHoiA0" placeholder="Đáp án đúng * (đáp án đầu tiên luôn là đúng)" style="${inp}">
+        <input class="adm-inp" id="admHoiA1" placeholder="Đáp án sai 1 *" style="${inp}">
+        <input class="adm-inp" id="admHoiA2" placeholder="Đáp án sai 2 (không bắt buộc)" style="${inp}">
+        <button onclick="admSaveStory()" style="background:linear-gradient(180deg,#c3b0ff,#9a7cf0);color:#fff;border:none;border-radius:12px;padding:12px;font-weight:800;font-size:1rem;cursor:pointer;font-family:inherit">Lưu câu chuyện</button>
+      </div>
+    </div>
   </div>`;
 }
 function vDocBai(id){
@@ -2829,6 +2892,7 @@ function veTrang(){
   else if(p[0]==="thuthach") set(vThuThach(), chayThuThach);
   else if(p[0]==="co")   set(vCo(), chayCo);
   else if(p[0]==="admin") set(isAdmin()?vAdmin():vHome(), isAdmin()?null:veHeroScene);
+  else if(p[0]==="addstory") set(isGV()?vGVStory():vDoc());
   else set(vHome(), veHeroScene);
 
   danhDauMenu(); capNhatSao();
