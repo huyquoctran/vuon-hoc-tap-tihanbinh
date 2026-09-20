@@ -3020,13 +3020,27 @@ window.admSignup=async function(){
   const errEl=document.getElementById('admErr');
   if(!u||!p||!ten||!code){errEl.style.color='';errEl.textContent='Vui lòng điền đầy đủ Email, Mật khẩu, Họ tên và Mã trường.';return;}
   if(!sb){errEl.textContent='Lỗi kết nối Supabase.';return;}
+  // Pre-validate school code: check anon can read schools at all (requires "schools_public_read" policy)
+  // If anon reads are blocked (count==0), skip validation and let the handle_new_user trigger handle it.
+  try{
+    const{count:total}=await sb.from('schools').select('*',{count:'exact',head:true});
+    if(total>0){
+      const{data:sc}=await sb.from('schools').select('id').eq('code',code).maybeSingle();
+      if(!sc){errEl.style.color='orange';errEl.textContent='Mã trường "'+code+'" không tồn tại. Kiểm tra lại với Admin.';return;}
+    }
+  }catch(e){/* skip pre-check on any network error */}
+  errEl.style.color='';errEl.textContent='Đang tạo tài khoản...';
   const{data,error}=await sb.auth.signUp({email:u,password:p,options:{data:{ten,school_code:code}}});
-  if(error){errEl.style.color='';errEl.textContent=error.message;return;}
-  // Check if school_code was valid (trigger sets school_id)
-  const{data:pd}=await sb.from('profiles').select('school_id').eq('id',data.user.id).single();
-  await sb.auth.signOut(); // sign out so admin session isn't replaced
-  if(!pd||!pd.school_id){errEl.style.color='orange';errEl.textContent='Đăng ký xong nhưng mã trường không đúng — liên hệ Admin.';}
-  else{errEl.style.color='var(--green-d)';errEl.textContent='Đăng ký thành công! Chờ Admin trường duyệt tài khoản.';}
+  if(error){
+    const msg=(error.message||'').toLowerCase().includes('fetch')
+      ?'Lỗi kết nối mạng. Kiểm tra internet và thử lại.'
+      :'Lỗi đăng ký: '+error.message;
+    errEl.style.color='';errEl.textContent=msg;return;
+  }
+  // Do NOT query profiles or signOut — signUp with email confirmation has no session yet.
+  // handle_new_user trigger sets school_id from school_code metadata.
+  errEl.style.color='var(--green-d)';
+  errEl.textContent='Đăng ký thành công! Vui lòng kiểm tra email xác nhận, rồi chờ Admin trường duyệt tài khoản.';
 };
 
 function khoiDong(){
