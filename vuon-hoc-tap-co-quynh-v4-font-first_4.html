@@ -615,13 +615,13 @@ function saveTeacher(t){localStorage.setItem('vg_teacher',JSON.stringify(t));}
 function refreshBrand(){
   const t=loadTeacher();
   const av=$('#brandAvatar'), nm=$('#brandName');
-  if(nm && t.name) nm.textContent=t.name.toUpperCase();
+  const displayName=(_profile&&_profile.ten)?_profile.ten:(t.name||'Cô Quỳnh');
+  const avatarImg=(_profile&&_profile.avatar_url)?_profile.avatar_url:t.avatarImg;
+  if(nm) nm.textContent=displayName.toUpperCase();
   if(av){
-    if(t.avatarImg){
-      av.innerHTML=`<div style="width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid #c3b0ff"><img src="${t.avatarImg}" style="width:100%;height:100%;object-fit:cover"></div>`;
-    } else {
-      av.innerHTML=cqAvatar(44);
-    }
+    if(avatarImg){
+      av.innerHTML=`<div style="width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid #c3b0ff"><img src="${avatarImg}" style="width:100%;height:100%;object-fit:cover"></div>`;
+    } else { av.innerHTML=cqAvatar(44); }
   }
 }
 function _resizeTcImg(file,cb){
@@ -2605,11 +2605,16 @@ function veTrang(){
 /* ---------- KHỞI ĐỘNG ---------- */
 
 function vAdmin(){
+  setTimeout(vAdminData,50);
   const custom=getCustomStories();
   const inpStyle='width:100%;box-sizing:border-box;padding:9px 13px;border-radius:10px;border:2px solid #e5e7eb;font-family:inherit;font-size:.93rem;margin-bottom:8px;outline:none';
   return `<div class="stage">
-    <h2 style="color:var(--purple-d)">🔧 Công cụ Quản trị</h2>
-    <p style="color:var(--ink-soft);margin:0 0 16px">Chỉ dành cho giáo viên / tác giả nội dung.</p>
+    <h2 style="color:var(--purple-d)">Quản trị</h2>
+    <p style="color:var(--ink-soft);margin:0 0 16px">Trường Tiểu Học An Bình — Vườn Học Tập.</p>
+
+    <div class="adm-sect" id="admSchool" style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(90,70,140,.08)"><div style="color:var(--ink-soft);padding:4px">Đang tải thông tin trường...</div></div>
+    <div class="adm-sect" id="admKhoiLop" style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(90,70,140,.08)"><div style="color:var(--ink-soft);padding:4px">Đang tải Khối / Lớp...</div></div>
+    <div class="adm-sect" id="admGV" style="background:#fff;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(90,70,140,.08)"><div style="color:var(--ink-soft);padding:4px">Đang tải giáo viên...</div></div>
 
     <!-- Quản lý câu chuyện -->
     <div class="adm-panel" style="margin-bottom:16px">
@@ -2666,6 +2671,132 @@ function vAdmin(){
     </div>
   </div>`;
 }
+
+async function vAdminData(){
+  if(!sb||!_profile||!_profile.school_id){return;}
+  const sid=_profile.school_id;
+  const{data:sc}=await sb.from('schools').select('*').eq('id',sid).single();
+  const schEl=$('#admSchool');
+  if(schEl) schEl.innerHTML=`
+    <h3 style="margin:0 0 12px;color:var(--purple-d)">Thông tin trường</h3>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <div><div style="font-size:1.1rem;font-weight:700">${esc(sc?sc.name:'—')}</div>
+      <div style="color:var(--ink-soft);font-size:.85rem">Mã trường: ${esc(sc?sc.code:'—')}</div></div>
+      <button class="btn sm" onclick="admEditSchool('${sc?sc.id:''}','${esc(sc?sc.name:'')}','${esc(sc?sc.code:'')}')">Sửa tên</button>
+    </div>`;
+  const{data:khois}=await sb.from('khois').select('id,name,lops(id,name)').eq('school_id',sid).order('name');
+  const klEl=$('#admKhoiLop');
+  if(klEl){
+    let khtml=`<h3 style="margin:0 0 12px;color:var(--purple-d)">Khối / Lớp</h3>`;
+    if(khois&&khois.length){
+      khois.forEach(k=>{
+        const lps=(k.lops||[]).sort((a,b)=>a.name.localeCompare(b.name));
+        khtml+=`<div style="margin-bottom:12px;background:#f8f5ff;border-radius:14px;padding:12px 14px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <span style="font-weight:700">${esc(k.name)}</span>
+            <button class="btn sm" onclick="admAddLop('${k.id}','${esc(k.name)}')">+ Lớp</button>
+            <button class="btn sm" style="background:#fee2e2;color:#b91c1c" onclick="admDelKhoi('${k.id}','${esc(k.name)}')">Xóa khối</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            ${lps.map(l=>`<span style="background:var(--purple-l);color:var(--purple-d);border-radius:20px;padding:4px 12px;font-size:.85rem;display:inline-flex;align-items:center;gap:5px">${esc(l.name)}<button onclick="admDelLop('${l.id}','${esc(l.name)}')" style="background:none;border:none;cursor:pointer;color:var(--purple-d);font-size:.8rem;padding:0;line-height:1">x</button></span>`).join('')}
+            ${lps.length===0?'<span style="color:var(--ink-soft);font-size:.85rem">Chưa có lớp</span>':''}
+          </div></div>`;
+      });
+    } else { khtml+=`<p style="color:var(--ink-soft)">Chưa có khối nào.</p>`; }
+    khtml+=`<button class="btn g sm" onclick="admAddKhoi('${sid}')">+ Thêm Khối</button>`;
+    klEl.innerHTML=khtml;
+  }
+  const{data:gvs}=await sb.from('profiles').select('id,ten,role,lop_id,lops(name)').eq('school_id',sid).neq('role','hoc_sinh').neq('role','phu_huynh').order('role');
+  const gvEl=$('#admGV');
+  if(gvEl){
+    const pending=(gvs||[]).filter(g=>g.role==='pending');
+    const active=(gvs||[]).filter(g=>g.role!=='pending'&&g.id!==_profile.id);
+    const lopOpts=(khois||[]).flatMap(k=>(k.lops||[]).map(l=>`<option value="${l.id}">${esc(k.name)} — ${esc(l.name)}</option>`)).join('');
+    let ghtml=`<h3 style="margin:0 0 12px;color:var(--purple-d)">Giáo viên</h3>`;
+    if(pending.length){
+      ghtml+=`<div style="background:#fef9c3;border-radius:12px;padding:10px 14px;margin-bottom:12px"><div style="font-weight:700;margin-bottom:8px">Chờ duyệt (${pending.length})</div>`;
+      pending.forEach(g=>{ghtml+=`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid #fde68a;flex-wrap:wrap">
+        <span style="font-weight:600;flex:1;min-width:120px">${esc(g.ten||g.id)}</span>
+        <select id="lopPick_${g.id}" style="padding:4px 8px;border-radius:8px;border:1px solid #ddd;font-size:.85rem"><option value="">-- Chọn lớp --</option>${lopOpts}</select>
+        <select id="rolePick_${g.id}" style="padding:4px 8px;border-radius:8px;border:1px solid #ddd;font-size:.85rem">
+          <option value="giao_vien">Giáo viên</option>
+          <option value="to_truong">Tổ trưởng</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button class="btn g sm" onclick="admApprove('${g.id}')">Duyệt</button>
+        <button class="btn sm" style="background:#fee2e2;color:#b91c1c" onclick="admReject('${g.id}','${esc(g.ten||'')}')">Từ chối</button>
+      </div>`});
+      ghtml+=`</div>`;
+    }
+    if(active.length){
+      ghtml+=`<div style="background:#f8f5ff;border-radius:12px;padding:10px 14px"><div style="font-weight:700;margin-bottom:8px">Đang hoạt động</div>`;
+      active.forEach(g=>{
+        const rl={admin:'Admin',to_truong:'Tổ trưởng',giao_vien:'Giáo viên'}[g.role]||g.role;
+        const ln=g.lops?g.lops.name:'—';
+        ghtml+=`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line)">
+          <span style="flex:1;font-weight:600">${esc(g.ten||'—')}</span>
+          <span style="font-size:.8rem;background:var(--purple-l);color:var(--purple-d);padding:2px 8px;border-radius:20px">${rl}</span>
+          <span style="font-size:.8rem;color:var(--ink-soft)">${esc(ln)}</span>
+        </div>`;
+      });
+      ghtml+=`</div>`;
+    }
+    if(!pending.length&&!active.length) ghtml+=`<p style="color:var(--ink-soft)">Chưa có giáo viên nào. GV tự đăng ký qua form trên app.</p>`;
+    gvEl.innerHTML=ghtml;
+  }
+}
+window.admEditSchool=async function(id,curName,curCode){
+  const name=prompt('Tên trường:',curName);if(!name)return;
+  const code=prompt('Mã trường:',curCode);if(!code)return;
+  const{error}=await sb.from('schools').update({name:name.trim(),code:code.trim().toUpperCase()}).eq('id',id);
+  if(error){alert('Lỗi: '+error.message);}else{vAdminData();}
+};
+window.admAddKhoi=async function(sid){
+  const name=prompt('Tên khối (VD: Khối 1):');if(!name)return;
+  const{error}=await sb.from('khois').insert({school_id:sid,name:name.trim()});
+  if(error){alert('Lỗi: '+error.message);}else{vAdminData();}
+};
+window.admDelKhoi=async function(id,name){
+  if(!confirm('Xóa '+name+'? Tất cả lớp trong khối cũng sẽ bị xóa.'))return;
+  const{error}=await sb.from('khois').delete().eq('id',id);
+  if(error){alert('Lỗi: '+error.message);}else{vAdminData();}
+};
+window.admAddLop=async function(khoiId){
+  const name=prompt('Tên lớp (VD: 1/1):');if(!name)return;
+  const{error}=await sb.from('lops').insert({khoi_id:khoiId,name:name.trim()});
+  if(error){alert('Lỗi: '+error.message);}else{vAdminData();}
+};
+window.admDelLop=async function(id,name){
+  if(!confirm('Xóa lớp '+name+'?'))return;
+  const{error}=await sb.from('lops').delete().eq('id',id);
+  if(error){alert('Lỗi: '+error.message);}else{vAdminData();}
+};
+window.admApprove=async function(uid){
+  const role=((document.getElementById('rolePick_'+uid))||{}).value||'giao_vien';
+  const lopId=((document.getElementById('lopPick_'+uid))||{}).value||null;
+  const upd={role,school_id:_profile.school_id};
+  if(lopId) upd.lop_id=lopId;
+  const{error}=await sb.from('profiles').update(upd).eq('id',uid);
+  if(error){alert('Lỗi: '+error.message);}else{vAdminData();}
+};
+window.admReject=async function(uid,name){
+  if(!confirm('Xóa tài khoản của '+name+'?'))return;
+  const{error}=await sb.from('profiles').update({role:'pending',school_id:null,lop_id:null}).eq('id',uid);
+  if(error){alert('Lỗi: '+error.message);}else{vAdminData();}
+};
+window.admToggleSignup=function(){const el=document.getElementById('admSignupExtra');if(el)el.style.display=el.style.display==='none'?'block':'none';};
+window.admSignup=async function(){
+  const u=(document.getElementById('admUser').value||'').trim();
+  const p=(document.getElementById('admPass').value||'');
+  const ten=((document.getElementById('admTen')||{}).value||'').trim();
+  if(!u||!p||!ten){document.getElementById('admErr').textContent='Vui lòng điền đầy đủ Email, Mật khẩu và Họ tên.';return;}
+  if(!sb){document.getElementById('admErr').textContent='Lỗi kết nối Supabase.';return;}
+  const{error}=await sb.auth.signUp({email:u,password:p,options:{data:{ten}}});
+  if(error){document.getElementById('admErr').textContent=error.message;return;}
+  document.getElementById('admErr').style.color='var(--green-d)';
+  document.getElementById('admErr').textContent='Đăng ký thành công! Chờ admin duyệt tài khoản.';
+};
+
 function khoiDong(){
   napGV();
   veMenu();
@@ -11022,6 +11153,11 @@ function hpPage(ch){
     <div class="adm-err" id="admErr"></div>
     <div class="row center" style="gap:10px">
       <button class="btn g" onclick="admLogin()">Đăng nhập</button>
+      <button class="btn" onclick="admToggleSignup()" style="font-size:.85rem;margin-top:6px;width:100%">Chưa có tài khoản? Đăng ký</button>
+      <div id="admSignupExtra" style="display:none;margin-top:8px">
+        <input type="text" id="admTen" placeholder="Họ và tên *" style="width:100%;padding:10px;border:2px solid var(--line);border-radius:12px;font-size:.95rem;font-family:inherit;margin-bottom:6px"/>
+        <button class="btn" style="width:100%;background:var(--green);color:#fff" onclick="admSignup()">Tạo tài khoản giáo viên</button>
+      </div>
       <button class="btn" onclick="admClose()">Hủy</button>
     </div>
   </div>
