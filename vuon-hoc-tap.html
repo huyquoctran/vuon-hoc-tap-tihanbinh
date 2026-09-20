@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Vườn Học Tập Cô Quỳnh – Cùng học, cùng chơi, cùng tiến bộ. Website học Tiếng Việt và Toán cho học sinh lớp 1.">
-<title>Vườn Học Tập Cô Quỳnh – V4 Font-first</title>
+<title>Vườn Học Tập – V4 Font-first</title>
 <!-- Author: Huy Tran | Created: 2026-09-13 | Revision: V4 Font-first clean-room architecture -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -403,7 +403,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 <div class="tipbar">
   <div class="tipbar-in">
     <span id="tipAvatar"></span>
-    <div class="txt"><b id="tipLabel">Cô Quỳnh dặn em:</b> <span id="tipText">Chào em! Hôm nay mình học gì nhỉ?</span></div>
+    <div class="txt"><b id="tipLabel">Cô dặn em:</b> <span id="tipText">Chào em! Hôm nay mình học gì nhỉ?</span></div>
     <button class="icon-btn" id="btnTipSpeak" title="Nghe cô đọc" aria-label="Nghe cô đọc lời dặn">🔊</button>
     <button class="icon-btn" id="btnTipNext" title="Lời dặn khác" aria-label="Xem lời dặn khác">🔁</button>
   </div>
@@ -661,6 +661,7 @@ function refreshBrand(){
   const displayName=(_profile&&_profile.ten)?_profile.ten:(t.name||'Cô Quỳnh');
   const avatarImg=(_profile&&_profile.avatar_url)?_profile.avatar_url:t.avatarImg;
   if(nm) nm.textContent=displayName.toUpperCase();
+  document.title=displayName+' – Vườn Học Tập';
   const tl=$('#tipLabel');if(tl) tl.textContent=displayName+' dặn em:';
   if(av){
     if(avatarImg){
