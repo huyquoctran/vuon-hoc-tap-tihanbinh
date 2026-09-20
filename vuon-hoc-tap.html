@@ -55,8 +55,8 @@ header.top{
   box-shadow:0 4px 18px rgba(120,100,170,.10);
 }
 .top-in{max-width:1180px;margin:0 auto;padding:8px 14px;display:flex;align-items:center;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.brand .bt{font-weight:800;font-size:1.06rem;letter-spacing:.2px;line-height:1.05}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:1}
+.brand .bt{font-weight:800;font-size:1.06rem;letter-spacing:.2px;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
 .brand .bs{font-size:.72rem;color:var(--ink-soft);font-weight:600}
 .top-tools{margin-left:auto;display:flex;align-items:center;gap:8px}
 .icon-btn{
@@ -329,6 +329,48 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 .ws-preview{background:#fff;border:2px solid var(--line);border-radius:18px;padding:8px;overflow:auto}
 .ws-canvas{display:block;width:100%;height:auto;background:#fff}
 @media(max-width:560px){.compare{grid-template-columns:1fr}.font-lab .btn{width:100%}}
+
+/* ====================== 9. RESPONSIVE NÂNG CAO ====================== */
+/* Tablet (600–1024px) */
+@media(max-width:1024px){
+  .wrap{max-width:100%}
+  .zones{grid-template-columns:repeat(2,1fr)}
+}
+/* Mobile (≤ 600px) */
+@media(max-width:600px){
+  .top-in{gap:8px;padding:6px 10px}
+  .top-tools{gap:5px}
+  #starPill{display:none}
+  .icon-btn{width:40px;height:40px;font-size:1.1rem;border-radius:12px}
+  .brand .bs{display:none}
+  .brand .bt{font-size:.92rem}
+  .wrap{padding:0 10px calc(120px + env(safe-area-inset-bottom,0px))}
+  .hero{padding:16px 12px 14px;border-radius:22px;margin-top:10px}
+  .hero h1{font-size:clamp(1.55rem,6vw,2.2rem)}
+  .sec h2{font-size:1.25rem}
+  .adm-box{padding:20px 14px;border-radius:14px}
+  .adm-panel{padding:12px 10px}
+  .adm-tool{padding:10px 12px;gap:8px}
+  .adm-tool .ti{font-size:1.5rem}
+  .modal .box{padding:18px 14px;border-radius:22px}
+  .b3-scene{padding:10px}
+  .b3-book{max-width:100%}
+  .tipbar-in{padding:6px 10px;gap:8px}
+  .tipbar .txt{font-size:.82rem}
+  .stage{padding:14px 12px}
+  .card{padding:14px 12px}
+  .adm-sect{padding:12px!important}
+  .crumb button{padding:6px 12px;font-size:.88rem;min-height:42px}
+  .chip{padding:8px 14px;font-size:1.1rem;min-height:54px}
+}
+#btnLogin{white-space:nowrap;flex-shrink:0}
+/* Small phone (≤ 400px) */
+@media(max-width:400px){
+  .icon-btn{width:36px;height:36px;font-size:.98rem}
+  .brand .bt{font-size:.82rem;max-width:120px}
+  .top-tools{gap:4px}
+  #btnLogin{padding:5px 9px!important;font-size:.78rem!important}
+}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -2716,8 +2758,8 @@ async function vAdminData(){
       khois.forEach(k=>{
         const lps=(k.lops||[]).sort((a,b)=>a.name.localeCompare(b.name));
         khtml+=`<div style="margin-bottom:12px;background:#f8f5ff;border-radius:14px;padding:12px 14px">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-            <span style="font-weight:700">${esc(k.name)}</span>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+            <span style="font-weight:700;flex:1;min-width:80px">${esc(k.name)}</span>
             <button class="btn sm" onclick="admAddLop('${k.id}','${esc(k.name)}')">+ Lớp</button>
             <button class="btn sm" style="background:#fee2e2;color:#b91c1c" onclick="admDelKhoi('${k.id}','${esc(k.name)}')">Xóa khối</button>
           </div>
@@ -2757,8 +2799,8 @@ async function vAdminData(){
       active.forEach(g=>{
         const rl={admin:'Admin',to_truong:'Tổ trưởng',giao_vien:'Giáo viên'}[g.role]||g.role;
         const ln=g.lops?g.lops.name:'—';
-        ghtml+=`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line)">
-          <span style="flex:1;font-weight:600">${esc(g.ten||'—')}</span>
+        ghtml+=`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line);flex-wrap:wrap">
+          <span style="flex:1;font-weight:600;min-width:100px">${esc(g.ten||'—')}</span>
           <span style="font-size:.8rem;background:var(--purple-l);color:var(--purple-d);padding:2px 8px;border-radius:20px">${rl}</span>
           <span style="font-size:.8rem;color:var(--ink-soft)">${esc(ln)}</span>
         </div>`;
