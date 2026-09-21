@@ -3643,6 +3643,10 @@ function khoiDong(){
   $("#btnTipNext").onclick=()=>{SFX.tap();tipIdx++;veTip();};
   window.addEventListener("hashchange", veTrang);
   veTrang();
+  if(localStorage.getItem('vhq_open_hub')==='1'){
+    localStorage.removeItem('vhq_open_hub');
+    setTimeout(()=>{ if(typeof gvMoHub==='function') gvMoHub(); }, 900);
+  }
 }
 
 /* ============================================================
@@ -13829,8 +13833,8 @@ function g7Answer(chosen, correct, btn) {
 }
 (function() {
   const cat = typeof GAME_CATALOG !== 'undefined' ? GAME_CATALOG : [];
-  [{ id:6,emoji:'🐇',name:'Thỏ Con Dỏng Tai',desc:'Nhận biết âm và vần',theme:'purple',badge:'Mới',fn:'gvMoGame(6)',locked:false },
-   { id:7,emoji:'🗺️',name:'Thỏ Tìm Đường',desc:'Điền chữ còn thiếu',theme:'green',badge:'Mới',fn:'gvMoGame(7)',locked:false }]
+  [{ id:6,emoji:'🐇',name:'Thỏ Con Dỏng Tai',desc:'Nhận biết âm và vần',theme:'purple',badge:'Mới',fn:'gvMoGame(6)',locked:false,section:'hoc' },
+   { id:7,emoji:'🗺️',name:'Thỏ Tìm Đường',desc:'Điền chữ còn thiếu',theme:'green',badge:'Mới',fn:'gvMoGame(7)',locked:false,section:'hoc' }]
   .forEach(u => { const i = cat.findIndex(c => c.id === u.id); if (i >= 0) Object.assign(cat[i], u); else cat.push(u); });
 })();
 (function() {
@@ -13972,8 +13976,8 @@ function g9Answer(chosen,correct,btn){
 }
 (function(){
   const cat=typeof GAME_CATALOG!=='undefined'?GAME_CATALOG:[];
-  [{id:8,emoji:'🔢',name:'Số Vui',desc:'Số 11-100, chục và đơn vị',theme:'blue',badge:'Mới',fn:'gvMoGame(8)',locked:false},
-   {id:9,emoji:'🕐',name:'Đồng Hồ Kỳ Diệu',desc:'Xem giờ, nửa tiếng',theme:'purple',badge:'Mới',fn:'gvMoGame(9)',locked:false}]
+  [{id:8,emoji:'🔢',name:'Số Vui',desc:'Số 11-100, chục và đơn vị',theme:'blue',badge:'Mới',fn:'gvMoGame(8)',locked:false,section:'hoc'},
+   {id:9,emoji:'🕐',name:'Đồng Hồ Kỳ Diệu',desc:'Xem giờ, nửa tiếng',theme:'purple',badge:'Mới',fn:'gvMoGame(9)',locked:false,section:'hoc'}]
   .forEach(u=>{const i=cat.findIndex(c=>c.id===u.id);if(i>=0)Object.assign(cat[i],u);else cat.push(u);});
 })();
 (function(){
