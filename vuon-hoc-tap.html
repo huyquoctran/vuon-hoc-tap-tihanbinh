@@ -538,6 +538,137 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 .pr-input:focus{outline:none;border-color:#7c3aed;}
 .pr-btn{width:100%;padding:14px;background:linear-gradient(135deg,#7c3aed,#e84393);border:none;border-radius:12px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;margin-top:4px;}
 #prMsg{color:#ef4444;font-size:.9rem;margin-top:10px;text-align:center;min-height:20px;}
+
+/* ============================================================
+   VUON GAME — Phase 1 CSS
+   Games: Hub + Tho hai Ca Rot + Can Bang Rung Xanh + Ech Nhay La Sen
+   Mobile-first, large touch targets for Grade 1 kids (6-7 tuoi)
+   ============================================================ */
+
+/* ---- GAME HUB ---- */
+#vGameHub { display:none; flex-direction:column; min-height:100vh; background:linear-gradient(160deg,#0f4c75 0%,#1b6ca8 50%,#1abc9c 100%); }
+#vGameHub.active { display:flex; }
+.gvh-header { padding:20px 16px 10px; text-align:center; }
+.gvh-title { font-size:2rem; font-weight:900; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+.gvh-sub { color:rgba(255,255,255,.8); font-size:1rem; margin-top:4px; }
+.gvh-stars-total { display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.2); border-radius:20px; padding:6px 16px; margin-top:10px; color:#fbbf24; font-weight:700; font-size:1.1rem; }
+.gvh-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:14px; padding:16px; }
+.gvh-card { background:#fff; border-radius:22px; padding:18px 12px; text-align:center; cursor:pointer; transition:transform .2s,box-shadow .2s; position:relative; border:3px solid transparent; }
+.gvh-card:active { transform:scale(.95); }
+.gvh-card:hover { transform:translateY(-4px); box-shadow:0 12px 30px rgba(0,0,0,.25); }
+.gvh-card.locked { opacity:.55; cursor:default; }
+.gvh-card.locked:hover { transform:none; box-shadow:none; }
+.gvh-card-emoji { font-size:3.2rem; line-height:1; }
+.gvh-card-name { font-size:.95rem; font-weight:800; color:#1e293b; margin:10px 0 4px; }
+.gvh-card-desc { font-size:.75rem; color:#64748b; line-height:1.3; }
+.gvh-card-stars { margin-top:8px; color:#fbbf24; font-size:1rem; }
+.gvh-card-badge { position:absolute; top:-8px; right:-8px; background:#ef4444; color:#fff; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:.75rem; font-weight:700; }
+.gvh-card-badge.new { background:#10b981; }
+.gvh-card.theme-green { border-color:#86efac; }
+.gvh-card.theme-blue  { border-color:#93c5fd; }
+.gvh-card.theme-orange{ border-color:#fcd34d; }
+.gvh-card.theme-purple{ border-color:#c4b5fd; }
+.gvh-back-btn { background:rgba(255,255,255,.2); border:none; color:#fff; border-radius:12px; padding:10px 18px; cursor:pointer; font-size:.9rem; margin:0 16px 16px; align-self:flex-start; }
+
+/* ---- SHARED GAME FRAMEWORK ---- */
+.gv-screen { display:none; position:fixed; inset:0; z-index:8000; flex-direction:column; }
+.gv-screen.active { display:flex; }
+.gv-header { padding:10px 14px; display:flex; align-items:center; gap:10px; position:relative; z-index:2; }
+.gv-back { background:rgba(255,255,255,.25); border:none; color:#fff; border-radius:10px; padding:8px 12px; cursor:pointer; font-size:.85rem; font-weight:600; flex-shrink:0; }
+.gv-progress-wrap { flex:1; background:rgba(255,255,255,.25); border-radius:8px; height:14px; overflow:hidden; }
+.gv-progress-fill { height:100%; background:#fff; border-radius:8px; transition:width .4s ease; }
+.gv-hearts { display:flex; gap:4px; font-size:1.3rem; flex-shrink:0; }
+.gv-score-badge { background:rgba(255,255,255,.25); border-radius:10px; padding:4px 10px; color:#fff; font-weight:700; font-size:.9rem; flex-shrink:0; }
+.gv-mascot-wrap { position:absolute; bottom:80px; right:12px; z-index:5; pointer-events:none; }
+.gv-mascot-img { font-size:3rem; animation:gvFloat 3s ease-in-out infinite; }
+.gv-mascot-bubble { background:#fff; border-radius:16px; padding:8px 12px; font-size:.85rem; font-weight:600; color:#1e293b; max-width:160px; margin-bottom:8px; box-shadow:0 4px 12px rgba(0,0,0,.15); text-align:center; position:relative; }
+.gv-mascot-bubble::after { content:''; position:absolute; bottom:-8px; right:20px; border:8px solid transparent; border-top-color:#fff; border-bottom:none; }
+@keyframes gvFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.gv-feedback { position:fixed; inset:0; z-index:9500; display:none; align-items:center; justify-content:center; flex-direction:column; pointer-events:none; }
+.gv-feedback.show { display:flex; }
+.gv-feedback-icon { font-size:8rem; animation:gvPop .5s cubic-bezier(.34,1.56,.64,1); }
+.gv-feedback-text { font-size:2.5rem; font-weight:900; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.3); animation:gvPop .5s .1s cubic-bezier(.34,1.56,.64,1) both; }
+.gv-feedback-bg { position:absolute; inset:0; }
+.gv-feedback-bg.correct { background:rgba(16,185,129,.85); }
+.gv-feedback-bg.wrong   { background:rgba(239,68,68,.7); }
+@keyframes gvPop { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
+.gv-fly-star { position:fixed; font-size:2rem; pointer-events:none; z-index:9600; animation:gvFly 1s ease forwards; }
+@keyframes gvFly { 0%{opacity:1;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-120px) scale(1.5)} }
+.gv-result { position:fixed; inset:0; z-index:9000; background:#0d0d1a; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; }
+.gv-result.show { display:flex; }
+.gv-result-stars { font-size:5rem; animation:gvPop .8s .2s cubic-bezier(.34,1.56,.64,1) both; }
+.gv-result-title { color:#fff; font-size:2rem; font-weight:900; margin:16px 0 8px; }
+.gv-result-sub { color:#94a3b8; font-size:1rem; margin-bottom:24px; }
+.gv-result-score { background:#1e293b; border-radius:16px; padding:16px 32px; color:#fbbf24; font-size:1.5rem; font-weight:800; margin-bottom:24px; }
+.gv-result-btn { padding:16px 40px; background:linear-gradient(135deg,#f72585,#7209b7); border:none; border-radius:16px; color:#fff; font-size:1.2rem; font-weight:700; cursor:pointer; margin:6px; }
+.gv-result-btn.sec { background:#1e293b; font-size:1rem; }
+
+/* GAME 1: THO HAI CA ROT */
+#vGame1 { background:linear-gradient(160deg,#134e1b 0%,#1a7a26 60%,#2d9e35 100%); }
+.g1-sky { position:absolute; top:0; left:0; right:0; height:35%; background:linear-gradient(180deg,#87ceeb,#c8e6c9); overflow:hidden; }
+.g1-cloud { position:absolute; background:#fff; border-radius:50px; opacity:.9; animation:g1Float linear infinite; }
+.g1-question-banner { background:rgba(255,255,255,.95); border-radius:20px; padding:14px 20px; margin:10px 14px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.15); position:relative; z-index:2; }
+.g1-question-text { font-size:1.4rem; font-weight:800; color:#166534; }
+.g1-items-area { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px; min-height:120px; padding:12px; position:relative; z-index:2; }
+.g1-item { font-size:2.8rem; animation:g1ItemPop .3s cubic-bezier(.34,1.56,.64,1) both; transition:transform .2s; }
+.g1-item:hover { transform:scale(1.15); }
+@keyframes g1ItemPop { from{transform:scale(0) rotate(-20deg);opacity:0} to{transform:scale(1) rotate(0deg);opacity:1} }
+.g1-answers { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:14px; position:relative; z-index:2; margin-top:auto; }
+.g1-ans-btn { background:#fff; border:4px solid #d1fae5; border-radius:20px; padding:20px 10px; font-size:2.5rem; font-weight:900; color:#166534; cursor:pointer; transition:transform .15s,background .15s; box-shadow:0 4px 12px rgba(0,0,0,.1); }
+.g1-ans-btn:active { transform:scale(.92); }
+.g1-ans-btn.correct { background:#d1fae5; border-color:#10b981; transform:scale(1.06); }
+.g1-ans-btn.wrong { background:#fee2e2; border-color:#ef4444; animation:gvShake .4s; }
+@keyframes gvShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
+.g1-bunny { font-size:4rem; position:absolute; bottom:0; right:20px; animation:gvFloat 2.5s ease-in-out infinite; filter:drop-shadow(0 4px 8px rgba(0,0,0,.2)); }
+@keyframes g1Float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+/* GAME 2: CAN BANG RUNG XANH */
+#vGame2 { background:linear-gradient(160deg,#064e3b 0%,#065f46 50%,#047857 100%); }
+.g2-question-banner { background:rgba(255,255,255,.95); border-radius:20px; padding:14px 20px; margin:10px 14px 6px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.2); }
+.g2-question-text { font-size:1.3rem; font-weight:800; color:#064e3b; }
+.g2-scale-wrap { display:flex; flex-direction:column; align-items:center; padding:10px 14px; flex:1; }
+.g2-scale-beam { display:flex; align-items:flex-start; justify-content:space-between; width:100%; max-width:380px; gap:16px; }
+.g2-scale-pan { flex:1; background:rgba(255,255,255,.15); border:3px solid rgba(255,255,255,.4); border-radius:18px; min-height:100px; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:4px; padding:10px; transition:transform .5s ease; }
+.g2-scale-pan.tilt-down { transform:translateY(12px); }
+.g2-scale-pan.tilt-up { transform:translateY(-12px); }
+.g2-scale-pole { width:6px; background:rgba(255,255,255,.5); border-radius:3px; height:60px; flex-shrink:0; margin-top:0; align-self:flex-start; position:relative; }
+.g2-scale-pole::before { content:'▲'; position:absolute; bottom:100%; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.7); font-size:1.2rem; }
+.g2-scale-item { font-size:2.4rem; }
+.g2-answers { display:flex; justify-content:center; gap:16px; padding:14px; margin-top:auto; }
+.g2-ans-btn { background:#fff; border:none; border-radius:18px; padding:18px 28px; font-size:2.8rem; font-weight:900; color:#064e3b; cursor:pointer; transition:transform .15s,background .15s; box-shadow:0 6px 18px rgba(0,0,0,.2); min-width:90px; }
+.g2-ans-btn:active { transform:scale(.9); }
+.g2-ans-btn.correct { background:#d1fae5; transform:scale(1.1); }
+.g2-ans-btn.wrong { background:#fee2e2; animation:gvShake .4s; }
+.g2-frog-deco { font-size:3rem; position:absolute; bottom:80px; left:16px; animation:gvFloat 3s ease-in-out infinite; }
+
+/* GAME 3: ECH NHAY LA SEN */
+#vGame3 { background:linear-gradient(180deg,#0c4a6e 0%,#0369a1 40%,#0284c7 100%); }
+.g3-water { position:absolute; bottom:0; left:0; right:0; height:55%; background:linear-gradient(180deg,#0ea5e9,#0284c7,#0369a1); border-radius:50% 50% 0 0 / 20% 20% 0 0; animation:g3Wave 4s ease-in-out infinite; }
+@keyframes g3Wave { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.g3-equation-banner { background:rgba(255,255,255,.95); border-radius:20px; padding:16px 24px; margin:10px 14px 6px; text-align:center; box-shadow:0 4px 16px rgba(0,0,0,.2); position:relative; z-index:3; }
+.g3-equation-text { font-size:2.2rem; font-weight:900; color:#0c4a6e; }
+.g3-pads-area { display:flex; justify-content:space-evenly; align-items:flex-end; padding:10px 14px; position:relative; z-index:3; flex-wrap:wrap; gap:10px; margin-top:auto; min-height:160px; }
+.g3-pad { background:linear-gradient(135deg,#4ade80,#22c55e); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:transform .15s,box-shadow .15s; box-shadow:0 6px 0 #166534,0 8px 16px rgba(0,0,0,.3); position:relative; border:none; }
+.g3-pad.large { width:110px; height:110px; font-size:2.2rem; }
+.g3-pad.medium { width:90px; height:90px; font-size:1.9rem; }
+.g3-pad:active { transform:translateY(4px); box-shadow:0 2px 0 #166534,0 4px 8px rgba(0,0,0,.2); }
+.g3-pad.correct { background:linear-gradient(135deg,#fbbf24,#f59e0b); box-shadow:0 6px 0 #b45309,0 0 24px rgba(251,191,36,.6); }
+.g3-pad.wrong { background:linear-gradient(135deg,#f87171,#ef4444); animation:gvShake .4s; box-shadow:0 6px 0 #991b1b; }
+.g3-pad-num { font-weight:900; color:#fff; text-shadow:0 2px 4px rgba(0,0,0,.3); }
+.g3-frog { font-size:3.5rem; position:absolute; top:-30px; left:50%; transform:translateX(-50%); transition:all .5s cubic-bezier(.34,1.56,.64,1); z-index:4; filter:drop-shadow(0 4px 8px rgba(0,0,0,.3)); pointer-events:none; }
+.g3-frog.jump { animation:g3Jump .6s cubic-bezier(.34,1.56,.64,1); }
+@keyframes g3Jump { 0%{transform:translateX(-50%) translateY(0) scale(1)} 40%{transform:translateX(-50%) translateY(-80px) scale(1.2)} 100%{transform:translateX(-50%) translateY(0) scale(1)} }
+.g3-ripple { position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); width:80px; height:20px; border-radius:50%; background:rgba(255,255,255,.15); animation:g3Ripple 1.5s ease-in-out infinite; }
+@keyframes g3Ripple { 0%,100%{transform:translateX(-50%) scale(1);opacity:.6} 50%{transform:translateX(-50%) scale(1.3);opacity:.2} }
+
+@media(max-width:420px){
+  .gvh-grid { grid-template-columns:repeat(2,1fr); }
+  .g1-item { font-size:2.2rem; }
+  .g1-ans-btn { font-size:2rem; padding:16px 8px; }
+  .g3-pad.large { width:90px; height:90px; font-size:1.8rem; }
+  .g3-pad.medium { width:75px; height:75px; font-size:1.6rem; }
+  .g2-ans-btn { font-size:2.2rem; padding:14px 20px; }
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -556,6 +687,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
       <button class="icon-btn" id="btnVoice" title="Chọn giọng đọc" aria-label="Chọn giọng đọc">🗣️</button>
       <button class="icon-btn" id="btnSound" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button>
       <button class="td-nav-btn" onclick="tdMo()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;margin-right:4px">&#127942; Thi Dau</button>
+      <button class="top-tool-btn" onclick="moVuonGame()" title="Vườn Vui Học" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;background:#10b981;color:#fff;border:none;cursor:pointer;margin-right:4px;transition:.15s">&#127803; Vườn Game</button>
       <div style="position:relative;display:inline-block">
         <button id="btnLogin" onclick="btnLoginClick()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(120,80,200,.25);border:none;cursor:pointer;transition:.15s">Đăng nhập</button>
         <div id="gvMenu" style="display:none;position:absolute;top:calc(100% + 6px);right:0;background:#1e1e2e;border-radius:14px;padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.55);min-width:220px;z-index:2000;border:1px solid rgba(255,255,255,.08)"></div>
@@ -12331,5 +12463,475 @@ function openTool(b64){var by=Uint8Array.from(atob(b64),function(c){return c.cha
     <div id="prMsg"></div>
   </div>
 </div>
+
+<!-- ============================================================
+   VUON GAME — Phase 1 HTML
+   ============================================================ -->
+
+<!-- ===== GAME HUB ===== -->
+<div id="vGameHub">
+  <div class="gvh-header">
+    <div class="gvh-title">&#127803; Vườn Vui Học</div>
+    <div class="gvh-sub">Chọn trò chơi yêu thích!</div>
+    <div class="gvh-stars-total">&#11088; <span id="gvhTotalStars">0</span> sao</div>
+  </div>
+  <div class="gvh-grid" id="gvhGrid"></div>
+  <button class="gvh-back-btn" onclick="gvhDong()">&#8592; Quay lại</button>
+</div>
+
+<!-- ===== GAME 1: THO HAI CA ROT ===== -->
+<div id="vGame1" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#166534,#16a34a);">
+    <button class="gv-back" onclick="gvDongGame(1)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g1Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g1Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g1Score">0 &#11088;</div>
+  </div>
+  <div class="g1-sky">
+    <div class="g1-cloud" style="width:80px;height:30px;top:20%;left:10%;animation-duration:18s;"></div>
+    <div class="g1-cloud" style="width:55px;height:22px;top:40%;left:55%;animation-duration:24s;"></div>
+    <div class="g1-cloud" style="width:70px;height:28px;top:15%;left:75%;animation-duration:21s;"></div>
+  </div>
+  <div class="g1-question-banner">
+    <div class="g1-question-text" id="g1QuestionText">Đếm xem có bao nhiêu? &#129302;</div>
+  </div>
+  <div class="g1-items-area" id="g1Items"></div>
+  <div class="g1-bunny" id="g1Bunny">&#129302;</div>
+  <div class="g1-answers" id="g1Answers"></div>
+</div>
+
+<!-- ===== GAME 2: CAN BANG RUNG XANH ===== -->
+<div id="vGame2" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#064e3b,#065f46);">
+    <button class="gv-back" onclick="gvDongGame(2)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g2Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g2Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g2Score">0 &#11088;</div>
+  </div>
+  <div class="g2-question-banner">
+    <div class="g2-question-text" id="g2QuestionText">So sánh hai bên cân, chọn dấu đúng!</div>
+  </div>
+  <div class="g2-scale-wrap">
+    <div class="g2-scale-beam">
+      <div class="g2-scale-pan" id="g2PanLeft"></div>
+      <div class="g2-scale-pole"></div>
+      <div class="g2-scale-pan" id="g2PanRight"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;width:100%;max-width:380px;padding:6px 0;">
+      <div style="text-align:center;flex:1;color:rgba(255,255,255,.8);font-size:1.8rem;font-weight:900;" id="g2NumLeft">?</div>
+      <div style="width:60px;"></div>
+      <div style="text-align:center;flex:1;color:rgba(255,255,255,.8);font-size:1.8rem;font-weight:900;" id="g2NumRight">?</div>
+    </div>
+  </div>
+  <div class="g2-answers" id="g2Answers">
+    <button class="g2-ans-btn" onclick="g2TrlLoi('>')">&#62;</button>
+    <button class="g2-ans-btn" onclick="g2TrlLoi('=')">&#61;</button>
+    <button class="g2-ans-btn" onclick="g2TrlLoi('<')">&#60;</button>
+  </div>
+  <div class="g2-frog-deco">&#128038;</div>
+</div>
+
+<!-- ===== GAME 3: ECH NHAY LA SEN ===== -->
+<div id="vGame3" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#0c4a6e,#0369a1);">
+    <button class="gv-back" onclick="gvDongGame(3)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g3Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g3Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g3Score">0 &#11088;</div>
+  </div>
+  <div class="g3-water"></div>
+  <div class="g3-equation-banner">
+    <div style="font-size:.9rem;color:#64748b;margin-bottom:4px;">Con ếch sẽ nhảy đến đáp án đúng!</div>
+    <div class="g3-equation-text" id="g3Equation">3 + 4 = ?</div>
+  </div>
+  <div class="g3-pads-area" id="g3Pads"></div>
+</div>
+
+<!-- ===== SHARED RESULT SCREEN ===== -->
+<div class="gv-result" id="vGameResult">
+  <div class="gv-result-stars" id="grStars">&#11088;&#11088;&#11088;</div>
+  <div class="gv-result-title" id="grTitle">Xuất sắc!</div>
+  <div class="gv-result-sub" id="grSub">Bé học rất giỏi!</div>
+  <div class="gv-result-score">&#11088; <span id="grScore">0</span> sao | &#127941; <span id="grPoints">0</span> điểm</div>
+  <button class="gv-result-btn" id="grPlayAgain" onclick="gvPlayAgain()">&#128257; Chơi lại</button>
+  <button class="gv-result-btn sec" onclick="gvVeHub()">&#8592; Về Vườn Game</button>
+</div>
+
+<!-- ===== SHARED FEEDBACK OVERLAY ===== -->
+<div class="gv-feedback" id="gvFeedback">
+  <div class="gv-feedback-bg" id="gvFeedbackBg"></div>
+  <div class="gv-feedback-icon" id="gvFeedbackIcon">&#127881;</div>
+  <div class="gv-feedback-text" id="gvFeedbackText">Đúng rồi!</div>
+</div>
+
+<script>
+// ============================================================
+// VUON GAME — Phase 1 JavaScript
+// Math Engine PCG + Game Hub + 3 Core Games
+// Author: Huy Tran | Cadence Design Systems Vietnam
+// ============================================================
+
+const _GV_KEY = 'vhq_garden_v1';
+function gvLoadSave() {
+  try { return JSON.parse(localStorage.getItem(_GV_KEY) || '{}'); } catch(e) { return {}; }
+}
+function gvSaveSave(data) {
+  try { localStorage.setItem(_GV_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+const MathEng = {
+  rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
+  shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  },
+  wrongs(correct, count, min, max) {
+    const pool = [];
+    for (let v = min; v <= max; v++) { if (v !== correct) pool.push(v); }
+    return this.shuffle(pool).slice(0, count);
+  },
+  genCount(range) {
+    range = range || [1, 5];
+    const ITEMS = ['\u{1F955}','⭐','\u{1F34E}','\u{1F423}','\u{1F338}','\u{1F353}','\u{1F33A}','\u{1F98B}','\u{1F34A}','\u{1F34B}'];
+    const ans = this.rnd(range[0], range[1]);
+    const item = ITEMS[this.rnd(0, ITEMS.length - 1)];
+    const wrongs = this.wrongs(ans, 3, Math.max(0, range[0] - 1), Math.min(range[1] + 2, 10));
+    const choices = this.shuffle([ans].concat(wrongs));
+    return { type: 'count', item, itemCount: ans, answer: ans, choices, question: 'Đếm xem có bao nhiêu?' };
+  },
+  genCompare(range) {
+    range = range || [1, 10];
+    const ITEMS = ['\u{1F34E}','\u{1F438}','\u{1F338}','\u{1F423}','\u{1F353}','\u{1F98B}','\u{1F33A}','\u{1F422}','\u{1F41E}','\u{1F33B}'];
+    const a = this.rnd(range[0], range[1]);
+    const b = this.rnd(range[0], range[1]);
+    const itemA = ITEMS[this.rnd(0, ITEMS.length - 1)];
+    let itemB;
+    do { itemB = ITEMS[this.rnd(0, ITEMS.length - 1)]; } while (itemB === itemA);
+    const correct = a > b ? '>' : (a < b ? '<' : '=');
+    return { type: 'compare', a, b, itemA, itemB, answer: correct, choices: ['>', '=', '<'] };
+  },
+  genAdd(range) {
+    range = range || [1, 10];
+    let a, b;
+    do {
+      a = this.rnd(1, range[1] - 1);
+      b = this.rnd(1, range[1] - a);
+    } while (a + b > range[1]);
+    const ans = a + b;
+    const wrongs = this.wrongs(ans, 3, 1, range[1]);
+    return { type: 'add', a, b, answer: ans, display: a + ' + ' + b + ' = ?', choices: this.shuffle([ans].concat(wrongs)) };
+  },
+  genSub(range) {
+    range = range || [1, 10];
+    let a, b;
+    do {
+      a = this.rnd(2, range[1]);
+      b = this.rnd(1, a - 1);
+    } while (a - b < 0 || a > range[1]);
+    const ans = a - b;
+    const wrongs = this.wrongs(ans, 3, 0, a);
+    return { type: 'sub', a, b, answer: ans, display: a + ' − ' + b + ' = ?', choices: this.shuffle([ans].concat(wrongs)) };
+  },
+  genArith(range) { return Math.random() > 0.5 ? this.genAdd(range) : this.genSub(range); },
+  batch(genFn, count) { return Array.from({length: count}, () => genFn()); }
+};
+
+const GV = {
+  current: null, state: null, save: gvLoadSave(),
+  _ctx: null,
+  getCtx() {
+    if (!this._ctx) { try { this._ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} }
+    return this._ctx;
+  },
+  playBeep(freq, dur, type, vol) {
+    freq = freq||440; dur = dur||0.15; type = type||'sine'; vol = vol||0.3;
+    const ctx = this.getCtx(); if (!ctx) return;
+    try {
+      const osc = ctx.createOscillator(), gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = type; osc.frequency.value = freq;
+      gain.gain.setValueAtTime(vol, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.start(); osc.stop(ctx.currentTime + dur);
+    } catch(e) {}
+  },
+  playCorrect() {
+    this.playBeep(523.25, 0.1); setTimeout(() => this.playBeep(659.25, 0.1), 100); setTimeout(() => this.playBeep(783.99, 0.2), 200);
+  },
+  playWrong() { this.playBeep(200, 0.3, 'sawtooth', 0.2); },
+  playStar() { [800,1000,1200,1000,1200].forEach((f,i) => setTimeout(() => this.playBeep(f, 0.08, 'sine', 0.2), i*80)); },
+  speak(text) {
+    if (!window.speechSynthesis) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'vi-VN'; u.rate = 0.85; u.pitch = 1.2; u.volume = 0.9;
+    window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+  },
+  initState(gameId, totalQ) {
+    this.current = gameId;
+    this.state = { gameId, questions:[], current:0, total:totalQ, score:0, stars:0, lives:3, streak:0, startTime:Date.now(), correct:0, answered:false };
+  },
+  updateProgress(id) {
+    const pct = this.state ? (this.state.current / this.state.total * 100) : 0;
+    const el = document.getElementById('g'+id+'Progress'); if (el) el.style.width = pct+'%';
+  },
+  updateHearts(id) {
+    const lives = this.state ? this.state.lives : 3;
+    const el = document.getElementById('g'+id+'Hearts'); if (!el) return;
+    el.innerHTML = '❤️'.repeat(Math.max(0,lives)) + '\u{1F5A4}'.repeat(Math.max(0,3-lives));
+  },
+  updateScore(id) {
+    const el = document.getElementById('g'+id+'Score'); if (el) el.innerHTML = this.state.stars + ' ⭐';
+  },
+  showFeedback(correct, msg, duration) {
+    duration = duration||900;
+    const fb=document.getElementById('gvFeedback'), bg=document.getElementById('gvFeedbackBg'),
+          icon=document.getElementById('gvFeedbackIcon'), text=document.getElementById('gvFeedbackText');
+    if (!fb) return;
+    bg.className = 'gv-feedback-bg ' + (correct ? 'correct' : 'wrong');
+    icon.textContent = correct ? '⭐' : '\u{1F605}';
+    text.textContent = msg || (correct ? 'Đúng rồi!' : 'Thử lại nhé!');
+    fb.classList.add('show');
+    setTimeout(() => fb.classList.remove('show'), duration);
+  },
+  flyStar(x, y) {
+    const el = document.createElement('div'); el.className = 'gv-fly-star'; el.textContent = '⭐';
+    el.style.left = (x||window.innerWidth/2)+'px'; el.style.top = (y||window.innerHeight/2)+'px';
+    document.body.appendChild(el); setTimeout(() => el.remove(), 1100);
+  },
+  praise: ['Xuất sắc! \u{1F389}', 'Bé giỏi quá!', 'Tuyệt vời!', 'Đúng rồi! ⭐', 'Giỏi lắm!', 'Thông minh quá!'],
+  getPraise() { return this.praise[Math.floor(Math.random()*this.praise.length)]; },
+  onCorrect(answerEl) {
+    if (!this.state) return;
+    this.state.correct++; this.state.streak++;
+    this.state.stars += this.state.streak >= 3 ? 2 : 1;
+    const elapsed = Date.now() - (this.state._qStart || Date.now());
+    this.state.score += 100 + Math.max(0, Math.floor(50*(1-elapsed/10000)));
+    this.playCorrect();
+    const praise = this.getPraise();
+    this.showFeedback(true, praise, 800);
+    if (answerEl) {
+      const r = answerEl.getBoundingClientRect();
+      for (let i=0; i<3; i++) setTimeout(() => this.flyStar(r.left+r.width/2+(Math.random()-.5)*60, r.top), i*150);
+    }
+    setTimeout(() => this.speak(this.state.streak>=3 ? 'Streak! '+this.state.streak+' liên tiếp!' : praise.replace(/[⭐\u{1F389}]/gu,'')), 200);
+  },
+  onWrong() {
+    if (!this.state) return;
+    this.state.lives--; this.state.streak = 0;
+    this.playWrong();
+    this.showFeedback(false, 'Ôi! Thử lại nhé \u{1F60A}', 700);
+    setTimeout(() => this.speak('Ôi! Thử lại nhé bé'), 100);
+    ['g1Hearts','g2Hearts','g3Hearts'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '❤️'.repeat(Math.max(0,this.state.lives)) + '\u{1F5A4}'.repeat(Math.max(0,3-this.state.lives));
+    });
+  },
+  showResult() {
+    const s = this.state, pct = s.correct/s.total;
+    const starCount = pct>=0.9 ? 3 : (pct>=0.7 ? 2 : 1);
+    const titles = ['Cố lên nhé!', 'Bé học tốt!', 'Xuất sắc! \u{1F3C6}'];
+    const subs = ['Chơi thêm để giỏi hơn nhé!','Bé làm rất tốt rồi đó!','Bé học thật chăm chỉ! Tuyệt vời!'];
+    document.getElementById('grStars').textContent = '⭐'.repeat(starCount);
+    document.getElementById('grTitle').textContent = titles[starCount-1];
+    document.getElementById('grSub').textContent = subs[starCount-1];
+    document.getElementById('grScore').textContent = s.stars;
+    document.getElementById('grPoints').textContent = s.score;
+    document.getElementById('vGameResult').classList.add('show');
+    const save = gvLoadSave(), key = 'game'+s.gameId+'_stars';
+    save[key] = Math.max(save[key]||0, starCount);
+    save.totalStars = (save.totalStars||0) + s.stars;
+    gvSaveSave(save); GV.save = save;
+    this.playStar();
+    this.speak(titles[starCount-1]+' '+s.correct+' câu đúng trên '+s.total+' câu!');
+  }
+};
+
+const GAME_CATALOG = [
+  { id:1, emoji:'\u{1F430}', name:'Thỏ Hái Cà Rốt', desc:'Đếm số lượng đồ vật', theme:'green', badge:'Mới', fn:'gvMoGame(1)' },
+  { id:2, emoji:'⚖️', name:'Cân Bằng Rừng Xanh', desc:'So sánh >, <, = hai nhóm', theme:'green', badge:null, fn:'gvMoGame(2)' },
+  { id:3, emoji:'\u{1F438}', name:'Ếch Nhảy Lá Sen', desc:'Cộng và trừ trong 10', theme:'blue', badge:null, fn:'gvMoGame(3)' },
+  { id:4, emoji:'\u{1F333}', name:'Cây Táo Kỳ Diệu', desc:'Tách và gộp số', theme:'orange', badge:'Sắp ra', fn:null, locked:true },
+  { id:5, emoji:'\u{1F3D7}️', name:'Thợ Xây Tí Hon', desc:'Nhận biết hình học', theme:'orange', badge:'Sắp ra', fn:null, locked:true },
+  { id:6, emoji:'\u{1F407}', name:'Thỏ Con Dỏng Tai', desc:'Nhận biết âm và vần', theme:'purple', badge:'Sắp ra', fn:null, locked:true }
+];
+
+function gvhDong() {
+  const hub=document.getElementById('vGameHub'); hub.classList.remove('active'); hub.style.display='';
+}
+function gvMoHub() {
+  GV.save = gvLoadSave();
+  const hub = document.getElementById('vGameHub'); hub.style.display='flex'; hub.classList.add('active');
+  const el = document.getElementById('gvhTotalStars'); if (el) el.textContent = GV.save.totalStars||0;
+  const grid = document.getElementById('gvhGrid');
+  grid.innerHTML = GAME_CATALOG.map(g => {
+    const stars = GV.save['game'+g.id+'_stars']||0;
+    const starStr = stars > 0 ? '⭐'.repeat(stars) : '☆☆☆';
+    const badge = g.badge ? '<div class="gvh-card-badge'+(g.badge==='\u4dới'?' new':'')+'">'+g.badge+'</div>' : '';
+    const locked = g.locked ? ' locked' : '';
+    const click = g.fn ? 'onclick="'+g.fn+'"' : '';
+    return '<div class="gvh-card theme-'+g.theme+locked+'" '+click+'>'+badge+'<div class="gvh-card-emoji">'+g.emoji+'</div><div class="gvh-card-name">'+g.name+'</div><div class="gvh-card-desc">'+g.desc+'</div><div class="gvh-card-stars">'+starStr+'</div></div>';
+  }).join('');
+}
+function gvMoGame(id) {
+  const hub=document.getElementById('vGameHub'); hub.classList.remove('active'); hub.style.display='';
+  if (id===1) g1Start(); else if (id===2) g2Start(); else if (id===3) g3Start();
+}
+function gvDongGame(id) {
+  const el=document.getElementById('vGame'+id); if (el) el.classList.remove('active');
+  document.getElementById('vGameResult').classList.remove('show');
+  gvMoHub();
+}
+function gvPlayAgain() {
+  document.getElementById('vGameResult').classList.remove('show');
+  const id=GV.state?GV.state.gameId:1;
+  if (id===1) g1Start(); else if (id===2) g2Start(); else if (id===3) g3Start();
+}
+function gvVeHub() {
+  document.getElementById('vGameResult').classList.remove('show');
+  if (GV.current) { const el=document.getElementById('vGame'+GV.current); if(el) el.classList.remove('active'); }
+  gvMoHub();
+}
+function moVuonGame() { gvMoHub(); }
+
+// GAME 1: THO HAI CA ROT
+const G1 = { TOTAL:8 };
+function g1Start() {
+  GV.initState(1, G1.TOTAL);
+  GV.state.questions = MathEng.batch(() => MathEng.genCount([1,7]), G1.TOTAL);
+  document.getElementById('vGame1').classList.add('active');
+  GV.updateProgress(1); GV.updateHearts(1); GV.updateScore(1);
+  GV.speak('Thỏ hái Cà rốt! Hãy đếm và chọn đáp án đúng nhé!');
+  setTimeout(() => g1ShowQ(0), 800);
+}
+function g1ShowQ(idx) {
+  const st=GV.state;
+  if (!st||idx>=G1.TOTAL) { GV.showResult(); return; }
+  st.current=idx; st.answered=false; st._qStart=Date.now(); GV.updateProgress(1);
+  const q=st.questions[idx];
+  document.getElementById('g1QuestionText').textContent = q.question+' \u{1F430}';
+  const area=document.getElementById('g1Items'); area.innerHTML='';
+  for (let i=0; i<q.itemCount; i++) {
+    const span=document.createElement('span'); span.className='g1-item';
+    span.style.animationDelay=(i*80)+'ms'; span.textContent=q.item; area.appendChild(span);
+  }
+  const ans=document.getElementById('g1Answers'); ans.innerHTML='';
+  q.choices.forEach(num => {
+    const btn=document.createElement('button'); btn.className='g1-ans-btn'; btn.textContent=num;
+    btn.onclick=()=>g1Answer(num,q.answer,btn); ans.appendChild(btn);
+  });
+}
+function g1Answer(chosen, correct, btn) {
+  if (GV.state.answered) return; GV.state.answered=true;
+  document.querySelectorAll('.g1-ans-btn').forEach(b=>b.disabled=true);
+  if (chosen===correct) {
+    btn.classList.add('correct'); GV.onCorrect(btn); GV.updateScore(1);
+    setTimeout(()=>g1ShowQ(GV.state.current+1), 1200);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.g1-ans-btn').forEach(b=>{if(parseInt(b.textContent)===correct)b.classList.add('correct');});
+    GV.onWrong(); GV.updateHearts(1);
+    if (GV.state.lives<=0) { setTimeout(()=>GV.showResult(),1000); }
+    else { setTimeout(()=>g1ShowQ(GV.state.current+1),1400); }
+  }
+}
+
+// GAME 2: CAN BANG RUNG XANH
+const G2 = { TOTAL:8 };
+function g2Start() {
+  GV.initState(2, G2.TOTAL);
+  GV.state.questions = MathEng.batch(() => MathEng.genCompare([1,9]), G2.TOTAL);
+  document.getElementById('vGame2').classList.add('active');
+  GV.updateProgress(2); GV.updateHearts(2); GV.updateScore(2);
+  GV.speak('Cân Bằng Rừng Xanh! Hãy so sánh hai bên cân và chọn dấu đúng!');
+  setTimeout(()=>g2ShowQ(0), 800);
+}
+function g2ShowQ(idx) {
+  const st=GV.state;
+  if (!st||idx>=G2.TOTAL) { GV.showResult(); return; }
+  st.current=idx; st.answered=false; st._qStart=Date.now(); GV.updateProgress(2);
+  const q=st.questions[idx];
+  const panL=document.getElementById('g2PanLeft'), panR=document.getElementById('g2PanRight');
+  panL.className='g2-scale-pan'; panR.className='g2-scale-pan';
+  const dN=n=>Math.min(n,9);
+  panL.innerHTML=Array(dN(q.a)).fill('<span class="g2-scale-item">'+q.itemA+'</span>').join('');
+  panR.innerHTML=Array(dN(q.b)).fill('<span class="g2-scale-item">'+q.itemB+'</span>').join('');
+  document.getElementById('g2NumLeft').textContent=q.a;
+  document.getElementById('g2NumRight').textContent=q.b;
+  setTimeout(()=>{
+    if(q.a>q.b){panL.classList.add('tilt-down');panR.classList.add('tilt-up');}
+    else if(q.a<q.b){panL.classList.add('tilt-up');panR.classList.add('tilt-down');}
+  },600);
+  document.querySelectorAll('.g2-ans-btn').forEach(b=>{b.disabled=false;b.className='g2-ans-btn';});
+  document.getElementById('g2QuestionText').textContent=q.a+' và '+q.b+': bên nào nhiều hơn?';
+}
+function g2TrlLoi(chosen) {
+  if (!GV.state||GV.state.answered) return; GV.state.answered=true;
+  const q=GV.state.questions[GV.state.current], correct=q.answer;
+  document.querySelectorAll('.g2-ans-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent.trim()===correct)b.classList.add('correct');
+    else if(b.textContent.trim()===chosen&&chosen!==correct)b.classList.add('wrong');
+  });
+  if(chosen===correct){GV.onCorrect(null);GV.updateScore(2);setTimeout(()=>g2ShowQ(GV.state.current+1),1200);}
+  else{GV.onWrong();GV.updateHearts(2);if(GV.state.lives<=0){setTimeout(()=>GV.showResult(),1000);}else{setTimeout(()=>g2ShowQ(GV.state.current+1),1400);}}
+}
+
+// GAME 3: ECH NHAY LA SEN
+const G3 = { TOTAL:8 };
+function g3Start() {
+  GV.initState(3, G3.TOTAL);
+  GV.state.questions = MathEng.batch(() => MathEng.genArith([1,10]), G3.TOTAL);
+  document.getElementById('vGame3').classList.add('active');
+  GV.updateProgress(3); GV.updateHearts(3); GV.updateScore(3);
+  GV.speak('Ếch Nhảy Lá Sen! Chọn lá sen có đáp án đúng để ếch nhảy tới!');
+  setTimeout(()=>g3ShowQ(0), 800);
+}
+function g3ShowQ(idx) {
+  const st=GV.state;
+  if (!st||idx>=G3.TOTAL) { GV.showResult(); return; }
+  st.current=idx; st.answered=false; st._qStart=Date.now();
+  GV.updateProgress(3);
+  const q=st.questions[idx];
+  document.getElementById('g3Equation').textContent=q.display;
+  const area=document.getElementById('g3Pads'); area.innerHTML='';
+  const sizes=['large','medium','large','medium'];
+  q.choices.forEach((num,i)=>{
+    const pad=document.createElement('button');
+    pad.className='g3-pad '+(sizes[i]||'medium');
+    pad.innerHTML='<span class="g3-pad-num">'+num+'</span><div class="g3-ripple"></div>';
+    if(i===0){const frog=document.createElement('div');frog.className='g3-frog';frog.id='g3Frog';frog.textContent='\u{1F438}';pad.appendChild(frog);}
+    pad.onclick=()=>g3Tap(num,q.answer,pad);
+    area.appendChild(pad);
+  });
+  const readEq=q.type==='add'?q.a+' cộng '+q.b+' bằng bao nhiêu?':q.a+' trừ '+q.b+' bằng bao nhiêu?';
+  setTimeout(()=>GV.speak(readEq),400);
+}
+function g3Tap(chosen, correct, padEl) {
+  if (!GV.state||GV.state.answered) return; GV.state.answered=true;
+  const oldFrog=document.getElementById('g3Frog'); if(oldFrog) oldFrog.remove();
+  const frog=document.createElement('div'); frog.id='g3Frog'; frog.className='g3-frog jump'; frog.textContent='\u{1F438}';
+  padEl.appendChild(frog);
+  document.querySelectorAll('.g3-pad').forEach(p=>p.disabled=true);
+  if(chosen===correct){
+    setTimeout(()=>padEl.classList.add('correct'),300);
+    GV.onCorrect(padEl); GV.updateScore(3);
+    setTimeout(()=>g3ShowQ(GV.state.current+1),1300);
+  } else {
+    setTimeout(()=>{
+      padEl.classList.add('wrong'); frog.textContent='\u{1F4A6}';
+      document.querySelectorAll('.g3-pad').forEach(p=>{
+        if(parseInt(p.querySelector('.g3-pad-num')?p.querySelector('.g3-pad-num').textContent:'')===correct)p.classList.add('correct');
+      });
+    },300);
+    GV.onWrong(); GV.updateHearts(3);
+    if(GV.state.lives<=0){setTimeout(()=>GV.showResult(),1200);}
+    else{setTimeout(()=>g3ShowQ(GV.state.current+1),1600);}
+  }
+}
+</script>
 </body>
 </html>
