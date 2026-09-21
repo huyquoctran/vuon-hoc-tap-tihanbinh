@@ -547,7 +547,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
     <div class="brand">
       <span id="brandAvatar" onclick="openTeacherProfile()" title="Hồ sơ giáo viên — bấm để chỉnh" style="cursor:pointer;flex-shrink:0"></span>
       <span>
-        <div class="bt" id="brandName">CÔ QUỲNH</div>
+        <div class="bt" id="brandName">GIÁO VIÊN</div>
         <div class="bs">VƯỜN HỌC TẬP</div>
       </span>
     </div>
@@ -828,7 +828,7 @@ function saveTeacher(t){localStorage.setItem('vg_teacher',JSON.stringify(t));}
 function refreshBrand(){
   const t=loadTeacher();
   const av=$('#brandAvatar'), nm=$('#brandName');
-  const displayName=(_profile&&_profile.ten)?_profile.ten:(t.name||'Cô Quỳnh');
+  const displayName=(_profile&&_profile.ten)?_profile.ten:(t.name||'Giáo viên');
   const avatarImg=(_profile&&_profile.avatar_url)?_profile.avatar_url:t.avatarImg;
   if(nm) nm.textContent=displayName.toUpperCase();
   document.title=displayName+' – Vườn Học Tập';
@@ -902,7 +902,7 @@ function openTeacherProfile(){
     </div>
     <input type="file" id="tcImgFile" accept="image/*" style="display:none">
     <label style="display:block;font-weight:700;font-size:.88rem;margin-bottom:5px;font-family:inherit">Tên giáo viên</label>
-    <input type="text" id="tcName" value="${t.name||''}" placeholder="Ví dụ: Cô Quỳnh"
+    <input type="text" id="tcName" value="${t.name||''}" placeholder="Ví dụ: Nguyễn Thị Lan"
       style="width:100%;box-sizing:border-box;padding:10px 14px;border-radius:12px;border:2px solid #e5e7eb;font-family:inherit;font-size:.97rem;margin-bottom:16px;outline:none;transition:border .15s"
       onfocus="this.style.borderColor='#9a7cf0'" onblur="this.style.borderColor='#e5e7eb'">
     <div style="display:flex;gap:10px">
@@ -914,7 +914,7 @@ function openTeacherProfile(){
   const wrap=ov.querySelector('#tcAvWrap'), fi=ov.querySelector('#tcImgFile');
   wrap.onclick=()=>fi.click();
   fi.onchange=()=>{const f=fi.files[0];if(!f)return;_resizeTcImg(f,u=>{pendingImg=u;wrap.innerHTML=`<img src="${u}" style="width:100%;height:100%;object-fit:cover"><div style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.4);text-align:center;font-size:.7rem;padding:3px 0;color:#fff">📷 Đổi ảnh</div>`;fi.value='';});};
-  ov.querySelector('#tcSave').onclick=()=>{const name=(ov.querySelector('#tcName').value.trim())||'Cô Quỳnh';saveTeacher({name,avatarImg:pendingImg});refreshBrand();ov.remove();};
+  ov.querySelector('#tcSave').onclick=()=>{const name=(ov.querySelector('#tcName').value.trim())||'Giáo viên';saveTeacher({name,avatarImg:pendingImg});refreshBrand();ov.remove();};
   setTimeout(()=>{const inp=ov.querySelector('#tcName');if(inp)inp.focus();},80);
 }
 
@@ -984,7 +984,7 @@ const sb=window.supabase?supabase.createClient(SUPA_URL,SUPA_KEY):null;
 let _profile=null;
 function isAdmin(){return _profile&&_profile.role==='admin';}
 function isGV(){return _profile&&(_profile.role==='giao_vien'||_profile.role==='admin'||_profile.role==='to_truong');}
-function tenGV(){return (_profile&&_profile.ten)?_profile.ten:(loadTeacher().name||'Cô Quỳnh');}
+function tenGV(){return (_profile&&_profile.ten)?_profile.ten:(loadTeacher().name||'Giáo viên');}
 if(sb){sb.auth.onAuthStateChange(function(event){if(event==='PASSWORD_RECOVERY'){_showPassReset();}});}
 function ac(){ if(!AC){ try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){} } 
   if(AC && AC.state==="suspended") AC.resume(); return AC; }
@@ -2727,7 +2727,7 @@ function vCo(){
     <div style="flex:1;min-width:240px">
       <h2>👩🏻‍🏫 ${tenGV()}</h2>
       <p style="font-weight:600;color:var(--ink-soft)">Cô là người bạn đồng hành của em trong Vườn Học Tập. Cô sẽ hướng dẫn, khen ngợi và nhắc em những điều cần nhớ.</p>
-      ${nutNghe("Chào em! Cô là cô Quỳnh. Mình cùng học, cùng chơi và cùng tiến bộ nhé!","Nghe cô chào","p")}
+      ${nutNghe("Chào em! Cô là "+tenGV()+". Mình cùng học, cùng chơi và cùng tiến bộ nhé!","Nghe cô chào","p")}
     </div>
   </div>
 
@@ -2805,7 +2805,7 @@ function chayCo(){
   $("#gvXuat").onclick=()=>{
     const blob=new Blob([JSON.stringify(docGV(),null,2)],{type:"application/json"});
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-    a.download="noi-dung-co-quynh.json"; a.click(); URL.revokeObjectURL(a.href);
+    a.download="noi-dung-giao-vien.json"; a.click(); URL.revokeObjectURL(a.href);
     phanHoi($("#gvFb"),true,"Đã xuất tệp nội dung.");
   };
   $("#gvNhap").onclick=()=>$("#gvFile").click();
@@ -2852,7 +2852,7 @@ function moCaiDatGiong(){
   $("#modalArt").textContent=""; $("#modalTitle").textContent=""; $("#modalText").innerHTML="";
   $("#modalBtns").innerHTML=""; $("#modalText").innerHTML=html; $("#modal").classList.add("on");
   const sel=$("#vSel"), rate=$("#vRate");
-  if(sel) sel.onchange=()=>{ST.voice=sel.value;save();doc("Xin chào em, cô là cô Quỳnh.");};
+  if(sel) sel.onchange=()=>{ST.voice=sel.value;save();doc("Xin chào em, cô là "+tenGV()+".");};
   rate.oninput=()=>{ST.rate=+rate.value;$("#vRateVal").textContent=ST.rate.toFixed(2);save();};
   $("#vTest").onclick=()=>{SFX.tap();doc("Bờ – an – ban. Bàn. Nhà em có cái bàn gỗ.");};
   $("#vOk").onclick=()=>{SFX.tap();dungDoc();dongModal();};
@@ -3160,7 +3160,7 @@ function chayViet(ch){bindWritingToolbar();const st=STROKES[ch];veLuoiOLi($('#gr
  function next(){if(idx>=ps.length){but.setAttribute('opacity','0');return}const p=ps[idx],L=p.getTotalLength(),dur=Math.max(700,L*8),li=$('#net'+idx);li&&li.classList.add('on');const s=p.getPointAtLength(0);ds.setAttribute('cx',s.x);ds.setAttribute('cy',s.y);ds.setAttribute('opacity','1');but.setAttribute('opacity','1');start=performance.now();elapsed=0;(function step(now){if(paused){start=now;raf=requestAnimationFrame(step);return}elapsed+=now-start;start=now;const k=Math.min(1,elapsed/dur);p.style.strokeDashoffset=L*(1-k);const q=p.getPointAtLength(L*k);but.setAttribute('transform',`translate(${q.x},${q.y})`);if(k<1)raf=requestAnimationFrame(step);else{const e=p.getPointAtLength(L);de.setAttribute('cx',e.x);de.setAttribute('cy',e.y);de.setAttribute('opacity','1');li&&li.classList.add('xong');idx++;setTimeout(next,350)}})(performance.now())}
  function play(){reset();next()} $('#bMau').onclick=play;$('#bLai').onclick=play;$('#bDung').onclick=()=>{paused=!paused;$('#bDung').textContent=paused?'▶️ Tiếp tục':'⏸️ Tạm dừng'};setTimeout(play,300)}
 function vTrangLuyen(){return crumb([["Trang chủ","#/"],["Luyện viết","#/viet"],["Tạo trang luyện",""]])+writingToolbar()+`<div class="stage"><h2>📄 Tạo trang luyện viết theo font chuẩn</h2><p class="cap">Nhập chữ, từ hoặc câu. Công cụ đặt mẫu chữ lên lưới ô li theo kiến trúc nền lưới + lớp chữ, giống nguyên lý của công cụ tham khảo.</p><textarea id="wsText" rows="3" style="width:100%;font:700 1.2rem var(--ff);padding:12px;border:2px solid var(--line);border-radius:14px">a ă â b c d đ e ê</textarea><div class="row" style="margin-top:10px"><button class="btn g sm" id="wsMake">✨ Tạo trang</button><button class="btn b sm" id="wsPng">⬇️ Lưu PNG</button></div><div class="ws-preview" style="margin-top:12px"><canvas id="wsCanvas" class="ws-canvas" width="1200" height="1680"></canvas></div></div>`}
-function chayTrangLuyen(){bindWritingToolbar();const cv=$('#wsCanvas'),ctx=cv.getContext('2d');function draw(){const text=$('#wsText').value.normalize('NFC');ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);const left=80,top=100,rowH=200,cell=50;ctx.strokeStyle='#d8e3f2';ctx.lineWidth=1;for(let y=top;y<cv.height-80;y+=cell){ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(cv.width-60,y);ctx.stroke()}for(let x=left;x<cv.width-60;x+=cell){ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,cv.height-80);ctx.stroke()}for(let y=top+150;y<cv.height-80;y+=rowH){ctx.strokeStyle='#e77a99';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(cv.width-60,y);ctx.stroke()}ctx.fillStyle='#625282';ctx.globalAlpha=.28;ctx.font=`150px '${WRITING_V4.fontName}','HP001 4 hang',cursive`;ctx.textBaseline='alphabetic';const words=text.split(/\s+/);let x=left+30,y=top+150;for(const w of words){const z=ctx.measureText(w+' ').width;if(x+z>cv.width-90){x=left+30;y+=rowH}if(y>cv.height-100)break;ctx.fillText(w,x,y);x+=z}ctx.globalAlpha=1}$('#wsMake').onclick=draw;$('#wsPng').onclick=()=>{draw();const a=document.createElement('a');a.download='trang-luyen-viet-co-quynh.png';a.href=cv.toDataURL('image/png');a.click()};draw()}
+function chayTrangLuyen(){bindWritingToolbar();const cv=$('#wsCanvas'),ctx=cv.getContext('2d');function draw(){const text=$('#wsText').value.normalize('NFC');ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);const left=80,top=100,rowH=200,cell=50;ctx.strokeStyle='#d8e3f2';ctx.lineWidth=1;for(let y=top;y<cv.height-80;y+=cell){ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(cv.width-60,y);ctx.stroke()}for(let x=left;x<cv.width-60;x+=cell){ctx.beginPath();ctx.moveTo(x,top);ctx.lineTo(x,cv.height-80);ctx.stroke()}for(let y=top+150;y<cv.height-80;y+=rowH){ctx.strokeStyle='#e77a99';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(cv.width-60,y);ctx.stroke()}ctx.fillStyle='#625282';ctx.globalAlpha=.28;ctx.font=`150px '${WRITING_V4.fontName}','HP001 4 hang',cursive`;ctx.textBaseline='alphabetic';const words=text.split(/\s+/);let x=left+30,y=top+150;for(const w of words){const z=ctx.measureText(w+' ').width;if(x+z>cv.width-90){x=left+30;y+=rowH}if(y>cv.height-100)break;ctx.fillText(w,x,y);x+=z}ctx.globalAlpha=1}$('#wsMake').onclick=draw;$('#wsPng').onclick=()=>{draw();const a=document.createElement('a');a.download='trang-luyen-viet.png';a.href=cv.toDataURL('image/png');a.click()};draw()}
 
 const _oldVeTrang=veTrang;
 
