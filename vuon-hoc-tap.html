@@ -14235,6 +14235,71 @@ window.sbQuizCheck = function(btn, idx, dung) {
 /* ---- Teacher management overlay ---- */
 let _qlStories = [];
 let _csType = 'text';
+const _CS_DEFAULT_CATS = ['Cổ tích','Khoa học','Đạo đức','Thiên nhiên','Toán vui','Tiếng Việt'];
+
+async function qlLoadCategories() {
+  if (!sb) return;
+  const { data } = await sb.from('stories').select('category');
+  const fromDB = [...new Set((data||[]).map(function(r){return r.category;}).filter(Boolean))];
+  const all = [..._CS_DEFAULT_CATS];
+  fromDB.forEach(function(c){ if(!all.includes(c)) all.push(c); });
+  const filter = document.getElementById('qlFilterCat');
+  if (filter) {
+    const curr = filter.value;
+    filter.innerHTML = '<option value="">Tất cả danh mục</option>' +
+      all.map(function(c){return '<option value="'+c+'"'+(c===curr?' selected':'')+'>'+c+'</option>';}).join('');
+  }
+  const cscat = document.getElementById('csCategory');
+  if (cscat) {
+    const curr = cscat.value && cscat.value !== '__new__' ? cscat.value : all[0];
+    cscat.innerHTML = all.map(function(c){return '<option value="'+c+'"'+(c===curr?' selected':'')+'>'+c+'</option>';}).join('') +
+      '<option value="__new__">➕ Tạo danh mục mới...</option>';
+  }
+}
+
+window.csOnCategoryChange = function() {
+  const sel = document.getElementById('csCategory');
+  const inp = document.getElementById('csNewCatInput');
+  const act = document.getElementById('csNewCatActions');
+  if (!sel||!inp||!act) return;
+  if (sel.value === '__new__') {
+    inp.style.display = 'block';
+    act.style.display = 'flex';
+    inp.focus();
+  } else {
+    inp.style.display = 'none';
+    act.style.display = 'none';
+  }
+};
+
+window.csConfirmNewCat = function() {
+  const inp = document.getElementById('csNewCatInput');
+  const name = inp.value.trim();
+  if (!name) { inp.focus(); return; }
+  const sel = document.getElementById('csCategory');
+  const opt = document.createElement('option');
+  opt.value = name; opt.textContent = name;
+  sel.insertBefore(opt, sel.querySelector('[value="__new__"]'));
+  sel.value = name;
+  inp.value = '';
+  inp.style.display = 'none';
+  document.getElementById('csNewCatActions').style.display = 'none';
+  const filter = document.getElementById('qlFilterCat');
+  if (filter && !filter.querySelector('option[value="'+name+'"]')) {
+    const fopt = document.createElement('option');
+    fopt.value = name; fopt.textContent = name;
+    filter.appendChild(fopt);
+  }
+};
+
+window.csCancelNewCat = function() {
+  const sel = document.getElementById('csCategory');
+  if (sel) sel.value = _CS_DEFAULT_CATS[0];
+  const inp = document.getElementById('csNewCatInput');
+  const act = document.getElementById('csNewCatActions');
+  if (inp) inp.style.display = 'none';
+  if (act) act.style.display = 'none';
+};
 
 document.addEventListener('DOMContentLoaded', function() {
   const inp = 'width:100%;box-sizing:border-box;padding:9px 13px;border-radius:10px;border:2px solid #e5e7eb;font-family:inherit;font-size:.93rem;margin-bottom:8px;outline:none';
@@ -14251,6 +14316,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <option>Cổ tích</option><option>Khoa học</option><option>Đạo đức</option>
       <option>Thiên nhiên</option><option>Toán vui</option><option>Tiếng Việt</option>
     </select>
+
   </div>
   <div id="qlStoryList" style="padding:0 16px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;"></div>
 </div>
@@ -14263,7 +14329,12 @@ document.addEventListener('DOMContentLoaded', function() {
       <label style="flex:1;"><span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Biểu tượng</span>
         <input id="csEmoji" value="📖" style="${inp}"></label>
       <label style="flex:2;"><span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Danh mục</span>
-        <select id="csCategory" style="${inp}"><option>Cổ tích</option><option>Khoa học</option><option>Đạo đức</option><option>Thiên nhiên</option><option>Toán vui</option><option>Tiếng Việt</option></select></label>
+        <select id="csCategory" onchange="csOnCategoryChange()" style="${inp}"><option>Cổ tích</option><option>Khoa học</option><option>Đạo đức</option><option>Thiên nhiên</option><option>Toán vui</option><option>Tiếng Việt</option><option value="__new__">➕ Tạo danh mục mới...</option></select>
+        <input id="csNewCatInput" placeholder="Tên danh mục mới..." onkeydown="if(event.key==='Enter'){event.preventDefault();csConfirmNewCat();}" style="display:none;width:100%;border:1px solid #10b981;border-radius:10px;padding:10px;font-size:.9rem;box-sizing:border-box;margin-top:6px;font-family:inherit;">
+        <div id="csNewCatActions" style="display:none;gap:8px;margin-top:6px;">
+          <button type="button" onclick="csConfirmNewCat()" style="padding:6px 14px;border-radius:8px;border:none;background:#10b981;color:#fff;cursor:pointer;font-size:.85rem;font-weight:600;">Xác nhận</button>
+          <button type="button" onclick="csCancelNewCat()" style="padding:6px 14px;border-radius:8px;border:1px solid #d1d5db;background:#fff;cursor:pointer;font-size:.85rem;">Hủy</button>
+        </div></label>
     </div>
     <label style="display:block;margin-bottom:12px;"><span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Loại nội dung</span>
       <div style="display:flex;gap:8px;">
@@ -14312,6 +14383,7 @@ window.moQuanLyCauChuyen = async function() {
   document.body.style.overflow = 'hidden';
   if (_profile && sb) await storyMigrateLocal();
   _qlStories = await storyGetAll();
+  await qlLoadCategories();
   qlRenderList();
 };
 
