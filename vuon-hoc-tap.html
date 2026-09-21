@@ -905,7 +905,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 /* ---- BADGE NOTIFICATION ---- */
 .gv-badge-toast {
   position: fixed;
-  bottom: 80px; left: 50%;
+  bottom: 16px; left: 50%;
   transform: translateX(-50%) translateY(100px);
   background: linear-gradient(135deg, #065f46, #047857);
   border: 2px solid #10b981;
@@ -919,7 +919,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
   min-width: 280px;
 }
 .gv-badge-toast.show { transform: translateX(-50%) translateY(0); }
-.gv-badge-toast-icon { font-size: 2.5rem; display: block; margin-bottom: 6px; }
+.gv-badge-toast-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
 .gv-badge-toast-title { font-size: .8rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 1px; }
 .gv-badge-toast-name { font-size: 1.3rem; font-weight: 900; margin: 4px 0; }
 .gv-badge-toast-desc { font-size: .85rem; color: #d1fae5; }
@@ -3089,9 +3089,10 @@ function chayGame(id){
     let van=0; const tong=6;
     (function v(){
       if(van>=tong) return xongGame(id,"Em đã xây xong cây cầu!");
-      const a=nn(1,6),b=nn(1,Math.min(4,10-a)),cong=Math.random()<.6;
-      const kq=cong?a+b:Math.max(0,a-b);
-      const ds=tron([kq,kq+1,Math.max(0,kq-1)].filter((x,i,arr)=>arr.indexOf(x)===i)).map(String);
+      const cong=Math.random()<.6;
+      const a=cong?nn(1,6):nn(2,9), b=cong?nn(1,Math.min(4,10-a)):nn(1,a);
+      const kq=cong?a+b:a-b;
+      const ds=tron([kq,kq+1,kq>=1?kq-1:kq+2].filter((x,i,arr)=>arr.indexOf(x)===i)).map(String);
       stage.innerHTML=`<div class="row center"><span class="pill">🌉 Ván cầu ${van}/${tong}</span></div>
         <svg viewBox="0 0 320 90" style="width:100%;max-width:460px;display:block;margin:8px auto">
           <rect x="0" y="60" width="40" height="30" fill="#8fe0b1"/><rect x="280" y="60" width="40" height="30" fill="#8fe0b1"/>
@@ -3138,7 +3139,7 @@ function theGhiNho(g){
   return `<button class="tile" style="text-align:left;padding:18px" onclick="SFX.tap();doc(${JSON.stringify(t).replace(/"/g,"&quot;")})">
     <div style="font-size:2rem">${g.icon}</div><b style="font-size:1.05rem">${esc(g.ten)}</b>
     <div class="cap" style="margin-top:4px">${esc(g.noi)}</div>
-    <div class="big-letter" style="font-size:1.25rem;text-align:left;margin-top:8px;color:var(--purple-d)">${esc(g.vd)}</div>
+    <div class="big-letter" style="font-size:1.25rem;text-align:left;margin-top:8px;color:var(--purple-d);font-family:Arial,'Times New Roman',sans-serif">${esc(g.vd)}</div>
     <div class="cap" style="margin-top:6px">🔊 Bấm để nghe cô đọc</div></button>`;
 }
 
@@ -12941,7 +12942,7 @@ function gvSaveSave(data) {
   try { localStorage.setItem(_GV_KEY, JSON.stringify(data)); } catch(e) {}
 }
 
-const MathEng = {
+window.MathEng = {
   rnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; },
   shuffle(arr) {
     const a = arr.slice();
@@ -13002,7 +13003,7 @@ const MathEng = {
   batch(genFn, count) { return Array.from({length: count}, () => genFn()); }
 };
 
-const GV = {
+window.GV = {
   current: null, state: null, save: gvLoadSave(),
   _ctx: null,
   getCtx() {
@@ -13112,7 +13113,7 @@ const GV = {
   }
 };
 
-const GAME_CATALOG = [
+window.GAME_CATALOG = [
   { id:1, emoji:'\u{1F430}', name:'Thỏ Hái Cà Rốt', desc:'Đếm số lượng đồ vật', theme:'green', badge:'Mới', fn:'gvMoGame(1)' },
   { id:2, emoji:'⚖️', name:'Cân Bằng Rừng Xanh', desc:'So sánh >, <, = hai nhóm', theme:'green', badge:null, fn:'gvMoGame(2)' },
   { id:3, emoji:'\u{1F438}', name:'Ếch Nhảy Lá Sen', desc:'Cộng và trừ trong 10', theme:'blue', badge:null, fn:'gvMoGame(3)' },
@@ -13132,7 +13133,7 @@ function gvMoHub() {
   grid.innerHTML = GAME_CATALOG.map(g => {
     const stars = GV.save['game'+g.id+'_stars']||0;
     const starStr = stars > 0 ? '⭐'.repeat(stars) : '☆☆☆';
-    const badge = g.badge ? '<div class="gvh-card-badge'+(g.badge==='\u4dới'?' new':'')+'">'+g.badge+'</div>' : '';
+    const badge = g.badge ? '<div class="gvh-card-badge'+(g.badge==='Mới'?' new':'')+'">'+g.badge+'</div>' : '';
     const locked = g.locked ? ' locked' : '';
     const click = g.fn ? 'onclick="'+g.fn+'"' : '';
     return '<div class="gvh-card theme-'+g.theme+locked+'" '+click+'>'+badge+'<div class="gvh-card-emoji">'+g.emoji+'</div><div class="gvh-card-name">'+g.name+'</div><div class="gvh-card-desc">'+g.desc+'</div><div class="gvh-card-stars">'+starStr+'</div></div>';
@@ -13979,7 +13980,7 @@ function g9Answer(chosen,correct,btn){
 // Streak tracking, Badges, Daily Challenge, Mascot Chú Ong
 // Author: Huy Tran | Cadence Design Systems Vietnam
 // ============================================================
-const BADGES = [
+const GV5_BADGES = [
   { id:'first_win', icon:'🌟', name:'Bé Giỏi Đầu Tiên', desc:'Hoàn thành trò chơi đầu tiên', check:s=>(s.gamesCompleted||0)>=1 },
   { id:'streak_5', icon:'🔥', name:'Tay Nhanh Mắt Sáng', desc:'5 câu đúng liên tiếp trong một lần', check:s=>(s.maxStreak||0)>=5 },
   { id:'streak_10', icon:'⚡', name:'Thánh Tính Nhẩm', desc:'10 câu đúng liên tiếp — cực kỳ giỏi!', check:s=>(s.maxStreak||0)>=10 },
@@ -14019,10 +14020,10 @@ let _gv5StreakTimer=null;
 function gv5ShowStreak(n){const el=document.getElementById('gv5StreakPopup');const num=document.getElementById('gv5StreakNum');if(!el)return;if(num)num.textContent=n;el.classList.add('show');clearTimeout(_gv5StreakTimer);_gv5StreakTimer=setTimeout(()=>el.classList.remove('show'),2200);}
 function gv5HideStreak(){const el=document.getElementById('gv5StreakPopup');if(el)el.classList.remove('show');}
 let _gv5BadgeTimer=null;
-function gv5CheckBadges(){const s=gvLoadSave();BADGES.forEach(badge=>{if(s['badge_'+badge.id])return;if(badge.check(s)){s['badge_'+badge.id]=Date.now();gvSaveSave(s);GV.save=s;gv5ShowBadgeToast(badge);}});}
+function gv5CheckBadges(){const s=gvLoadSave();GV5_BADGES.forEach(badge=>{if(s['badge_'+badge.id])return;if(badge.check(s)){s['badge_'+badge.id]=Date.now();gvSaveSave(s);GV.save=s;gv5ShowBadgeToast(badge);}});}
 function gv5ShowBadgeToast(badge){const toast=document.getElementById('gv5BadgeToast');const icon=document.getElementById('gv5ToastIcon');const name=document.getElementById('gv5ToastName');const desc=document.getElementById('gv5ToastDesc');if(!toast)return;if(icon)icon.textContent=badge.icon;if(name)name.textContent=badge.name;if(desc)desc.textContent=badge.desc;toast.classList.add('show');GV.playStar();GV.speak('Chúc mừng! Huy hiệu mới: '+badge.name);clearTimeout(_gv5BadgeTimer);_gv5BadgeTimer=setTimeout(()=>toast.classList.remove('show'),4000);}
 (function(){const origResult=GV.showResult.bind(GV);GV.showResult=function(){origResult();const s=gvLoadSave();s.gamesCompleted=(s.gamesCompleted||0)+1;if(GV.state&&GV.state.streak>(s.maxStreak||0))s.maxStreak=GV.state.streak;gvSaveSave(s);GV.save=s;setTimeout(()=>gv5CheckBadges(),500);};})();
-function gv5MoBadges(){const screen=document.getElementById('vBadges');if(!screen)return;screen.classList.add('active');const s=gvLoadSave();const grid=document.getElementById('gv5BadgesGrid');if(!grid)return;grid.innerHTML=BADGES.map(b=>{const earned=!!s['badge_'+b.id];const earnedDate=earned?new Date(s['badge_'+b.id]).toLocaleDateString('vi-VN'):null;return`<div class="badge-card${earned?' earned':''}">\n<div class="badge-card-icon">${b.icon}</div>\n<div class="badge-card-name">${b.name}</div>\n<div class="badge-card-desc">${b.desc}</div>\n${earned?`<div class="badge-lock" style="color:#10b981;font-size:.7rem;">Đạt được ${earnedDate}</div>`:'<div class="badge-lock">🔒 Chưa đạt</div>'}\n</div>`;}).join('');}
+function gv5MoBadges(){const screen=document.getElementById('vBadges');if(!screen)return;screen.classList.add('active');const s=gvLoadSave();const grid=document.getElementById('gv5BadgesGrid');if(!grid)return;grid.innerHTML=GV5_BADGES.map(b=>{const earned=!!s['badge_'+b.id];const earnedDate=earned?new Date(s['badge_'+b.id]).toLocaleDateString('vi-VN'):null;return`<div class="badge-card${earned?' earned':''}">\n<div class="badge-card-icon">${b.icon}</div>\n<div class="badge-card-name">${b.name}</div>\n<div class="badge-card-desc">${b.desc}</div>\n${earned?`<div class="badge-lock" style="color:#10b981;font-size:.7rem;">Đạt được ${earnedDate}</div>`:'<div class="badge-lock">🔒 Chưa đạt</div>'}\n</div>`;}).join('');}
 function gv5DongBadges(){const screen=document.getElementById('vBadges');if(screen)screen.classList.remove('active');gvMoHub();}
 function gv5IsDailyDone(){const s=gvLoadSave();const today=new Date().toISOString().slice(0,10);return s.dailyDate===today;}
 function gv5DailyGameId(){const dayOfYear=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/86400000);return(dayOfYear%9)+1;}
@@ -14044,7 +14045,7 @@ function gv5StartDaily(){if(gv5IsDailyDone()){GV.speak('Hôm nay bé đã hoàn 
     dailyEl.innerHTML=`<div class="gvh-daily-icon">${dailyDone?'✅':'🌟'}</div><div class="gvh-daily-text"><div class="gvh-daily-title">Thử Thách Hôm Nay</div><div class="gvh-daily-sub">${dailyGame?dailyGame.name:'Trò chơi ngày hôm nay'}</div></div><div class="gvh-daily-badge${dailyDone?' gvh-daily-done':''}">${dailyDone?'✓ Xong':'+2⭐'}</div>`;
     const mascotEl=document.createElement('div');mascotEl.className='gvh-mascot-level';
     mascotEl.innerHTML=`<div class="gvh-mascot-emoji">${mascot.emoji}</div><div class="gvh-mascot-info"><div class="gvh-mascot-name">${mascot.name}</div><div class="gvh-mascot-xp-wrap"><div class="gvh-mascot-xp-fill" style="width:${xpPct}%"></div></div></div><div class="gvh-mascot-lvl">Lv.${mascot.level}</div>`;
-    const earned=BADGES.filter(b=>s['badge_'+b.id]).length;
+    const earned=GV5_BADGES.filter(b=>s['badge_'+b.id]).length;
     const gamesPlayed=[1,2,3,4,5,6,7,8,9].filter(id=>s['game'+id+'_stars']).length;
     const statsEl=document.createElement('div');statsEl.className='gvh-stats-row';
     statsEl.innerHTML=`<div class="gvh-stat-chip"><div class="sv">⭐${stars}</div><div class="sl">Sao</div></div><div class="gvh-stat-chip"><div class="sv">🔥${s.maxStreak||0}</div><div class="sl">Streak cao</div></div><div class="gvh-stat-chip"><div class="sv">🏅${earned}</div><div class="sl">Huy hiệu</div></div><div class="gvh-stat-chip"><div class="sv">🎮${gamesPlayed}</div><div class="sl">Trò đã chơi</div></div>`;
