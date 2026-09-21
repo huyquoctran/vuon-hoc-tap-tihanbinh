@@ -568,6 +568,16 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 .gvh-card.theme-blue  { border-color:#93c5fd; }
 .gvh-card.theme-orange{ border-color:#fcd34d; }
 .gvh-card.theme-purple{ border-color:#c4b5fd; }
+.gvh-card.theme-teal  { border-color:#5eead4; }
+.gvh-card.theme-indigo{ border-color:#a5b4fc; }
+.gvh-card.theme-pink  { border-color:#f9a8d4; }
+.gvh-card.theme-yellow{ border-color:#fde68a; }
+.gvh-card.theme-red   { border-color:#fca5a5; }
+.gvh-section-hdr { grid-column:1/-1; display:flex; align-items:center; gap:12px; padding:14px 4px 6px; border-top:1px solid rgba(255,255,255,.18); margin-top:4px; }
+.gvh-section-hdr:first-child { border-top:none; margin-top:0; }
+.gvh-section-icon { font-size:1.8rem; }
+.gvh-section-title { color:#fff; font-size:1.05rem; font-weight:800; }
+.gvh-section-sub { color:rgba(255,255,255,.7); font-size:.8rem; margin-top:2px; }
 .gvh-back-btn { background:rgba(255,255,255,.2); border:none; color:#fff; border-radius:12px; padding:10px 18px; cursor:pointer; font-size:.9rem; margin:0 16px 16px; align-self:flex-start; }
 
 /* ---- SHARED GAME FRAMEWORK ---- */
@@ -13117,12 +13127,19 @@ window.GV = {
 };
 
 window.GAME_CATALOG = [
-  { id:1, emoji:'\u{1F430}', name:'Thỏ Hái Cà Rốt', desc:'Đếm số lượng đồ vật', theme:'green', badge:'Mới', fn:'gvMoGame(1)' },
-  { id:2, emoji:'⚖️', name:'Cân Bằng Rừng Xanh', desc:'So sánh >, <, = hai nhóm', theme:'green', badge:null, fn:'gvMoGame(2)' },
-  { id:3, emoji:'\u{1F438}', name:'Ếch Nhảy Lá Sen', desc:'Cộng và trừ trong 10', theme:'blue', badge:null, fn:'gvMoGame(3)' },
-  { id:4, emoji:'\u{1F333}', name:'Cây Táo Kỳ Diệu', desc:'Tách và gộp số', theme:'orange', badge:'Sắp ra', fn:null, locked:true },
-  { id:5, emoji:'\u{1F3D7}️', name:'Thợ Xây Tí Hon', desc:'Nhận biết hình học', theme:'orange', badge:'Sắp ra', fn:null, locked:true },
-  { id:6, emoji:'\u{1F407}', name:'Thỏ Con Dỏng Tai', desc:'Nhận biết âm và vần', theme:'purple', badge:'Sắp ra', fn:null, locked:true }
+  { id:1, emoji:'🐰', name:'Thỏ Hái Cà Rốt', desc:'Đếm số lượng đồ vật', theme:'green', badge:'Mới', fn:'gvMoGame(1)', section:'hoc' },
+  { id:2, emoji:'⚖️', name:'Cân Bằng Rừng Xanh', desc:'So sánh >, <, = hai nhóm', theme:'green', badge:null, fn:'gvMoGame(2)', section:'hoc' },
+  { id:3, emoji:'🐸', name:'Ếch Nhảy Lá Sen', desc:'Cộng và trừ trong 10', theme:'blue', badge:null, fn:'gvMoGame(3)', section:'hoc' },
+  { id:4, emoji:'🌳', name:'Cây Táo Kỳ Diệu', desc:'Tách và gộp số', theme:'orange', badge:'Sắp ra', fn:null, locked:true, section:'hoc' },
+  { id:5, emoji:'🏗️', name:'Thợ Xây Tí Hon', desc:'Nhận biết hình học', theme:'orange', badge:'Sắp ra', fn:null, locked:true, section:'hoc' },
+  { id:6, emoji:'🐇', name:'Thỏ Con Dỏng Tai', desc:'Nhận biết âm và vần', theme:'purple', badge:'Sắp ra', fn:null, locked:true, section:'hoc' },
+  { id:'old_sanchu', emoji:'🔤', name:'Săn Chữ', desc:'Nhận diện nhanh mặt chữ cái', theme:'purple', badge:null, fn:"gvhDong();sangTrang('#/choi/sanchu')", section:'choi' },
+  { id:'old_timvan', emoji:'🌸', name:'Tìm Vần', desc:'Nhận ra tiếng có vần đã học', theme:'pink', badge:null, fn:"gvhDong();sangTrang('#/choi/timvan')", section:'choi' },
+  { id:'old_noicap', emoji:'🔗', name:'Nối Cặp', desc:'Nối từ với hình ảnh đúng', theme:'teal', badge:null, fn:"gvhDong();sangTrang('#/choi/noicap')", section:'choi' },
+  { id:'old_latthe', emoji:'🃏', name:'Lật Thẻ Ghi Nhớ', desc:'Ghi nhớ chữ và hình ảnh', theme:'indigo', badge:null, fn:"gvhDong();sangTrang('#/choi/latthe')", section:'choi' },
+  { id:'old_xaycau', emoji:'🌉', name:'Xây Cầu', desc:'Cộng trừ trong phạm vi 10', theme:'blue', badge:null, fn:"gvhDong();sangTrang('#/choi/xaycau')", section:'choi' },
+  { id:'old_khobau', emoji:'🗝️', name:'Mở Kho Báu', desc:'Ôn tổng hợp Tiếng Việt và Toán', theme:'yellow', badge:null, fn:"gvhDong();sangTrang('#/choi/khobau')", section:'choi' },
+  { id:'old_vuonvan', emoji:'🌈', name:'Vườn Vần', desc:'5 trò chơi – 125 vần lớp 1', theme:'green', badge:null, fn:"gvhDong();sangTrang('#/choi/vuonvan')", section:'choi' },
 ];
 
 function gvhDong() {
@@ -13133,14 +13150,25 @@ function gvMoHub() {
   const hub = document.getElementById('vGameHub'); hub.style.display='flex'; hub.classList.add('active');
   const el = document.getElementById('gvhTotalStars'); if (el) el.textContent = GV.save.totalStars||0;
   const grid = document.getElementById('gvhGrid');
-  grid.innerHTML = GAME_CATALOG.map(g => {
+  let html = ''; let lastSection = null;
+  GAME_CATALOG.forEach(function(g) {
+    if (g.section && g.section !== lastSection) {
+      lastSection = g.section;
+      if (g.section === 'hoc') {
+        html += '<div class="gvh-section-hdr"><span class="gvh-section-icon">🌟</span><div><div class="gvh-section-title">Trò Chơi Học Tập</div><div class="gvh-section-sub">Toán & Tiếng Việt Lớp 1</div></div></div>';
+      } else {
+        html += '<div class="gvh-section-hdr"><span class="gvh-section-icon">🎮</span><div><div class="gvh-section-title">Trò Chơi Vui</div><div class="gvh-section-sub">Khám phá thêm trò chơi</div></div></div>';
+      }
+    }
+    const isOld = typeof g.id === 'string';
     const stars = GV.save['game'+g.id+'_stars']||0;
-    const starStr = stars > 0 ? '⭐'.repeat(stars) : '☆☆☆';
+    const starStr = isOld ? '<span style="font-size:.75rem;color:#94a3b8">Chơi ngay ▶</span>' : (stars > 0 ? '⭐'.repeat(stars) : '☆☆☆');
     const badge = g.badge ? '<div class="gvh-card-badge'+(g.badge==='Mới'?' new':'')+'">'+g.badge+'</div>' : '';
     const locked = g.locked ? ' locked' : '';
     const click = g.fn ? 'onclick="'+g.fn+'"' : '';
-    return '<div class="gvh-card theme-'+g.theme+locked+'" '+click+'>'+badge+'<div class="gvh-card-emoji">'+g.emoji+'</div><div class="gvh-card-name">'+g.name+'</div><div class="gvh-card-desc">'+g.desc+'</div><div class="gvh-card-stars">'+starStr+'</div></div>';
-  }).join('');
+    html += '<div class="gvh-card theme-'+g.theme+locked+'" '+click+'>'+badge+'<div class="gvh-card-emoji">'+g.emoji+'</div><div class="gvh-card-name">'+g.name+'</div><div class="gvh-card-desc">'+g.desc+'</div><div class="gvh-card-stars">'+starStr+'</div></div>';
+  });
+  grid.innerHTML = html;
 }
 function gvMoGame(id) {
   const hub=document.getElementById('vGameHub'); hub.classList.remove('active'); hub.style.display='';
