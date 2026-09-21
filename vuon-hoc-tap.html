@@ -5,8 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Vườn Học Tập Cô Quỳnh – Cùng học, cùng chơi, cùng tiến bộ. Website học Tiếng Việt và Toán cho học sinh lớp 1.">
-<title>Vườn Học Tập – V4 Font-first</title>
+<meta name="description" content="Vườn Học Tập Tiểu Học An Bình – Cùng học, cùng chơi, cùng tiến bộ. Website học Tiếng Việt và Toán cho học sinh lớp 1.">
+<title>Vườn Học Tập - Tiểu Học An Bình</title>
 <!-- Author: Huy Tran | Created: 2026-09-13 | Revision: V4 Font-first clean-room architecture -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -926,12 +926,13 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
   z-index: 9800;
   transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s;
   opacity: 0;
+  pointer-events: none;
   box-shadow: 0 16px 48px rgba(0,0,0,.5);
   min-width: 260px;
   max-width: 320px;
 }
-.gv-badge-toast.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-.gv-badge-toast::before { content:''; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:-1; border-radius:0; }
+.gv-badge-toast.show { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+.gv-badge-toast.show::before { content:''; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:-1; border-radius:0; }
 .gv-badge-toast-icon { font-size: 4rem; display: block; margin-bottom: 12px; }
 .gv-badge-toast-title { font-size: .9rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 1px; }
 .gv-badge-toast-name { font-size: 1.5rem; font-weight: 900; margin: 8px 0 6px; }
