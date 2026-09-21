@@ -1064,7 +1064,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
       <span class="pill" id="starPill" title="Ngôi sao tiến bộ">⭐ <b id="starCount">0</b></span>
       <button class="icon-btn" id="btnVoice" title="Chọn giọng đọc" aria-label="Chọn giọng đọc">🗣️</button>
       <button class="icon-btn" id="btnSound" title="Bật/tắt âm thanh" aria-label="Bật hoặc tắt âm thanh">🔊</button>
-      <button class="td-nav-btn" onclick="tdMo()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;margin-right:4px">&#127942; Thi Dau</button>
+      <button class="td-nav-btn" onclick="tdMo()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;border:none;cursor:pointer;margin-right:4px">&#127942; Thi Đấu</button>
       <button class="top-tool-btn" onclick="moVuonGame()" title="Vườn Vui Học" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;background:#10b981;color:#fff;border:none;cursor:pointer;margin-right:4px;transition:.15s">&#127803; Vườn Game</button>
       <div style="position:relative;display:inline-block">
         <button id="btnLogin" onclick="btnLoginClick()" style="padding:6px 14px;border-radius:20px;font-weight:700;font-size:.85rem;background:var(--purple);color:#fff;box-shadow:0 2px 8px rgba(120,80,200,.25);border:none;cursor:pointer;transition:.15s">Đăng nhập</button>
@@ -1381,7 +1381,7 @@ function _gvMenuBtn(lbl,fn){
 function _buildGvMenu(){
   const m=document.getElementById('gvMenu');
   if(!m)return;
-  m.innerHTML=_gvMenuBtn('&#128218; Quản lý câu chuyện',"sangTrang('#/addstory')")+
+  m.innerHTML=_gvMenuBtn('&#128218; Quản lý câu chuyện',"moQuanLyCauChuyen()")+
     _gvMenuBtn('&#127942; Tổ chức Thi Đấu',"tdMoTeacher()")+
     '<hr style="border:none;border-top:1px solid #333;margin:4px 6px">'+
     _gvMenuBtn('&#128275; Đăng xuất',"if(sb&&confirm('Đăng xuất?')){sb.auth.signOut();_profile=null;refreshBrand();sangTrang('#/');}");
@@ -2736,6 +2736,7 @@ function chayViet(ch){
 function vDoc(){
   const isAdm=isGV();
   const all=allStories();
+  if(typeof storyLoadSB==='function') setTimeout(storyLoadSB, 80);
   return crumb([["Trang chủ","#/"],["Đọc sách",""]]) + `
   <div class="note">Mỗi ngày một câu chuyện ngắn. Bấm vào bìa sách để bắt đầu đọc nhé!</div>
   <div class="grid g-2" style="margin-top:14px">
@@ -2745,12 +2746,13 @@ function vDoc(){
       <b style="font-size:1rem;display:block">${esc(s.ten)}</b>
       <div class="cap" style="margin-top:4px">${esc(s.muc)}</div>
     </button>`).join("")}
-    ${isAdm?`<button class="tile" style="text-align:center;padding:18px;border:2.5px dashed #c3b0ff;color:#9a7cf0;background:#f8f5ff" onclick="SFX.tap();sangTrang('#/addstory')">
-      <div style="font-size:2.8rem;margin-bottom:6px">+</div>
-      <b>Thêm câu chuyện</b>
-      <div class="cap">Dành cho giáo viên</div>
+    ${isAdm?`<button class="tile" style="text-align:center;padding:18px;border:2.5px dashed #10b981;color:#047857;background:#f0fdf4" onclick="SFX.tap();moQuanLyCauChuyen()">
+      <div style="font-size:2.8rem;margin-bottom:6px">📚</div>
+      <b>Quản lý câu chuyện</b>
+      <div class="cap">Thêm · YouTube · Video</div>
     </button>`:''}
-  </div>`;
+  </div>
+  <div id="sbStoriesGrid" class="grid g-2" style="margin-top:4px"></div>`;
 }
 function vGVStory(){
   if(!isGV()) return vDoc();
@@ -12689,61 +12691,61 @@ function openTool(b64){var by=Uint8Array.from(atob(b64),function(c){return c.cha
 <div id="vThiDauTeacher" class="td-screen">
   <div class="td-header">
     <button class="td-back-btn" onclick="tdDongTeacher()">&#8592; Quay lai</button>
-    <h2>&#127942; To Chuc Thi Dau</h2>
+    <h2>&#127942; Tổ chức thi đấu</h2>
   </div>
   <div class="td-body">
 
     <!-- Step 1: Config -->
     <div id="tdStepConfig">
       <div class="td-card">
-        <label>Mon thi</label>
+        <label>Môn thi</label>
         <select id="tdSelMon">
-          <option value="toan">Toan hoc</option>
-          <option value="viet">Tieng Viet</option>
-          <option value="hon_hop" selected>Hon hop (Toan + TV)</option>
+          <option value="toan">Toán học</option>
+          <option value="viet">Tiếng Việt</option>
+          <option value="hon_hop" selected>Hỗn hợp (Toán + TV)</option>
         </select>
       </div>
       <div class="td-card">
-        <label>Khoi lop</label>
+        <label>Khối lớp</label>
         <select id="tdSelKhoi">
-          <option value="1">Khoi 1 &mdash; 6-7 tuoi (so 1-10)</option>
-          <option value="2" selected>Khoi 2 &mdash; 7-8 tuoi (so 1-100)</option>
-          <option value="3">Khoi 3 &mdash; 8-9 tuoi (nhan chia)</option>
-          <option value="4">Khoi 4 &mdash; 9-10 tuoi (kho hon)</option>
-          <option value="5">Khoi 5 &mdash; 10-11 tuoi (nang cao)</option>
+          <option value="1">Khối 1 &mdash; 6-7 tuổi (so 1-10)</option>
+          <option value="2" selected>Khối 2 &mdash; 7-8 tuổi (so 1-100)</option>
+          <option value="3">Khối 3 &mdash; 8-9 tuổi (nhan chia)</option>
+          <option value="4">Khối 4 &mdash; 9-10 tuổi (kho hon)</option>
+          <option value="5">Khối 5 &mdash; 10-11 tuổi (nang cao)</option>
         </select>
       </div>
       <div class="td-card">
-        <label>So cau hoi</label>
+        <label>Số Câu Hỏi</label>
         <select id="tdSelSoCau">
-          <option value="5">5 cau (~2 phut)</option>
-          <option value="10" selected>10 cau (~4 phut)</option>
-          <option value="15">15 cau (~6 phut)</option>
-          <option value="20">20 cau (~8 phut)</option>
+          <option value="5">5 câu (~2 phút)</option>
+          <option value="10" selected>10 câu (~4 phút)</option>
+          <option value="15">15 câu (~6 phút)</option>
+          <option value="20">20 câu (~8 phút)</option>
         </select>
       </div>
       <div class="td-card">
-        <label>Thoi gian moi cau</label>
+        <label>Thời gian mỗi câu</label>
         <select id="tdSelThoiGian">
-          <option value="10">10 giay (nhanh)</option>
-          <option value="15">15 giay</option>
-          <option value="20" selected>20 giay (chuan)</option>
-          <option value="30">30 giay (thoai mai)</option>
+          <option value="10">10 giây/100y (nhanh)</option>
+          <option value="15">15 giây/100y</option>
+          <option value="20" selected>20 giây (Chuẩnn)</option>
+          <option value="30">30 giây/100y (thoải mái)</option>
         </select>
       </div>
-      <button class="td-btn-primary" onclick="tdTaoPhong()">&#127939; Tao Phong Thi Dau</button>
+      <button class="td-btn-primary" onclick="tdTaoPhong()">&#127939; Tạo phòng thi đấu</button>
     </div>
 
     <!-- Step 2: Lobby -->
     <div id="tdStepLobby" style="display:none">
       <div class="td-room-box">
-        <div class="td-code-label">Ma phong &mdash; hoc sinh nhap ma nay</div>
+        <div class="td-code-label">Mã phòng &mdash; Học Sinh Nhập Mã Này</div>
         <div class="td-code" id="tdMaPhongHien">????</div>
-        <div class="td-code-hint">Chieu len man hinh hoac doc to cho ca lop</div>
+        <div class="td-code-hint">Chiếu lên màn hình hoặc đọc to cho cả lớp</div>
       </div>
-      <div class="td-lobby-header" id="tdLobbyCountLbl">Dang cho hoc sinh tham gia...</div>
+      <div class="td-lobby-header" id="tdLobbyCountLbl">Đang chờ học sinh tham gia...</div>
       <div class="td-lobby-grid" id="tdLobbyGrid"></div>
-      <button class="td-btn-primary" id="tdBtnBatDau" onclick="tdGVBatDau()" disabled>Cho it nhat 1 hoc sinh...</button>
+      <button class="td-btn-primary" id="tdBtnBatDau" onclick="tdGVBatDau()" disabled>Chờ ít nhất một học sinh...</button>
     </div>
 
     <!-- Step 3: Game control (teacher) -->
@@ -14097,6 +14099,340 @@ function gv5StartDaily(){if(gv5IsDailyDone()){GV.speak('Hôm nay bé đã hoàn 
 setTimeout(gv5CheckBadges,1500);
 (function(){const prev=typeof gvDongGame==='function'?gvDongGame:null;window.gvDongGame=function(id){const el=document.getElementById('vGame'+id);if(el)el.classList.remove('active');const res=document.getElementById('vGameResult');if(res)res.classList.remove('show');gvMoHub();};})();
 window.gvhDong=function(){const hub=document.getElementById('vGameHub');if(hub){hub.classList.remove('active');hub.style.display='';}};
+</script>
+<script>
+/* ============================================================
+   THƯ VIỆN CÂU CHUYỆN V2 — Supabase-backed + YouTube + Upload
+   ============================================================ */
+
+window._sbStoriesCache = [];
+
+async function storyGetAll() {
+  if (!sb) return [];
+  const { data, error } = await sb.from('stories').select('*').order('created_at', { ascending: false });
+  if (error) { console.error('storyGetAll:', error); return []; }
+  return data || [];
+}
+
+async function storyGetForStudent(lopId) {
+  if (!sb) return [];
+  let q = sb.from('stories').select('*').order('created_at', { ascending: false });
+  if (lopId) q = q.or(`visibility.eq.all,lop_ids.cs.{${lopId}}`);
+  else q = q.eq('visibility', 'all');
+  const { data, error } = await q;
+  if (error) { console.error('storyGetForStudent:', error); return []; }
+  return data || [];
+}
+
+async function storyCreate(payload) {
+  if (!sb) throw new Error('Chưa kết nối máy chủ');
+  const { data: { user } } = await sb.auth.getUser();
+  const { data, error } = await sb.from('stories').insert([{ ...payload, created_by: user?.id }]).select().single();
+  if (error) throw error;
+  return data;
+}
+
+async function storyDelete(id) {
+  if (!sb) throw new Error('Chưa kết nối máy chủ');
+  const { error } = await sb.from('stories').delete().eq('id', id);
+  if (error) throw error;
+}
+
+async function storyUploadImage(file) {
+  if (!sb) throw new Error('Chưa kết nối máy chủ');
+  const ext = file.name.split('.').pop();
+  const path = 'thumbnails/' + Date.now() + '.' + ext;
+  const { error } = await sb.storage.from('story-files').upload(path, file, { upsert: true });
+  if (error) throw error;
+  const { data: pub } = sb.storage.from('story-files').getPublicUrl(path);
+  return pub.publicUrl;
+}
+
+async function storyMigrateLocal() {
+  if (!sb || !_profile) return;
+  if (localStorage.getItem('vg_sb_migrated')) return;
+  const old = JSON.parse(localStorage.getItem('vg_custom_stories') || '[]');
+  if (!old.length) { localStorage.setItem('vg_sb_migrated','1'); return; }
+  for (const s of old) {
+    try {
+      await storyCreate({
+        title: s.ten || s.title || 'Câu chuyện',
+        emoji: s.hinh || s.emoji || '📖',
+        description: s.muc || '',
+        category: 'Cổ tích',
+        content_type: 'text',
+        sentences: s.cau || s.sentences || [],
+        quiz: s.hoi ? { q: s.hoi.q, a: s.hoi.a, dung: s.hoi.dung } : null,
+        visibility: 'all',
+        lop_ids: []
+      });
+    } catch(e) { console.warn('migrate skip:', e); }
+  }
+  localStorage.setItem('vg_sb_migrated', '1');
+}
+
+async function storyLoadSB() {
+  const container = document.getElementById('sbStoriesGrid');
+  if (!container || !sb) return;
+  container.innerHTML = '<div style="color:var(--ink-soft);font-size:.9rem;padding:8px 0;grid-column:1/-1">Đang tải thêm câu chuyện...</div>';
+  try {
+    const lopId = _profile ? _profile.lop_id : null;
+    const stories = lopId ? await storyGetForStudent(lopId) : await storyGetAll();
+    window._sbStoriesCache = stories;
+    if (!stories.length) { container.innerHTML = ''; return; }
+    container.innerHTML = stories.map(function(s) {
+      const ytId = s.youtube_url ? (s.youtube_url.match(/(?:v=|youtu\.be\/)([^&\s]+)/) || [])[1] || '' : '';
+      const thumb = s.image_url || (ytId ? 'https://img.youtube.com/vi/'+ytId+'/mqdefault.jpg' : '');
+      const typeBadge = s.content_type==='youtube'
+        ? '<div style="position:absolute;top:8px;left:10px;background:#dc2626;color:#fff;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:999px">YouTube</div>'
+        : s.content_type==='upload'
+        ? '<div style="position:absolute;top:8px;left:10px;background:#7c3aed;color:#fff;font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:999px">Video</div>'
+        : '';
+      return '<button class="tile" style="text-align:center;padding:0;overflow:hidden;position:relative" onclick="SFX.tap();storyMoDocSB(\''+s.id+'\')">'
+        + typeBadge
+        + (thumb ? '<img src="'+thumb+'" style="width:100%;height:120px;object-fit:cover" onerror="this.style.display=\'none\'">' : '<div style="font-size:3rem;padding:18px 0">'+(s.emoji||'📖')+'</div>')
+        + '<div style="padding:10px 14px">'
+        + '<b style="font-size:1rem;display:block">'+esc(s.title||'')+'</b>'
+        + (s.description?'<div class="cap" style="margin-top:4px">'+esc(s.description)+'</div>':'')
+        + (s.category?'<div class="cap">'+esc(s.category)+'</div>':'')
+        + '</div></button>';
+    }).join('');
+  } catch(e) {
+    container.innerHTML = '<div style="color:var(--ink-soft);font-size:.9rem;grid-column:1/-1">Không tải được câu chuyện từ máy chủ.</div>';
+  }
+}
+
+window.storyMoDocSB = function(id) {
+  const s = window._sbStoriesCache.find(function(x){ return x.id===id; });
+  if (!s) return;
+  const ytId = s.youtube_url ? (s.youtube_url.match(/(?:v=|youtu\.be\/)([^&\s]+)/) || [])[1] || '' : '';
+  let content = '';
+  if (s.content_type==='youtube' && ytId) {
+    content = '<div style="margin:16px 0;border-radius:12px;overflow:hidden"><iframe width="100%" height="220" src="https://www.youtube.com/embed/'+ytId+'" frameborder="0" allowfullscreen style="display:block"></iframe></div>';
+  } else if (s.content_type==='upload' && s.video_url) {
+    content = '<div style="margin:16px 0"><video src="'+s.video_url+'" controls style="width:100%;border-radius:12px"></video></div>';
+  } else if (Array.isArray(s.sentences) && s.sentences.length) {
+    content = s.sentences.map(function(c){ return '<p style="margin:12px 0;font-size:1.1rem;line-height:1.7">'+esc(c)+'</p>'; }).join('');
+  }
+  const quizHtml = (s.quiz && s.quiz.q) ?
+    '<div style="background:#f0fdf4;border-radius:14px;padding:16px;margin-top:20px">'
+    + '<b style="display:block;margin-bottom:10px">❓ '+esc(s.quiz.q)+'</b>'
+    + (s.quiz.a||[]).map(function(a,i){ return '<button onclick="sbQuizCheck(this,'+i+','+s.quiz.dung+')" style="display:block;width:100%;text-align:left;padding:10px 14px;margin-bottom:8px;border-radius:10px;border:2px solid #e5e7eb;background:#fff;cursor:pointer;font-family:inherit;font-size:.95rem">'+esc(a)+'</button>'; }).join('')
+    + '</div>' : '';
+  hienModal(s.emoji||'📖', esc(s.title||''), '<div style="text-align:left">'+content+quizHtml+'</div>', [['Đóng lại','',dongModal]]);
+};
+
+window.sbQuizCheck = function(btn, idx, dung) {
+  const btns = btn.closest('div').querySelectorAll('button');
+  btns.forEach(function(b,i){
+    b.style.background = i===dung?'#dcfce7':(i===idx&&idx!==dung?'#fee2e2':'#fff');
+    b.style.borderColor = i===dung?'#16a34a':(i===idx&&idx!==dung?'#dc2626':'#e5e7eb');
+    b.disabled = true;
+  });
+  if(idx===dung) SFX.correct(); else SFX.wrong();
+};
+
+/* ---- Teacher management overlay ---- */
+let _qlStories = [];
+let _csType = 'text';
+
+document.addEventListener('DOMContentLoaded', function() {
+  const inp = 'width:100%;box-sizing:border-box;padding:9px 13px;border-radius:10px;border:2px solid #e5e7eb;font-family:inherit;font-size:.93rem;margin-bottom:8px;outline:none';
+  document.body.insertAdjacentHTML('beforeend', `
+<div id="vQuanLyCauChuyen" style="display:none;pointer-events:none;position:fixed;inset:0;z-index:7000;background:#f0fdf4;overflow-y:auto;">
+  <div style="background:linear-gradient(135deg,#065f46,#047857);padding:16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:2;">
+    <button onclick="dongQuanLyCauChuyen()" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:.9rem;font-family:inherit;">← Quay lại</button>
+    <h2 style="color:#fff;margin:0;flex:1;font-size:1.2rem;">📚 Quản Lý Câu Chuyện</h2>
+    <button onclick="moThemCauChuyen()" style="background:#10b981;border:none;color:#fff;border-radius:10px;padding:8px 16px;cursor:pointer;font-weight:700;font-family:inherit;">+ Thêm mới</button>
+  </div>
+  <div style="padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;">
+    <select id="qlFilterCat" onchange="qlRenderList()" style="border-radius:8px;padding:6px 10px;border:1px solid #d1d5db;font-size:.9rem;font-family:inherit;">
+      <option value="">Tất cả danh mục</option>
+      <option>Cổ tích</option><option>Khoa học</option><option>Đạo đức</option>
+      <option>Thiên nhiên</option><option>Toán vui</option><option>Tiếng Việt</option>
+    </select>
+  </div>
+  <div id="qlStoryList" style="padding:0 16px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;"></div>
+</div>
+<div id="vThemCauChuyen" style="display:none;pointer-events:none;position:fixed;inset:0;z-index:7500;background:rgba(0,0,0,.6);overflow-y:auto;padding:20px;">
+  <div style="background:#fff;border-radius:20px;max-width:520px;margin:0 auto;padding:24px;">
+    <h3 style="margin:0 0 20px;font-size:1.2rem;">✏️ Thêm câu chuyện mới</h3>
+    <label style="display:block;margin-bottom:12px;"><span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Tiêu đề *</span>
+      <input id="csTitle" placeholder="Tên câu chuyện..." style="${inp}"></label>
+    <div style="display:flex;gap:10px;margin-bottom:12px;">
+      <label style="flex:1;"><span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Biểu tượng</span>
+        <input id="csEmoji" value="📖" style="${inp}"></label>
+      <label style="flex:2;"><span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Danh mục</span>
+        <select id="csCategory" style="${inp}"><option>Cổ tích</option><option>Khoa học</option><option>Đạo đức</option><option>Thiên nhiên</option><option>Toán vui</option><option>Tiếng Việt</option></select></label>
+    </div>
+    <label style="display:block;margin-bottom:12px;"><span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Loại nội dung</span>
+      <div style="display:flex;gap:8px;">
+        <button type="button" onclick="csSetType('text')" id="csBtnText" style="flex:1;padding:8px;border-radius:8px;border:2px solid #10b981;background:#f0fdf4;cursor:pointer;font-size:.85rem;font-weight:600;font-family:inherit;">📝 Văn bản</button>
+        <button type="button" onclick="csSetType('youtube')" id="csBtnYoutube" style="flex:1;padding:8px;border-radius:8px;border:2px solid #d1d5db;background:#fff;cursor:pointer;font-size:.85rem;font-weight:600;font-family:inherit;">▶ YouTube</button>
+        <button type="button" onclick="csSetType('upload')" id="csBtnUpload" style="flex:1;padding:8px;border-radius:8px;border:2px solid #d1d5db;background:#fff;cursor:pointer;font-size:.85rem;font-weight:600;font-family:inherit;">📤 Tải lên</button>
+      </div>
+    </label>
+    <div id="csTypeText" style="margin-bottom:12px;">
+      <span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Nội dung (mỗi dòng = 1 câu)</span>
+      <textarea id="csSentences" rows="5" placeholder="Ngày xửa ngày xưa...&#10;Có một chú thỏ..." style="${inp}resize:vertical;"></textarea>
+    </div>
+    <div id="csTypeYoutube" style="display:none;margin-bottom:12px;">
+      <span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Link YouTube</span>
+      <input id="csYoutubeUrl" placeholder="https://youtube.com/watch?v=..." style="${inp}">
+    </div>
+    <div id="csTypeUpload" style="display:none;margin-bottom:12px;">
+      <span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Tải clip lên (MP4, tối đa 50MB)</span>
+      <input type="file" id="csVideoFile" accept="video/*" style="width:100%;font-size:.9rem;">
+    </div>
+    <label style="display:block;margin-bottom:12px;">
+      <span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Ảnh bìa (không bắt buộc)</span>
+      <input type="file" id="csImageFile" accept="image/*" style="width:100%;font-size:.9rem;margin-bottom:6px;">
+      <img id="csImagePreview" style="display:none;width:100%;border-radius:10px;max-height:150px;object-fit:cover;">
+    </label>
+    <label style="display:block;margin-bottom:16px;">
+      <span style="font-size:.85rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Chia sẻ với</span>
+      <select id="csVisibility" onchange="csToggleLop()" style="${inp}">
+        <option value="all">Tất cả các lớp</option>
+        <option value="class">Chọn lớp cụ thể</option>
+      </select>
+      <div id="csLopSelect" style="display:none;margin-top:4px;font-size:.85rem;color:#6b7280;">Chức năng chọn lớp sẽ sớm ra mắt.</div>
+    </label>
+    <div style="display:flex;gap:10px;">
+      <button type="button" onclick="dongThemCauChuyen()" style="flex:1;padding:12px;border-radius:12px;border:1px solid #d1d5db;background:#fff;cursor:pointer;font-size:1rem;font-family:inherit;">Hủy</button>
+      <button type="button" onclick="csLuu()" style="flex:2;padding:12px;border-radius:12px;border:none;background:#10b981;color:#fff;cursor:pointer;font-size:1rem;font-weight:700;font-family:inherit;">💾 Lưu câu chuyện</button>
+    </div>
+  </div>
+</div>`);
+});
+
+window.moQuanLyCauChuyen = async function() {
+  const el = document.getElementById('vQuanLyCauChuyen');
+  if (!el) return;
+  el.style.display = 'block'; el.style.pointerEvents = 'auto';
+  document.body.style.overflow = 'hidden';
+  if (_profile && sb) await storyMigrateLocal();
+  _qlStories = await storyGetAll();
+  qlRenderList();
+};
+
+window.dongQuanLyCauChuyen = function() {
+  const el = document.getElementById('vQuanLyCauChuyen');
+  if (el) { el.style.display = 'none'; el.style.pointerEvents = 'none'; }
+  document.body.style.overflow = '';
+};
+
+window.qlRenderList = function() {
+  const cat = (document.getElementById('qlFilterCat') || {}).value || '';
+  let list = cat ? _qlStories.filter(function(s){ return s.category===cat; }) : _qlStories;
+  const grid = document.getElementById('qlStoryList');
+  if (!grid) return;
+  if (!list.length) { grid.innerHTML = '<p style="color:#6b7280;text-align:center;grid-column:1/-1;padding:40px;">Chưa có câu chuyện nào. Hãy nhấn "+ Thêm mới" để bắt đầu!</p>'; return; }
+  grid.innerHTML = list.map(function(s) {
+    const ytId = s.youtube_url ? (s.youtube_url.match(/(?:v=|youtu\.be\/)([^&\s]+)/) || [])[1] || '' : '';
+    const thumb = s.image_url || (ytId ? 'https://img.youtube.com/vi/'+ytId+'/mqdefault.jpg' : '');
+    const safeTitle = (s.title||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return '<div style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #e5e7eb;">'
+      + (thumb ? '<img src="'+thumb+'" style="width:100%;height:130px;object-fit:cover">' : '<div style="width:100%;height:80px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);display:flex;align-items:center;justify-content:center;font-size:2.8rem;">'+(s.emoji||'📖')+'</div>')
+      + '<div style="padding:12px;">'
+      + '<div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">'+esc(s.title||'')+'</div>'
+      + '<div style="font-size:.78rem;color:#6b7280;margin-bottom:8px;">'+(s.category||'')+' · '+(s.content_type==='youtube'?'▶ YouTube':s.content_type==='upload'?'📤 Video':'📝 Văn bản')+' · '+(s.visibility==='all'?'Tất cả lớp':'Lớp cụ thể')+'</div>'
+      + '<button onclick="qlXoaCauChuyen(\''+s.id+'\',\''+safeTitle+'\')" style="width:100%;padding:8px;border-radius:8px;border:1px solid #fca5a5;background:#fff5f5;color:#dc2626;cursor:pointer;font-size:.85rem;font-weight:600;font-family:inherit;">🗑 Xóa câu chuyện</button>'
+      + '</div></div>';
+  }).join('');
+};
+
+window.qlXoaCauChuyen = async function(id, title) {
+  if (!confirm('Xóa câu chuyện "'+title+'"?\nHành động này không thể hoàn tác.')) return;
+  try {
+    await storyDelete(id);
+    _qlStories = _qlStories.filter(function(s){ return s.id!==id; });
+    window._sbStoriesCache = window._sbStoriesCache.filter(function(s){ return s.id!==id; });
+    qlRenderList();
+  } catch(e) { alert('Lỗi khi xóa: '+e.message); }
+};
+
+window.moThemCauChuyen = function() {
+  const el = document.getElementById('vThemCauChuyen');
+  if (el) { el.style.display='block'; el.style.pointerEvents='auto'; }
+  csSetType('text');
+};
+
+window.dongThemCauChuyen = function() {
+  const el = document.getElementById('vThemCauChuyen');
+  if (el) { el.style.display='none'; el.style.pointerEvents='none'; }
+  ['csTitle','csSentences','csYoutubeUrl'].forEach(function(id){ const e=document.getElementById(id); if(e) e.value=''; });
+  const em=document.getElementById('csEmoji'); if(em) em.value='📖';
+  const pr=document.getElementById('csImagePreview'); if(pr){ pr.style.display='none'; pr.src=''; }
+};
+
+window.csSetType = function(type) {
+  _csType = type;
+  [['Text','text'],['Youtube','youtube'],['Upload','upload']].forEach(function(t) {
+    const btn=document.getElementById('csBtn'+t[0]);
+    const panel=document.getElementById('csType'+t[0]);
+    const active = t[1]===type;
+    if(btn){ btn.style.borderColor=active?'#10b981':'#d1d5db'; btn.style.background=active?'#f0fdf4':'#fff'; }
+    if(panel) panel.style.display=active?'block':'none';
+  });
+};
+
+window.csToggleLop = function() {
+  const v=(document.getElementById('csVisibility')||{}).value;
+  const el=document.getElementById('csLopSelect');
+  if(el) el.style.display=v==='class'?'block':'none';
+};
+
+document.addEventListener('change', function(e) {
+  if (e.target.id==='csImageFile') {
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(ev){ const img=document.getElementById('csImagePreview'); if(img){ img.src=ev.target.result; img.style.display='block'; } };
+    reader.readAsDataURL(file);
+  }
+});
+
+window.csLuu = async function() {
+  const title=((document.getElementById('csTitle')||{}).value||'').trim();
+  if(!title){ alert('Vui lòng nhập tiêu đề!'); return; }
+  const btn=document.querySelector('[onclick="csLuu()"]');
+  if(btn){ btn.disabled=true; btn.textContent='Đang lưu...'; }
+  try {
+    let imageUrl=null;
+    const imgFile=(document.getElementById('csImageFile')||{}).files&&document.getElementById('csImageFile').files[0];
+    if(imgFile) imageUrl=await storyUploadImage(imgFile);
+    let videoUrl=null;
+    if(_csType==='upload'){
+      const vidFile=(document.getElementById('csVideoFile')||{}).files&&document.getElementById('csVideoFile').files[0];
+      if(vidFile){
+        const ext=vidFile.name.split('.').pop();
+        const path='videos/'+Date.now()+'.'+ext;
+        const{error}=await sb.storage.from('story-files').upload(path,vidFile,{upsert:true});
+        if(!error){ const{data:pub}=sb.storage.from('story-files').getPublicUrl(path); videoUrl=pub.publicUrl; }
+      }
+    }
+    const rawSen=((document.getElementById('csSentences')||{}).value||'');
+    const payload={
+      title,
+      emoji:((document.getElementById('csEmoji')||{}).value||'📖'),
+      category:((document.getElementById('csCategory')||{}).value||'Cổ tích'),
+      description:'',
+      content_type:_csType,
+      sentences:_csType==='text'?rawSen.split('\n').map(function(s){return s.trim();}).filter(Boolean):[],
+      youtube_url:_csType==='youtube'?((document.getElementById('csYoutubeUrl')||{}).value||'').trim():null,
+      image_url:imageUrl,
+      video_url:videoUrl,
+      visibility:((document.getElementById('csVisibility')||{}).value||'all'),
+      lop_ids:[]
+    };
+    const saved=await storyCreate(payload);
+    _qlStories.unshift(saved);
+    window._sbStoriesCache.unshift(saved);
+    qlRenderList();
+    dongThemCauChuyen();
+    alert('Đã lưu câu chuyện thành công!');
+  } catch(e) { alert('Lỗi: '+e.message); }
+  finally { if(btn){ btn.disabled=false; btn.textContent='💾 Lưu câu chuyện'; } }
+};
 </script>
 </body>
 </html>
