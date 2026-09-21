@@ -878,6 +878,159 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
 .g9-ans-btn .g9-big-time { font-size: 1.8rem; display: block; }
 .g9-star { position: absolute; color: rgba(255,255,255,.6); font-size: .8rem; animation: g9Twinkle 2s ease-in-out infinite; }
 @keyframes g9Twinkle { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+/* ============================================================
+   VUON GAME — Phase 5: Full Gamification Layer
+   Streak, Badges, Daily Challenge, Mascot Chú Ong, Stars economy
+   ============================================================ */
+
+/* ---- STREAK DISPLAY (appears during games) ---- */
+.gv-streak-popup {
+  position: fixed;
+  top: 70px; right: 12px;
+  background: linear-gradient(135deg, #f72585, #7209b7);
+  color: #fff;
+  border-radius: 16px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 800;
+  z-index: 9300;
+  transform: translateX(120%);
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(247,37,133,.4);
+}
+.gv-streak-popup.show { transform: translateX(0); }
+.gv-streak-num { font-size: 1.6rem; }
+
+/* ---- BADGE NOTIFICATION ---- */
+.gv-badge-toast {
+  position: fixed;
+  bottom: 80px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: linear-gradient(135deg, #065f46, #047857);
+  border: 2px solid #10b981;
+  color: #fff;
+  border-radius: 20px;
+  padding: 14px 24px;
+  text-align: center;
+  z-index: 9400;
+  transition: transform .5s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 8px 32px rgba(16,185,129,.4);
+  min-width: 280px;
+}
+.gv-badge-toast.show { transform: translateX(-50%) translateY(0); }
+.gv-badge-toast-icon { font-size: 2.5rem; display: block; margin-bottom: 6px; }
+.gv-badge-toast-title { font-size: .8rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: 1px; }
+.gv-badge-toast-name { font-size: 1.3rem; font-weight: 900; margin: 4px 0; }
+.gv-badge-toast-desc { font-size: .85rem; color: #d1fae5; }
+
+/* ---- BADGES SCREEN ---- */
+#vBadges {
+  display: none; position: fixed; inset: 0; z-index: 8500;
+  background: linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+  flex-direction: column; overflow-y: auto;
+}
+#vBadges.active { display: flex; }
+.badges-header {
+  background: linear-gradient(135deg, #f72585, #7209b7);
+  padding: 16px; display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 2;
+}
+.badges-header h2 { color: #fff; font-size: 1.3rem; margin: 0; flex: 1; font-weight: 800; }
+.badges-back { background: rgba(255,255,255,.18); border: none; color: #fff; border-radius: 10px; padding: 8px 14px; cursor: pointer; font-size: .9rem; font-weight: 600; }
+.badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; padding: 16px; }
+.badge-card {
+  background: #1e293b;
+  border-radius: 18px;
+  padding: 16px 12px;
+  text-align: center;
+  border: 2px solid #334155;
+  transition: transform .2s, border-color .2s;
+}
+.badge-card.earned { border-color: #10b981; background: #0f2d23; }
+.badge-card.earned:hover { transform: scale(1.05); }
+.badge-card-icon { font-size: 2.8rem; margin-bottom: 8px; filter: grayscale(1) opacity(.5); }
+.badge-card.earned .badge-card-icon { filter: none; }
+.badge-card-name { font-size: .85rem; font-weight: 800; color: #94a3b8; }
+.badge-card.earned .badge-card-name { color: #10b981; }
+.badge-card-desc { font-size: .72rem; color: #475569; margin-top: 4px; line-height: 1.3; }
+.badge-card.earned .badge-card-desc { color: #d1fae5; }
+.badge-lock { font-size: .8rem; color: #334155; margin-top: 6px; }
+.badge-card.earned .badge-lock { display: none; }
+
+/* ---- STATS PANEL (on Hub) ---- */
+.gvh-stats-row {
+  display: flex; gap: 10px; padding: 0 16px 14px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.gvh-stat-chip {
+  background: rgba(255,255,255,.12);
+  border-radius: 14px; padding: 10px 16px;
+  text-align: center; flex-shrink: 0; min-width: 80px;
+  color: #fff;
+}
+.gvh-stat-chip .sv { font-size: 1.5rem; font-weight: 900; }
+.gvh-stat-chip .sl { font-size: .72rem; color: rgba(255,255,255,.7); margin-top: 2px; }
+
+/* ---- DAILY CHALLENGE BANNER (on Hub) ---- */
+.gvh-daily {
+  margin: 0 16px 14px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; transition: transform .15s;
+}
+.gvh-daily:active { transform: scale(.97); }
+.gvh-daily-icon { font-size: 2.5rem; flex-shrink: 0; }
+.gvh-daily-text { flex: 1; }
+.gvh-daily-title { color: #fff; font-size: 1rem; font-weight: 800; }
+.gvh-daily-sub { color: rgba(255,255,255,.8); font-size: .8rem; margin-top: 2px; }
+.gvh-daily-badge {
+  background: #fff; color: #d97706;
+  border-radius: 10px; padding: 4px 10px;
+  font-size: .8rem; font-weight: 800;
+}
+.gvh-daily-done { background: #10b981; color: #fff; }
+
+/* ---- MASCOT PROGRESSION ---- */
+.gvh-mascot-level {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,.1); border-radius: 14px;
+  margin: 0 16px 14px; padding: 10px 14px;
+}
+.gvh-mascot-emoji { font-size: 2.4rem; }
+.gvh-mascot-info { flex: 1; }
+.gvh-mascot-name { color: #fff; font-size: .9rem; font-weight: 700; }
+.gvh-mascot-xp-wrap { background: rgba(255,255,255,.2); border-radius: 6px; height: 10px; margin-top: 6px; overflow: hidden; }
+.gvh-mascot-xp-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 6px; transition: width .6s ease; }
+.gvh-mascot-lvl { color: #fbbf24; font-size: .8rem; font-weight: 800; }
+
+/* ---- HUB ACTIONS ROW ---- */
+.gvh-actions { display: flex; gap: 10px; padding: 0 16px 14px; }
+.gvh-action-btn {
+  flex: 1; background: rgba(255,255,255,.15); border: none; border-radius: 14px;
+  padding: 12px 8px; color: #fff; font-size: .85rem; font-weight: 700;
+  cursor: pointer; transition: background .2s; text-align: center;
+}
+.gvh-action-btn:hover { background: rgba(255,255,255,.25); }
+.gvh-action-btn .ab-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+
+/* ---- FIRE STREAK BURST ---- */
+.gv-streak-burst {
+  position: fixed; inset: 0; z-index: 9600; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+.gv-streak-burst-num {
+  font-size: 5rem; font-weight: 900; color: #fbbf24;
+  text-shadow: 0 0 30px #f59e0b;
+  animation: gvPop .6s cubic-bezier(.34,1.56,.64,1);
+}
+.gv-streak-burst-lbl {
+  font-size: 1.5rem; font-weight: 800; color: #fff;
+  animation: gvPop .6s .1s cubic-bezier(.34,1.56,.64,1) both;
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -13798,6 +13951,113 @@ function g9Answer(chosen,correct,btn){
     if(id===8)g8Start();else if(id===9)g9Start();else if(prev)prev(id);
   };
 })();
+</script>
+<!-- ============================================================
+   VUON GAME — Phase 5 Gamification HTML
+   ============================================================ -->
+<div id="vBadges">
+  <div class="badges-header">
+    <button class="badges-back" onclick="gv5DongBadges()">&#8592; Quay lại</button>
+    <h2>&#127941; Huy Hiệu Của Bé</h2>
+  </div>
+  <div class="badges-grid" id="gv5BadgesGrid"></div>
+</div>
+<div class="gv-streak-popup" id="gv5StreakPopup">
+  <div>&#128293; Streak!</div>
+  <div class="gv-streak-num" id="gv5StreakNum">3</div>
+  <div style="font-size:.7rem;opacity:.8;">liên tiếp!</div>
+</div>
+<div class="gv-badge-toast" id="gv5BadgeToast">
+  <span class="gv-badge-toast-icon" id="gv5ToastIcon">&#127941;</span>
+  <div class="gv-badge-toast-title">Huy hiệu mới!</div>
+  <div class="gv-badge-toast-name" id="gv5ToastName">Thánh Tính Nhẩm</div>
+  <div class="gv-badge-toast-desc" id="gv5ToastDesc">10 câu đúng liên tiếp!</div>
+</div>
+<script>
+// ============================================================
+// VUON GAME — Phase 5: Full Gamification System
+// Streak tracking, Badges, Daily Challenge, Mascot Chú Ong
+// Author: Huy Tran | Cadence Design Systems Vietnam
+// ============================================================
+const BADGES = [
+  { id:'first_win', icon:'🌟', name:'Bé Giỏi Đầu Tiên', desc:'Hoàn thành trò chơi đầu tiên', check:s=>(s.gamesCompleted||0)>=1 },
+  { id:'streak_5', icon:'🔥', name:'Tay Nhanh Mắt Sáng', desc:'5 câu đúng liên tiếp trong một lần', check:s=>(s.maxStreak||0)>=5 },
+  { id:'streak_10', icon:'⚡', name:'Thánh Tính Nhẩm', desc:'10 câu đúng liên tiếp — cực kỳ giỏi!', check:s=>(s.maxStreak||0)>=10 },
+  { id:'stars_20', icon:'✨', name:'Người Thu Thập Sao', desc:'Thu thập được 20 sao', check:s=>(s.totalStars||0)>=20 },
+  { id:'stars_50', icon:'💎', name:'Kho Báu Sao', desc:'Thu thập được 50 sao', check:s=>(s.totalStars||0)>=50 },
+  { id:'stars_100', icon:'👑', name:'Đại Vương Sao', desc:'Thu thập được 100 sao — vô địch!', check:s=>(s.totalStars||0)>=100 },
+  { id:'all_math', icon:'🧮', name:'Nhà Toán Học Nhí', desc:'Chơi tất cả 6 trò toán học', check:s=>[1,2,3,4,8,9].every(id=>(s['game'+id+'_stars']||0)>0) },
+  { id:'all_viet', icon:'📚', name:'Nhà Văn Học Nhỏ', desc:'Chơi tất cả trò tiếng Việt', check:s=>[6,7].every(id=>(s['game'+id+'_stars']||0)>0) },
+  { id:'all_games', icon:'🏅', name:'Nhà Khám Phá Toàn Diện', desc:'Chơi tất cả 9 trò chơi ít nhất 1 lần', check:s=>[1,2,3,4,5,6,7,8,9].every(id=>(s['game'+id+'_stars']||0)>0) },
+  { id:'perfect_3star', icon:'🏆', name:'Nhà Vô Địch', desc:'Đạt 3 sao ở ít nhất 5 trò chơi', check:s=>[1,2,3,4,5,6,7,8,9].filter(id=>(s['game'+id+'_stars']||0)>=3).length>=5 },
+  { id:'daily_7', icon:'📅', name:'Học Đều Đặn', desc:'Hoàn thành thử thách hàng ngày 7 lần', check:s=>(s.dailyDone||0)>=7 },
+  { id:'shape_master', icon:'📐', name:'Nhà Hình Học', desc:'Đạt 3 sao ở Thợ Xây Tí Hon', check:s=>(s.game5_stars||0)>=3 },
+];
+const MASCOT_LEVELS = [
+  { level:1, emoji:'🐝', name:'Chú Ong Bé', xpNeeded:0 },
+  { level:2, emoji:'🐝', name:'Chú Ong Vui', xpNeeded:20 },
+  { level:3, emoji:'🌟🐝', name:'Chú Ong Sao', xpNeeded:50 },
+  { level:4, emoji:'⚡🐝', name:'Chú Ong Siêu', xpNeeded:100 },
+  { level:5, emoji:'👑🐝', name:'Vua Chú Ong', xpNeeded:200 },
+];
+function gv5MascotForStars(stars){let lv=MASCOT_LEVELS[0];for(const l of MASCOT_LEVELS){if(stars>=l.xpNeeded)lv=l;}return lv;}
+(function(){
+  const origCorrect=GV.onCorrect.bind(GV);
+  GV.onCorrect=function(answerEl){
+    origCorrect(answerEl);
+    const st=GV.state; if(!st)return;
+    const streak=st.streak;
+    const s=gvLoadSave();
+    if(streak>(s.maxStreak||0)){s.maxStreak=streak;gvSaveSave(s);GV.save=s;}
+    if(streak>0&&streak%3===0)gv5ShowStreak(streak);
+    gv5CheckBadges();
+  };
+  const origWrong=GV.onWrong.bind(GV);
+  GV.onWrong=function(){origWrong();gv5HideStreak();};
+})();
+let _gv5StreakTimer=null;
+function gv5ShowStreak(n){const el=document.getElementById('gv5StreakPopup');const num=document.getElementById('gv5StreakNum');if(!el)return;if(num)num.textContent=n;el.classList.add('show');clearTimeout(_gv5StreakTimer);_gv5StreakTimer=setTimeout(()=>el.classList.remove('show'),2200);}
+function gv5HideStreak(){const el=document.getElementById('gv5StreakPopup');if(el)el.classList.remove('show');}
+let _gv5BadgeTimer=null;
+function gv5CheckBadges(){const s=gvLoadSave();BADGES.forEach(badge=>{if(s['badge_'+badge.id])return;if(badge.check(s)){s['badge_'+badge.id]=Date.now();gvSaveSave(s);GV.save=s;gv5ShowBadgeToast(badge);}});}
+function gv5ShowBadgeToast(badge){const toast=document.getElementById('gv5BadgeToast');const icon=document.getElementById('gv5ToastIcon');const name=document.getElementById('gv5ToastName');const desc=document.getElementById('gv5ToastDesc');if(!toast)return;if(icon)icon.textContent=badge.icon;if(name)name.textContent=badge.name;if(desc)desc.textContent=badge.desc;toast.classList.add('show');GV.playStar();GV.speak('Chúc mừng! Huy hiệu mới: '+badge.name);clearTimeout(_gv5BadgeTimer);_gv5BadgeTimer=setTimeout(()=>toast.classList.remove('show'),4000);}
+(function(){const origResult=GV.showResult.bind(GV);GV.showResult=function(){origResult();const s=gvLoadSave();s.gamesCompleted=(s.gamesCompleted||0)+1;if(GV.state&&GV.state.streak>(s.maxStreak||0))s.maxStreak=GV.state.streak;gvSaveSave(s);GV.save=s;setTimeout(()=>gv5CheckBadges(),500);};})();
+function gv5MoBadges(){const screen=document.getElementById('vBadges');if(!screen)return;screen.classList.add('active');const s=gvLoadSave();const grid=document.getElementById('gv5BadgesGrid');if(!grid)return;grid.innerHTML=BADGES.map(b=>{const earned=!!s['badge_'+b.id];const earnedDate=earned?new Date(s['badge_'+b.id]).toLocaleDateString('vi-VN'):null;return`<div class="badge-card${earned?' earned':''}">\n<div class="badge-card-icon">${b.icon}</div>\n<div class="badge-card-name">${b.name}</div>\n<div class="badge-card-desc">${b.desc}</div>\n${earned?`<div class="badge-lock" style="color:#10b981;font-size:.7rem;">Đạt được ${earnedDate}</div>`:'<div class="badge-lock">🔒 Chưa đạt</div>'}\n</div>`;}).join('');}
+function gv5DongBadges(){const screen=document.getElementById('vBadges');if(screen)screen.classList.remove('active');gvMoHub();}
+function gv5IsDailyDone(){const s=gvLoadSave();const today=new Date().toISOString().slice(0,10);return s.dailyDate===today;}
+function gv5DailyGameId(){const dayOfYear=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/86400000);return(dayOfYear%9)+1;}
+function gv5StartDaily(){if(gv5IsDailyDone()){GV.speak('Hôm nay bé đã hoàn thành thử thách rồi! Hẹn gặp lại ngày mai!');return;}const id=gv5DailyGameId();gvMoGame(id);const origResult=GV.showResult.bind(GV);GV.showResult=function(){origResult();const s=gvLoadSave();const today=new Date().toISOString().slice(0,10);s.dailyDate=today;s.dailyDone=(s.dailyDone||0)+1;gvSaveSave(s);GV.save=s;GV.showResult=origResult;setTimeout(()=>gv5CheckBadges(),600);};}
+(function(){
+  const origHub=typeof gvMoHub==='function'?gvMoHub:null;
+  window.gvMoHub=function(){
+    if(origHub)origHub();
+    const hub=document.getElementById('vGameHub');if(!hub)return;
+    hub.querySelectorAll('.gvh-mascot-level,.gvh-stats-row,.gvh-daily,.gvh-actions').forEach(e=>e.remove());
+    const s=gvLoadSave();const stars=s.totalStars||0;
+    const mascot=gv5MascotForStars(stars);
+    const nextLv=MASCOT_LEVELS.find(l=>l.xpNeeded>stars);
+    const xpPct=nextLv?Math.min(100,((stars-mascot.xpNeeded)/(nextLv.xpNeeded-mascot.xpNeeded))*100):100;
+    const dailyId=gv5DailyGameId();
+    const dailyGame=typeof GAME_CATALOG!=='undefined'?GAME_CATALOG.find(g=>g.id===dailyId):null;
+    const dailyDone=gv5IsDailyDone();
+    const dailyEl=document.createElement('div');dailyEl.className='gvh-daily';dailyEl.onclick=gv5StartDaily;
+    dailyEl.innerHTML=`<div class="gvh-daily-icon">${dailyDone?'✅':'🌟'}</div><div class="gvh-daily-text"><div class="gvh-daily-title">Thử Thách Hôm Nay</div><div class="gvh-daily-sub">${dailyGame?dailyGame.name:'Trò chơi ngày hôm nay'}</div></div><div class="gvh-daily-badge${dailyDone?' gvh-daily-done':''}">${dailyDone?'✓ Xong':'+2⭐'}</div>`;
+    const mascotEl=document.createElement('div');mascotEl.className='gvh-mascot-level';
+    mascotEl.innerHTML=`<div class="gvh-mascot-emoji">${mascot.emoji}</div><div class="gvh-mascot-info"><div class="gvh-mascot-name">${mascot.name}</div><div class="gvh-mascot-xp-wrap"><div class="gvh-mascot-xp-fill" style="width:${xpPct}%"></div></div></div><div class="gvh-mascot-lvl">Lv.${mascot.level}</div>`;
+    const earned=BADGES.filter(b=>s['badge_'+b.id]).length;
+    const gamesPlayed=[1,2,3,4,5,6,7,8,9].filter(id=>s['game'+id+'_stars']).length;
+    const statsEl=document.createElement('div');statsEl.className='gvh-stats-row';
+    statsEl.innerHTML=`<div class="gvh-stat-chip"><div class="sv">⭐${stars}</div><div class="sl">Sao</div></div><div class="gvh-stat-chip"><div class="sv">🔥${s.maxStreak||0}</div><div class="sl">Streak cao</div></div><div class="gvh-stat-chip"><div class="sv">🏅${earned}</div><div class="sl">Huy hiệu</div></div><div class="gvh-stat-chip"><div class="sv">🎮${gamesPlayed}</div><div class="sl">Trò đã chơi</div></div>`;
+    const actionsEl=document.createElement('div');actionsEl.className='gvh-actions';
+    actionsEl.innerHTML=`<button class="gvh-action-btn" onclick="gv5MoBadges()"><span class="ab-icon">🏅</span>Huy Hiệu</button><button class="gvh-action-btn" onclick="gv5StartDaily()"><span class="ab-icon">📅</span>Hôm Nay</button>`;
+    const grid=document.getElementById('gvhGrid');
+    if(grid){hub.insertBefore(actionsEl,grid);hub.insertBefore(statsEl,actionsEl);hub.insertBefore(dailyEl,statsEl);hub.insertBefore(mascotEl,dailyEl);}
+    const el=document.getElementById('gvhTotalStars');if(el)el.textContent=stars;
+  };
+})();
+setTimeout(gv5CheckBadges,1500);
+(function(){const prev=typeof gvDongGame==='function'?gvDongGame:null;window.gvDongGame=function(id){const el=document.getElementById('vGame'+id);if(el)el.classList.remove('active');const res=document.getElementById('vGameResult');if(res)res.classList.remove('show');gvMoHub();};})();
+window.gvhDong=function(){const hub=document.getElementById('vGameHub');if(hub){hub.classList.remove('active');hub.style.display='';}};
 </script>
 </body>
 </html>
