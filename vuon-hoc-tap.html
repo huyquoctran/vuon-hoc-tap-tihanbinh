@@ -546,7 +546,7 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
    ============================================================ */
 
 /* ---- GAME HUB ---- */
-#vGameHub { display:none; flex-direction:column; min-height:100vh; background:linear-gradient(160deg,#0f4c75 0%,#1b6ca8 50%,#1abc9c 100%); }
+#vGameHub { display:none; position:fixed; inset:0; z-index:8000; flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch; background:linear-gradient(160deg,#0f4c75 0%,#1b6ca8 50%,#1abc9c 100%); }
 #vGameHub.active { display:flex; }
 .gvh-header { padding:20px 16px 10px; text-align:center; }
 .gvh-title { font-size:2rem; font-weight:900; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.3); }
@@ -669,6 +669,215 @@ nav.main{position:sticky;top:62px;z-index:55;background:transparent}
   .g3-pad.medium { width:75px; height:75px; font-size:1.6rem; }
   .g2-ans-btn { font-size:2.2rem; padding:14px 20px; }
 }
+/* ============================================================
+   VUON GAME — Phase 2 CSS
+   Game 4: Cay Tao Ky Dieu (number decomposition)
+   Game 5: Tho Xay Ti Hon (shape recognition)
+   ============================================================ */
+
+/* ============================================================
+   GAME 4: CAY TAO KY DIEU
+   Background: orchard warm tones, apple tree center
+   ============================================================ */
+#vGame4 { background: linear-gradient(160deg, #78350f 0%, #92400e 30%, #a16207 70%, #ca8a04 100%); }
+.g4-tree-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 14px;
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+.g4-target-banner {
+  background: rgba(255,255,255,.95);
+  border-radius: 20px;
+  padding: 14px 24px;
+  margin: 10px 14px 8px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.15);
+}
+.g4-target-text { font-size: 1.2rem; font-weight: 800; color: #78350f; }
+.g4-target-num  { font-size: 3rem; font-weight: 900; color: #b45309; }
+
+/* Apple tree SVG-style with CSS */
+.g4-tree-trunk { width: 32px; height: 60px; background: #92400e; border-radius: 4px; margin-top: -10px; }
+.g4-tree-crown { width: 180px; height: 140px; background: linear-gradient(135deg, #16a34a, #15803d); border-radius: 50% 50% 40% 40%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+.g4-tree-crown::before { content: '🌳'; font-size: 8rem; position: absolute; top: -20px; opacity: .15; }
+
+/* Split display on the tree */
+.g4-split-wrap { display: flex; align-items: center; gap: 14px; }
+.g4-split-box {
+  width: 64px; height: 64px;
+  background: rgba(255,255,255,.9);
+  border: 3px dashed #fbbf24;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; font-weight: 900; color: #78350f;
+  transition: border-color .3s, background .3s;
+  cursor: pointer;
+}
+.g4-split-box.filled { border: 3px solid #10b981; background: #d1fae5; }
+.g4-split-box.selected { border: 3px solid #f59e0b; background: #fef3c7; }
+.g4-split-plus { font-size: 1.8rem; color: rgba(255,255,255,.9); font-weight: 900; }
+.g4-split-equals { font-size: 1.4rem; color: rgba(255,255,255,.7); font-weight: 700; margin-top: 6px; }
+
+/* Number pad */
+.g4-numpad { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 14px; margin-top: auto; }
+.g4-num-btn {
+  background: rgba(255,255,255,.9);
+  border: none;
+  border-radius: 14px;
+  padding: 16px 8px;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #78350f;
+  cursor: pointer;
+  transition: transform .15s, background .15s;
+  box-shadow: 0 3px 8px rgba(0,0,0,.15);
+}
+.g4-num-btn:active { transform: scale(.88); }
+.g4-num-btn.used { opacity: .4; cursor: default; }
+.g4-num-btn.apple { background: linear-gradient(135deg, #f87171, #ef4444); color: #fff; }
+
+/* Check button */
+.g4-check-btn {
+  width: calc(100% - 28px); margin: 0 14px 14px;
+  padding: 16px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border: none; border-radius: 16px;
+  color: #fff; font-size: 1.2rem; font-weight: 800;
+  cursor: pointer; transition: transform .15s;
+}
+.g4-check-btn:active { transform: scale(.96); }
+.g4-check-btn:disabled { opacity: .5; cursor: default; }
+
+/* Apple rain animation */
+.g4-apple-rain { position: fixed; font-size: 2rem; pointer-events: none; z-index: 9700; animation: g4Rain 1.2s ease forwards; }
+@keyframes g4Rain { 0%{opacity:1;transform:translateY(-20px) rotate(0deg)} 100%{opacity:0;transform:translateY(100px) rotate(360deg)} }
+
+/* ============================================================
+   GAME 5: THO XAY TI HON (SHAPE RECOGNITION)
+   Background: construction site playful theme
+   ============================================================ */
+#vGame5 { background: linear-gradient(160deg, #1e3a5f 0%, #1d4ed8 60%, #3b82f6 100%); }
+.g5-question-banner {
+  background: rgba(255,255,255,.95);
+  border-radius: 20px;
+  padding: 14px 20px;
+  margin: 10px 14px 8px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+.g5-question-text { font-size: 1.2rem; font-weight: 800; color: #1e3a5f; }
+.g5-shape-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 16px;
+  position: relative;
+  z-index: 2;
+}
+.g5-shape { transition: transform .2s; }
+.g5-shape-circle { width: 140px; height: 140px; background: linear-gradient(135deg, #f472b6, #ec4899); border-radius: 50%; box-shadow: 0 8px 24px rgba(236,72,153,.4); }
+.g5-shape-square { width: 130px; height: 130px; background: linear-gradient(135deg, #fb923c, #f97316); border-radius: 8px; box-shadow: 0 8px 24px rgba(249,115,22,.4); }
+.g5-shape-rect { width: 200px; height: 110px; background: linear-gradient(135deg, #a78bfa, #8b5cf6); border-radius: 8px; box-shadow: 0 8px 24px rgba(139,92,246,.4); }
+.g5-shape-triangle { width: 0; height: 0; border-left: 80px solid transparent; border-right: 80px solid transparent; border-bottom: 140px solid #34d399; filter: drop-shadow(0 8px 16px rgba(52,211,153,.4)); }
+.g5-shape-rhombus { width: 110px; height: 110px; background: linear-gradient(135deg, #fbbf24, #f59e0b); transform: rotate(45deg); border-radius: 4px; box-shadow: 0 8px 24px rgba(251,191,36,.4); }
+.g5-shape-3d { font-size: 8rem; line-height: 1; filter: drop-shadow(0 8px 16px rgba(0,0,0,.3)); text-align: center; }
+.g5-fact-bubble { background: rgba(255,255,255,.15); border: 2px solid rgba(255,255,255,.3); border-radius: 16px; padding: 10px 18px; color: #fff; font-size: .95rem; text-align: center; margin: 0 14px 8px; }
+.g5-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; margin-top: auto; }
+.g5-ans-btn { background: rgba(255,255,255,.92); border: 3px solid transparent; border-radius: 18px; padding: 18px 10px; font-size: 1.1rem; font-weight: 800; color: #1e3a5f; cursor: pointer; transition: transform .15s, background .15s; box-shadow: 0 4px 12px rgba(0,0,0,.15); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.g5-ans-btn .g5-btn-emoji { font-size: 1.8rem; }
+.g5-ans-btn:active { transform: scale(.92); }
+.g5-ans-btn.correct { background: #d1fae5; border-color: #10b981; }
+.g5-ans-btn.wrong   { background: #fee2e2; border-color: #ef4444; animation: gvShake .4s; }
+.g5-info-bar { background: rgba(255,255,255,.1); border-radius: 12px; padding: 8px 14px; margin: 0 14px 6px; display: flex; justify-content: space-between; color: rgba(255,255,255,.8); font-size: .85rem; }
+
+/* ============================================================
+   VUON GAME — Phase 3 CSS
+   Game 6: Tho Con Dong Tai (phonics recognition)
+   Game 7: Tho Tim Duong (spelling maze)
+   ============================================================ */
+#vGame6 { background: linear-gradient(160deg, #4c1d95 0%, #5b21b6 50%, #6d28d9 100%); }
+.g6-question-banner { background: rgba(255,255,255,.95); border-radius: 20px; padding: 16px 20px; margin: 10px 14px 8px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+.g6-question-text { font-size: 1.2rem; font-weight: 800; color: #4c1d95; }
+.g6-phonics-display { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; padding: 16px; gap: 12px; }
+.g6-big-letter { font-size: 7rem; font-weight: 900; color: #fff; text-shadow: 0 4px 16px rgba(0,0,0,.3); animation: gvPop .5s cubic-bezier(.34,1.56,.64,1); line-height: 1; }
+.g6-picture { font-size: 4.5rem; animation: gvFloat 2.5s ease-in-out infinite; filter: drop-shadow(0 4px 12px rgba(0,0,0,.3)); }
+.g6-play-btn { background: rgba(255,255,255,.2); border: 2px solid rgba(255,255,255,.4); border-radius: 50%; width: 60px; height: 60px; font-size: 1.6rem; color: #fff; cursor: pointer; transition: background .2s, transform .15s; display: flex; align-items: center; justify-content: center; }
+.g6-play-btn:active { transform: scale(.9); background: rgba(255,255,255,.35); }
+.g6-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; }
+.g6-ans-btn { background: rgba(255,255,255,.92); border: 3px solid transparent; border-radius: 18px; padding: 22px 10px; font-size: 2rem; font-weight: 900; color: #4c1d95; cursor: pointer; transition: transform .15s, background .15s; box-shadow: 0 4px 12px rgba(0,0,0,.15); font-family: inherit; }
+.g6-ans-btn:active { transform: scale(.92); }
+.g6-ans-btn.correct { background: #d1fae5; border-color: #10b981; }
+.g6-ans-btn.wrong   { background: #fee2e2; border-color: #ef4444; animation: gvShake .4s; }
+.g6-rabbit-deco { position: absolute; bottom: 70px; right: 12px; font-size: 3.5rem; animation: g6Ear 1.5s ease-in-out infinite; }
+@keyframes g6Ear { 0%, 100% { transform: rotate(0deg) translateY(0); } 30% { transform: rotate(-10deg) translateY(-5px); } 60% { transform: rotate(8deg) translateY(-3px); } }
+
+#vGame7 { background: linear-gradient(160deg, #14532d 0%, #166534 50%, #15803d 100%); }
+.g7-question-banner { background: rgba(255,255,255,.95); border-radius: 20px; padding: 14px 20px; margin: 10px 14px 8px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+.g7-question-text { font-size: 1.1rem; font-weight: 800; color: #14532d; }
+.g7-word-area { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 16px; flex: 1; }
+.g7-picture { font-size: 5rem; animation: gvFloat 2.5s ease-in-out infinite; }
+.g7-word-wrap { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,.15); border-radius: 16px; padding: 14px 20px; }
+.g7-letter { font-size: 2.4rem; font-weight: 900; color: #fff; min-width: 36px; text-align: center; }
+.g7-blank { width: 52px; height: 58px; background: rgba(255,255,255,.9); border: 3px dashed #fbbf24; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; font-weight: 900; color: #14532d; transition: all .3s; min-width: 52px; }
+.g7-blank.filled { border: 3px solid #10b981; background: #d1fae5; }
+.g7-blank.wrong-blink { animation: g7Blink .4s 2; border-color: #ef4444; background: #fee2e2; }
+@keyframes g7Blink { 0%,100%{background:#fee2e2} 50%{background:#fca5a5} }
+.g7-hint-label { color: rgba(255,255,255,.7); font-size: .85rem; text-align: center; }
+.g7-answers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 14px; }
+.g7-ans-btn { background: rgba(255,255,255,.9); border: 3px solid transparent; border-radius: 14px; padding: 16px 6px; font-size: 1.6rem; font-weight: 900; color: #14532d; cursor: pointer; transition: transform .15s, background .15s; box-shadow: 0 3px 8px rgba(0,0,0,.15); }
+.g7-ans-btn:active { transform: scale(.9); }
+.g7-ans-btn.correct { background: #d1fae5; border-color: #10b981; }
+.g7-ans-btn.wrong   { background: #fee2e2; border-color: #ef4444; animation: gvShake .4s; }
+.g7-path-deco { position: absolute; bottom: 60px; left: 12px; font-size: 2rem; animation: gvFloat 3s ease-in-out infinite; }
+
+/* ============================================================
+   VUON GAME — Phase 4 CSS
+   Game 8: So Vui (numbers 11-100, place value)
+   Game 9: Dong Ho Ky Dieu (clock reading - Grade 1 HK2)
+   ============================================================ */
+#vGame8 { background: linear-gradient(160deg, #0c4a6e 0%, #075985 50%, #0284c7 100%); }
+.g8-question-banner { background: rgba(255,255,255,.95); border-radius: 20px; padding: 16px 24px; margin: 10px 14px 8px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+.g8-question-text { font-size: 1.2rem; font-weight: 800; color: #0c4a6e; }
+.g8-display-area { display: flex; flex-direction: column; align-items: center; flex: 1; padding: 10px 14px; gap: 14px; }
+.g8-big-num { font-size: 6rem; font-weight: 900; color: #fff; text-shadow: 0 4px 16px rgba(0,0,0,.3); animation: gvPop .5s cubic-bezier(.34,1.56,.64,1); line-height: 1; }
+.g8-blocks-wrap { display: flex; align-items: flex-start; gap: 20px; }
+.g8-block-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.g8-block-label { color: rgba(255,255,255,.7); font-size: .85rem; font-weight: 600; }
+.g8-tens-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; max-width: 120px; }
+.g8-ten-block { width: 18px; height: 60px; background: linear-gradient(180deg, #fbbf24, #f59e0b); border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+.g8-ones-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; max-width: 100px; }
+.g8-one-block { width: 18px; height: 18px; background: linear-gradient(135deg, #34d399, #10b981); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.g8-block-sep { font-size: 2rem; color: rgba(255,255,255,.5); align-self: center; font-weight: 300; }
+.g8-place-info { background: rgba(255,255,255,.15); border-radius: 12px; padding: 10px 20px; color: #fff; font-size: 1rem; font-weight: 700; text-align: center; }
+.g8-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; }
+.g8-ans-btn { background: rgba(255,255,255,.92); border: 3px solid transparent; border-radius: 18px; padding: 18px 10px; font-size: 1.8rem; font-weight: 900; color: #0c4a6e; cursor: pointer; transition: transform .15s, background .15s; box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+.g8-ans-btn:active { transform: scale(.92); }
+.g8-ans-btn.correct { background: #d1fae5; border-color: #10b981; }
+.g8-ans-btn.wrong   { background: #fee2e2; border-color: #ef4444; animation: gvShake .4s; }
+
+#vGame9 { background: linear-gradient(160deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%); }
+.g9-question-banner { background: rgba(255,255,255,.95); border-radius: 20px; padding: 14px 20px; margin: 10px 14px 8px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+.g9-question-text { font-size: 1.2rem; font-weight: 800; color: #1e1b4b; }
+.g9-clock-wrap { display: flex; align-items: center; justify-content: center; flex: 1; padding: 16px; }
+.g9-clock { width: 200px; height: 200px; background: radial-gradient(circle, #fff 60%, #e0e7ff); border-radius: 50%; border: 8px solid #312e81; box-shadow: 0 0 0 4px rgba(255,255,255,.2), 0 12px 40px rgba(0,0,0,.4); position: relative; animation: gvFloat 3s ease-in-out infinite; }
+.g9-clock-center { position: absolute; top: 50%; left: 50%; width: 14px; height: 14px; background: #312e81; border-radius: 50%; transform: translate(-50%,-50%); z-index: 10; }
+.g9-hour-num { position: absolute; font-size: .8rem; font-weight: 900; color: #1e1b4b; transform-origin: center; }
+.g9-hand-hour { position: absolute; bottom: 50%; left: 50%; width: 5px; height: 55px; background: #1e1b4b; border-radius: 4px 4px 0 0; transform-origin: bottom center; margin-left: -2.5px; transform: rotate(0deg); z-index: 8; }
+.g9-hand-min { position: absolute; bottom: 50%; left: 50%; width: 3px; height: 75px; background: #4f46e5; border-radius: 3px 3px 0 0; transform-origin: bottom center; margin-left: -1.5px; transform: rotate(0deg); z-index: 7; }
+.g9-tick { position: absolute; top: 50%; left: 50%; width: 2px; background: #c7d2fe; transform-origin: bottom center; }
+.g9-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; }
+.g9-ans-btn { background: rgba(255,255,255,.92); border: 3px solid transparent; border-radius: 18px; padding: 18px 10px; font-size: 1.2rem; font-weight: 900; color: #1e1b4b; cursor: pointer; transition: transform .15s, background .15s; box-shadow: 0 4px 12px rgba(0,0,0,.15); text-align: center; line-height: 1.3; }
+.g9-ans-btn:active { transform: scale(.92); }
+.g9-ans-btn.correct { background: #d1fae5; border-color: #10b981; }
+.g9-ans-btn.wrong   { background: #fee2e2; border-color: #ef4444; animation: gvShake .4s; }
+.g9-ans-btn .g9-big-time { font-size: 1.8rem; display: block; }
+.g9-star { position: absolute; color: rgba(255,255,255,.6); font-size: .8rem; animation: g9Twinkle 2s ease-in-out infinite; }
+@keyframes g9Twinkle { 0%,100%{opacity:.3;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
@@ -12932,6 +13141,663 @@ function g3Tap(chosen, correct, padEl) {
     else{setTimeout(()=>g3ShowQ(GV.state.current+1),1600);}
   }
 }
+</script>
+<!-- ============================================================
+   VUON GAME — Phase 2 HTML
+   Game 4: Cay Tao Ky Dieu + Game 5: Tho Xay Ti Hon
+   ============================================================ -->
+
+<!-- ===== GAME 4: CAY TAO KY DIEU ===== -->
+<div id="vGame4" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#78350f,#b45309);">
+    <button class="gv-back" onclick="gvDongGame(4)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g4Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g4Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g4Score">0 &#11088;</div>
+  </div>
+  <div class="g4-target-banner">
+    <div class="g4-target-text">Tách số <span id="g4TargetNum" class="g4-target-num">7</span> thành hai phần!</div>
+    <div style="font-size:.85rem;color:#92400e;margin-top:4px;" id="g4Hint">Bấm chọn hai số cộng lại bằng số trên</div>
+  </div>
+  <div class="g4-tree-area">
+    <div class="g4-tree-crown">
+      <div class="g4-split-wrap">
+        <div class="g4-split-box" id="g4BoxA" onclick="g4SelectBox('A')">?</div>
+        <div class="g4-split-plus">+</div>
+        <div class="g4-split-box" id="g4BoxB" onclick="g4SelectBox('B')">?</div>
+      </div>
+      <div class="g4-split-equals" id="g4SplitLabel">= <span id="g4SplitTarget">7</span></div>
+    </div>
+    <div class="g4-tree-trunk"></div>
+  </div>
+  <div class="g4-numpad" id="g4NumPad"></div>
+  <button class="g4-check-btn" id="g4CheckBtn" onclick="g4Check()" disabled>&#10003; Kiểm tra</button>
+</div>
+
+<!-- ===== GAME 5: THO XAY TI HON ===== -->
+<div id="vGame5" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#1e3a5f,#1d4ed8);">
+    <button class="gv-back" onclick="gvDongGame(5)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g5Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g5Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g5Score">0 &#11088;</div>
+  </div>
+  <div class="g5-question-banner">
+    <div class="g5-question-text" id="g5QuestionText">Hình này tên là gì?</div>
+  </div>
+  <div class="g5-info-bar" id="g5InfoBar">
+    <span id="g5InfoSides"></span>
+    <span id="g5InfoCorners"></span>
+  </div>
+  <div class="g5-shape-display" id="g5ShapeDisplay"></div>
+  <div class="g5-answers" id="g5Answers"></div>
+</div>
+
+<!-- ============================================================
+   VUON GAME — Phase 3 HTML
+   Game 6: Tho Con Dong Tai + Game 7: Tho Tim Duong
+   ============================================================ -->
+
+<!-- ===== GAME 6: THO CON DONG TAI (PHONICS) ===== -->
+<div id="vGame6" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#4c1d95,#6d28d9);">
+    <button class="gv-back" onclick="gvDongGame(6)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g6Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g6Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g6Score">0 &#11088;</div>
+  </div>
+  <div class="g6-question-banner">
+    <div class="g6-question-text" id="g6QuestionText">Hình này bắt đầu bằng âm nào?</div>
+  </div>
+  <div class="g6-phonics-display" id="g6Display">
+    <div class="g6-picture" id="g6Picture">&#128048;</div>
+    <div class="g6-big-letter" id="g6BigLetter">TH</div>
+    <button class="g6-play-btn" id="g6PlayBtn" onclick="g6PlaySound()" title="Nghe lại">&#128266;</button>
+  </div>
+  <div class="g6-rabbit-deco">&#128048;</div>
+  <div class="g6-answers" id="g6Answers"></div>
+</div>
+
+<!-- ===== GAME 7: THO TIM DUONG (SPELLING) ===== -->
+<div id="vGame7" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#14532d,#16a34a);">
+    <button class="gv-back" onclick="gvDongGame(7)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g7Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g7Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g7Score">0 &#11088;</div>
+  </div>
+  <div class="g7-question-banner">
+    <div class="g7-question-text" id="g7QuestionText">Điền chữ còn thiếu để hoàn thành từ!</div>
+  </div>
+  <div class="g7-word-area">
+    <div class="g7-picture" id="g7Picture">&#128048;</div>
+    <div class="g7-word-wrap" id="g7WordWrap"></div>
+    <div class="g7-hint-label" id="g7HintLabel"></div>
+  </div>
+  <div class="g7-path-deco">&#127800;</div>
+  <div class="g7-answers" id="g7Answers"></div>
+</div>
+
+<!-- ============================================================
+   VUON GAME — Phase 4 HTML
+   Game 8: So Vui + Game 9: Dong Ho Ky Dieu
+   ============================================================ -->
+
+<!-- ===== GAME 8: SO VUI (NUMBERS 11-100) ===== -->
+<div id="vGame8" class="gv-screen">
+  <div class="gv-header" style="background:linear-gradient(135deg,#0c4a6e,#0284c7);">
+    <button class="gv-back" onclick="gvDongGame(8)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g8Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g8Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g8Score">0 &#11088;</div>
+  </div>
+  <div class="g8-question-banner">
+    <div class="g8-question-text" id="g8QuestionText">Số này bằng bao nhiêu chục và mấy đơn vị?</div>
+  </div>
+  <div class="g8-display-area">
+    <div class="g8-big-num" id="g8BigNum">47</div>
+    <div class="g8-blocks-wrap">
+      <div class="g8-block-group">
+        <div class="g8-block-label">Chục</div>
+        <div class="g8-tens-row" id="g8TensBlocks"></div>
+      </div>
+      <div class="g8-block-sep">+</div>
+      <div class="g8-block-group">
+        <div class="g8-block-label">Đơn vị</div>
+        <div class="g8-ones-row" id="g8OnesBlocks"></div>
+      </div>
+    </div>
+    <div class="g8-place-info" id="g8PlaceInfo">? chục + ? đơn vị</div>
+  </div>
+  <div class="g8-answers" id="g8Answers"></div>
+</div>
+
+<!-- ===== GAME 9: DONG HO KY DIEU (CLOCK) ===== -->
+<div id="vGame9" class="gv-screen">
+  <div class="g9-star" style="top:12%;left:8%;animation-delay:0s;">&#11088;</div>
+  <div class="g9-star" style="top:20%;right:10%;animation-delay:.7s;">&#10022;</div>
+  <div class="g9-star" style="top:8%;left:55%;animation-delay:1.2s;">&#11088;</div>
+  <div class="g9-star" style="top:30%;left:15%;animation-delay:.4s;">&#10022;</div>
+  <div class="gv-header" style="background:linear-gradient(135deg,#1e1b4b,#4338ca);">
+    <button class="gv-back" onclick="gvDongGame(9)">&#8592; Ra</button>
+    <div class="gv-progress-wrap"><div class="gv-progress-fill" id="g9Progress" style="width:0%"></div></div>
+    <div class="gv-hearts" id="g9Hearts">&#10084;&#10084;&#10084;</div>
+    <div class="gv-score-badge" id="g9Score">0 &#11088;</div>
+  </div>
+  <div class="g9-question-banner">
+    <div class="g9-question-text" id="g9QuestionText">Đồng hồ chỉ mấy giờ?</div>
+  </div>
+  <div class="g9-clock-wrap">
+    <div class="g9-clock" id="g9Clock">
+      <div class="g9-clock-center"></div>
+      <div class="g9-hand-hour" id="g9HandHour"></div>
+      <div class="g9-hand-min"  id="g9HandMin"></div>
+    </div>
+  </div>
+  <div class="g9-answers" id="g9Answers"></div>
+</div>
+
+<script>
+// ============================================================
+// VUON GAME — Phase 2 JavaScript
+// Game 4: Cay Tao Ky Dieu (number decomposition / Tach-Gop)
+// Game 5: Tho Xay Ti Hon (2D/3D shape recognition)
+// Author: Huy Tran | Cadence Design Systems Vietnam
+// ============================================================
+
+MathEng.genSplit = function(range) {
+  range = range || [3, 8];
+  const target = this.rnd(range[0], range[1]);
+  return { type: 'split', target, range };
+};
+
+const SHAPES = [
+  { id: 'circle',    vn: 'Hình tròn',       en: 'circle',    emoji: '&#11044;', cssClass: 'g5-shape-circle',   sides: 0, corners: 0, fact: 'Hình tròn không có cạnh, không có góc.', hint3D: null },
+  { id: 'square',    vn: 'Hình vuông',       en: 'square',    emoji: '&#11035;', cssClass: 'g5-shape-square',   sides: 4, corners: 4, fact: 'Hình vuông có 4 cạnh bằng nhau và 4 góc vuông.', hint3D: null },
+  { id: 'rect',      vn: 'Hình chữ nhật',    en: 'rectangle', emoji: '&#9645;',  cssClass: 'g5-shape-rect',     sides: 4, corners: 4, fact: 'Hình chữ nhật có 4 cạnh và 4 góc vuông.', hint3D: null },
+  { id: 'triangle',  vn: 'Hình tam giác',    en: 'triangle',  emoji: '&#9650;',  cssClass: 'g5-shape-triangle', sides: 3, corners: 3, fact: 'Hình tam giác có 3 cạnh và 3 góc.', hint3D: null },
+  { id: 'cube',      vn: 'Hình lập phương',  en: 'cube',      emoji: '&#129524;',cssClass: 'g5-shape-3d',       sides: 6, corners: 8, fact: 'Hình lập phương có 6 mặt vuông bằng nhau.', hint3D: true },
+  { id: 'cylinder',  vn: 'Hình trụ',         en: 'cylinder',  emoji: '&#129684;',cssClass: 'g5-shape-3d',       sides: 0, corners: 0, fact: 'Hình trụ có 2 mặt tròn và 1 mặt cong.', hint3D: true },
+  { id: 'sphere',    vn: 'Hình cầu',         en: 'sphere',    emoji: '&#9679;',  cssClass: 'g5-shape-3d',       sides: 0, corners: 0, fact: 'Hình cầu là khối tròn — như quả bóng.', hint3D: true },
+];
+
+const G4 = { TOTAL: 8, target: 0, valA: null, valB: null, selectedBox: 'A', _answers: [] };
+
+function g4Start() {
+  GV.initState(4, G4.TOTAL);
+  GV.state.questions = Array.from({length: G4.TOTAL}, () => MathEng.genSplit([2, 9]));
+  document.getElementById('vGame4').classList.add('active');
+  GV.updateProgress(4); GV.updateHearts(4); GV.updateScore(4);
+  GV.speak('Cây Táo Kỳ Diệu! Hãy tách số thành hai phần cộng lại bằng số đề cho!');
+  setTimeout(() => g4ShowQ(0), 800);
+}
+function g4ShowQ(idx) {
+  const st = GV.state;
+  if (!st || idx >= G4.TOTAL) { GV.showResult(); return; }
+  st.current = idx; st.answered = false; st._qStart = Date.now();
+  GV.updateProgress(4);
+  const q = st.questions[idx];
+  G4.target = q.target; G4.valA = null; G4.valB = null; G4.selectedBox = 'A';
+  G4._answers = [];
+  for (let a = 1; a < q.target; a++) G4._answers.push([a, q.target - a]);
+  document.getElementById('g4TargetNum').textContent = q.target;
+  document.getElementById('g4SplitTarget').textContent = q.target;
+  document.getElementById('g4Hint').textContent = 'Chọn hai số cộng lại bằng ' + q.target;
+  const boxA = document.getElementById('g4BoxA'); const boxB = document.getElementById('g4BoxB');
+  boxA.textContent = '?'; boxA.className = 'g4-split-box selected';
+  boxB.textContent = '?'; boxB.className = 'g4-split-box';
+  const pad = document.getElementById('g4NumPad'); pad.innerHTML = '';
+  for (let n = 1; n < q.target; n++) {
+    const btn = document.createElement('button'); btn.className = 'g4-num-btn apple';
+    btn.textContent = n; btn.onclick = () => g4PadTap(n, btn); pad.appendChild(btn);
+  }
+  document.getElementById('g4CheckBtn').disabled = true;
+}
+function g4SelectBox(which) {
+  G4.selectedBox = which;
+  document.getElementById('g4BoxA').className = 'g4-split-box' + (which === 'A' ? ' selected' : (G4.valA !== null ? ' filled' : ''));
+  document.getElementById('g4BoxB').className = 'g4-split-box' + (which === 'B' ? ' selected' : (G4.valB !== null ? ' filled' : ''));
+}
+function g4PadTap(n, btn) {
+  if (GV.state.answered) return;
+  if (G4.selectedBox === 'A') { G4.valA = n; const box = document.getElementById('g4BoxA'); box.textContent = n; box.className = 'g4-split-box filled'; G4.selectedBox = 'B'; document.getElementById('g4BoxB').className = 'g4-split-box selected'; }
+  else { G4.valB = n; const box = document.getElementById('g4BoxB'); box.textContent = n; box.className = 'g4-split-box filled'; }
+  if (G4.valA !== null && G4.valB !== null) document.getElementById('g4CheckBtn').disabled = false;
+  GV.playBeep(440 + n * 20, 0.08);
+}
+function g4Check() {
+  if (GV.state.answered || G4.valA === null || G4.valB === null) return;
+  GV.state.answered = true;
+  const sum = G4.valA + G4.valB; const correct = sum === G4.target;
+  document.getElementById('g4CheckBtn').disabled = true;
+  if (correct) {
+    for (let i = 0; i < 6; i++) { setTimeout(() => { const el = document.createElement('div'); el.className = 'g4-apple-rain'; el.textContent = '🍎'; el.style.left = (20 + Math.random() * 60) + '%'; el.style.top = '20%'; document.body.appendChild(el); setTimeout(() => el.remove(), 1300); }, i * 120); }
+    document.getElementById('g4BoxA').style.background = '#d1fae5'; document.getElementById('g4BoxB').style.background = '#d1fae5';
+    GV.onCorrect(null); GV.updateScore(4);
+    GV.speak(G4.valA + ' cộng ' + G4.valB + ' bằng ' + G4.target + '! Đúng rồi!');
+    setTimeout(() => g4ShowQ(GV.state.current + 1), 1400);
+  } else {
+    document.getElementById('g4BoxA').style.background = '#fee2e2'; document.getElementById('g4BoxB').style.background = '#fee2e2';
+    GV.onWrong(); GV.updateHearts(4);
+    GV.speak(G4.valA + ' cộng ' + G4.valB + ' bằng ' + sum + ', chưa đúng! Thử lại nhé!');
+    setTimeout(() => { G4.valA = null; G4.valB = null; G4.selectedBox = 'A'; document.getElementById('g4BoxA').textContent = '?'; document.getElementById('g4BoxA').className = 'g4-split-box selected'; document.getElementById('g4BoxA').style.background = ''; document.getElementById('g4BoxB').textContent = '?'; document.getElementById('g4BoxB').className = 'g4-split-box'; document.getElementById('g4BoxB').style.background = ''; document.getElementById('g4CheckBtn').disabled = true; GV.state.answered = false; if (GV.state.lives <= 0) GV.showResult(); }, 1500);
+  }
+}
+
+const G5 = { TOTAL: 10, _pool: null };
+MathEng.genShape = function(pool) {
+  const shape = pool[Math.floor(Math.random() * pool.length)];
+  const types = ['name']; if (shape.sides > 0) types.push('sides');
+  const qType = types[Math.floor(Math.random() * types.length)];
+  let question, answer, choices;
+  if (qType === 'name') {
+    question = 'Hình này tên là gì?'; answer = shape.vn;
+    const distractors = pool.filter(s => s.id !== shape.id).map(s => s.vn).sort(() => Math.random()-0.5).slice(0,3);
+    choices = [answer, ...distractors].sort(() => Math.random()-0.5);
+  } else {
+    question = 'Hình ' + shape.vn.toLowerCase() + ' có bao nhiêu cạnh?'; answer = shape.sides;
+    const distractors = [shape.sides+1, shape.sides-1, shape.sides+2].filter(n => n>=0 && n!==shape.sides);
+    choices = [answer, ...distractors.slice(0,3)].sort(() => Math.random()-0.5);
+  }
+  return { shape, qType, question, answer, choices };
+};
+function g5Start() {
+  GV.initState(5, G5.TOTAL);
+  GV.state.questions = Array.from({length: G5.TOTAL}, (_, i) => MathEng.genShape(i < 5 ? SHAPES.slice(0,4) : SHAPES));
+  document.getElementById('vGame5').classList.add('active');
+  GV.updateProgress(5); GV.updateHearts(5); GV.updateScore(5);
+  GV.speak('Thợ Xây Tí Hon! Nhận biết hình học nào nhé!');
+  setTimeout(() => g5ShowQ(0), 800);
+}
+function g5ShowQ(idx) {
+  const st = GV.state; if (!st || idx >= G5.TOTAL) { GV.showResult(); return; }
+  st.current = idx; st.answered = false; st._qStart = Date.now(); GV.updateProgress(5);
+  const q = st.questions[idx]; const s = q.shape;
+  document.getElementById('g5QuestionText').textContent = q.question;
+  const sidesEl = document.getElementById('g5InfoSides'); const cornersEl = document.getElementById('g5InfoCorners');
+  if (s.sides > 0) { sidesEl.textContent = '📐 ' + s.sides + ' cạnh'; cornersEl.textContent = '📌 ' + s.corners + ' góc'; }
+  else if (s.id === 'circle') { sidesEl.textContent = '⭕ Không có cạnh'; cornersEl.textContent = '✨ Không có góc'; }
+  else { sidesEl.textContent = ''; cornersEl.textContent = s.fact.split('.')[0]; }
+  const disp = document.getElementById('g5ShapeDisplay');
+  if (s.hint3D) disp.innerHTML = '<div class="' + s.cssClass + '" style="animation:gvFloat 2.5s ease-in-out infinite;">' + s.emoji + '</div>';
+  else disp.innerHTML = '<div class="' + s.cssClass + '" style="animation:gvFloat 2.5s ease-in-out infinite;"></div>';
+  const ans = document.getElementById('g5Answers'); ans.innerHTML = '';
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button'); btn.className = 'g5-ans-btn';
+    const matchShape = SHAPES.find(sh => sh.vn === String(choice) || sh.sides === choice);
+    const emoji = typeof choice === 'string' && matchShape ? matchShape.emoji : '🔢';
+    btn.innerHTML = '<span class="g5-btn-emoji">' + (typeof choice === 'string' ? emoji : '') + '</span><span>' + choice + '</span>';
+    btn.onclick = () => g5Answer(choice, q.answer, btn); ans.appendChild(btn);
+  });
+  setTimeout(() => GV.speak(q.question), 300);
+}
+function g5Answer(chosen, correct, btn) {
+  if (!GV.state || GV.state.answered) return;
+  GV.state.answered = true;
+  document.querySelectorAll('.g5-ans-btn').forEach(b => b.disabled = true);
+  if (String(chosen) === String(correct)) {
+    btn.classList.add('correct');
+    const q = GV.state.questions[GV.state.current];
+    GV.onCorrect(btn); GV.updateScore(5);
+    setTimeout(() => GV.speak(q.shape.fact), 600);
+    setTimeout(() => g5ShowQ(GV.state.current + 1), 1500);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.g5-ans-btn').forEach(b => { if (String(b.querySelector('span:last-child')?.textContent) === String(correct)) b.classList.add('correct'); });
+    GV.onWrong(); GV.updateHearts(5);
+    if (GV.state.lives <= 0) setTimeout(() => GV.showResult(), 1000);
+    else setTimeout(() => g5ShowQ(GV.state.current + 1), 1500);
+  }
+}
+(function() {
+  const cat = typeof GAME_CATALOG !== 'undefined' ? GAME_CATALOG : [];
+  [{ id:4,emoji:'🍎',name:'Cây Táo Kỳ Diệu',desc:'Tách và gộp số',theme:'orange',badge:'Mới',fn:'gvMoGame(4)',locked:false },
+   { id:5,emoji:'🏗️',name:'Thợ Xây Tí Hon',desc:'Nhận biết hình học',theme:'orange',badge:'Mới',fn:'gvMoGame(5)',locked:false }]
+  .forEach(u => { const i = cat.findIndex(c => c.id === u.id); if (i >= 0) Object.assign(cat[i], u); });
+})();
+(function() {
+  const prev = typeof gvMoGame === 'function' ? gvMoGame : null;
+  window.gvMoGame = function(id) {
+    const hub = document.getElementById('vGameHub'); if (hub) { hub.classList.remove('active'); hub.style.display = ''; }
+    if (id === 1) g1Start(); else if (id === 2) g2Start(); else if (id === 3) g3Start();
+    else if (id === 4) g4Start(); else if (id === 5) g5Start(); else if (prev) prev(id);
+  };
+  window.gvDongGame = function(id) {
+    const el = document.getElementById('vGame' + id); if (el) el.classList.remove('active');
+    const res = document.getElementById('vGameResult'); if (res) res.classList.remove('show');
+    if (typeof gvMoHub === 'function') gvMoHub();
+  };
+})();
+</script>
+
+<script>
+// ============================================================
+// VUON GAME — Phase 3 JavaScript
+// Game 6: Tho Con Dong Tai (phonics)
+// Game 7: Tho Tim Duong (spelling)
+// Author: Huy Tran | Cadence Design Systems Vietnam
+// ============================================================
+const PHONICS_DB = [
+  { word: 'bò',    emoji: '🐄', initial: 'b',  group: 'animal' },
+  { word: 'bướm',  emoji: '🦋', initial: 'b',  group: 'animal' },
+  { word: 'bóng',  emoji: '⚽', initial: 'b',  group: 'object' },
+  { word: 'bàn',   emoji: '🪑', initial: 'b',  group: 'object' },
+  { word: 'cá',    emoji: '🐟', initial: 'c',  group: 'animal' },
+  { word: 'cây',   emoji: '🌳', initial: 'c',  group: 'nature' },
+  { word: 'cún',   emoji: '🐶', initial: 'c',  group: 'animal' },
+  { word: 'cờ',    emoji: '🚩', initial: 'c',  group: 'object' },
+  { word: 'dê',    emoji: '🐐', initial: 'd',  group: 'animal' },
+  { word: 'dưa',   emoji: '🍈', initial: 'd',  group: 'food'   },
+  { word: 'đèn',   emoji: '💡', initial: 'đ',  group: 'object' },
+  { word: 'đào',   emoji: '🍑', initial: 'đ',  group: 'food'   },
+  { word: 'đỏ',    emoji: '🔴', initial: 'đ',  group: 'color'  },
+  { word: 'gà',    emoji: '🐔', initial: 'g',  group: 'animal' },
+  { word: 'gấu',   emoji: '🐻', initial: 'g',  group: 'animal' },
+  { word: 'hoa',   emoji: '🌸', initial: 'h',  group: 'nature' },
+  { word: 'hổ',    emoji: '🐯', initial: 'h',  group: 'animal' },
+  { word: 'kẹo',   emoji: '🍬', initial: 'k',  group: 'food'   },
+  { word: 'kéo',   emoji: '✂️', initial: 'k',  group: 'object' },
+  { word: 'lá',    emoji: '🍃', initial: 'l',  group: 'nature' },
+  { word: 'lợn',   emoji: '🐷', initial: 'l',  group: 'animal' },
+  { word: 'lửa',   emoji: '🔥', initial: 'l',  group: 'nature' },
+  { word: 'mèo',   emoji: '🐱', initial: 'm',  group: 'animal' },
+  { word: 'mây',   emoji: '☁️', initial: 'm',  group: 'nature' },
+  { word: 'mưa',   emoji: '🌧️', initial: 'm',  group: 'nature' },
+  { word: 'nước',  emoji: '💧', initial: 'n',  group: 'nature' },
+  { word: 'nấm',   emoji: '🍄', initial: 'n',  group: 'food'   },
+  { word: 'phở',   emoji: '🍜', initial: 'ph', group: 'food'   },
+  { word: 'rùa',   emoji: '🐢', initial: 'r',  group: 'animal' },
+  { word: 'rau',   emoji: '🥬', initial: 'r',  group: 'food'   },
+  { word: 'sao',   emoji: '⭐', initial: 's',  group: 'nature' },
+  { word: 'sư tử', emoji: '🦁', initial: 's',  group: 'animal' },
+  { word: 'sóc',   emoji: '🐿️', initial: 's',  group: 'animal' },
+  { word: 'táo',   emoji: '🍎', initial: 't',  group: 'food'   },
+  { word: 'thỏ',   emoji: '🐰', initial: 'th', group: 'animal' },
+  { word: 'trăng', emoji: '🌙', initial: 'tr', group: 'nature' },
+  { word: 'tay',   emoji: '🖐️', initial: 't',  group: 'body'   },
+  { word: 'voi',   emoji: '🐘', initial: 'v',  group: 'animal' },
+  { word: 'vịt',   emoji: '🦆', initial: 'v',  group: 'animal' },
+  { word: 'vé',    emoji: '🎟️', initial: 'v',  group: 'object' },
+  { word: 'xe',    emoji: '🚗', initial: 'x',  group: 'object' },
+  { word: 'xanh',  emoji: '🟢', initial: 'x',  group: 'color'  },
+];
+const SPELLING_DB = [
+  { word: 'bò',   emoji: '🐄',  display: '_ò',   answer: 'b', dist: ['m','c','n'] },
+  { word: 'bướm', emoji: '🦋',  display: '_ướm', answer: 'b', dist: ['c','l','h'] },
+  { word: 'cá',   emoji: '🐟',  display: '_á',   answer: 'c', dist: ['b','g','m'] },
+  { word: 'cún',  emoji: '🐶',  display: '_ún',  answer: 'c', dist: ['k','b','v'] },
+  { word: 'dê',   emoji: '🐐',  display: '_ê',   answer: 'd', dist: ['b','c','g'] },
+  { word: 'đèn',  emoji: '💡',  display: '_èn',  answer: 'đ', dist: ['d','g','n'] },
+  { word: 'gà',   emoji: '🐔',  display: '_à',   answer: 'g', dist: ['c','b','l'] },
+  { word: 'gấu',  emoji: '🐻',  display: '_ấu',  answer: 'g', dist: ['h','m','n'] },
+  { word: 'hoa',  emoji: '🌸',  display: '_oa',  answer: 'h', dist: ['c','g','b'] },
+  { word: 'hổ',   emoji: '🐯',  display: '_ổ',   answer: 'h', dist: ['g','c','m'] },
+  { word: 'kẹo',  emoji: '🍬',  display: '_ẹo',  answer: 'k', dist: ['c','b','g'] },
+  { word: 'lá',   emoji: '🍃',  display: '_á',   answer: 'l', dist: ['b','n','c'] },
+  { word: 'lợn',  emoji: '🐷',  display: '_ợn',  answer: 'l', dist: ['m','n','g'] },
+  { word: 'mèo',  emoji: '🐱',  display: '_èo',  answer: 'm', dist: ['n','l','b'] },
+  { word: 'mây',  emoji: '☁️',  display: '_ây',  answer: 'm', dist: ['t','s','b'] },
+  { word: 'nước', emoji: '💧',  display: '_ước', answer: 'n', dist: ['m','l','r'] },
+  { word: 'rùa',  emoji: '🐢',  display: '_ùa',  answer: 'r', dist: ['c','l','n'] },
+  { word: 'sao',  emoji: '⭐',  display: '_ao',  answer: 's', dist: ['b','c','t'] },
+  { word: 'táo',  emoji: '🍎',  display: '_áo',  answer: 't', dist: ['s','b','d'] },
+  { word: 'voi',  emoji: '🐘',  display: '_oi',  answer: 'v', dist: ['b','c','g'] },
+  { word: 'vịt',  emoji: '🦆',  display: '_ịt',  answer: 'v', dist: ['b','t','m'] },
+  { word: 'xe',   emoji: '🚗',  display: '_e',   answer: 'x', dist: ['c','b','s'] },
+  { word: 'bàn',  emoji: '🪑',  display: 'b_n',  answer: 'à', dist: ['ò','ê','ô'] },
+  { word: 'cây',  emoji: '🌳',  display: 'c_y',  answer: 'â', dist: ['a','o','u'] },
+  { word: 'đào',  emoji: '🍑',  display: 'đ_o',  answer: 'à', dist: ['ô','ê','â'] },
+  { word: 'lửa',  emoji: '🔥',  display: 'l_a',  answer: 'ử', dist: ['ô','ê','â'] },
+];
+const G6 = { TOTAL: 10 };
+MathEng.genPhonics = function() {
+  const target = PHONICS_DB[Math.floor(Math.random() * PHONICS_DB.length)];
+  const allInitials = [...new Set(PHONICS_DB.map(p => p.initial))].filter(i => i !== target.initial);
+  const wrongs = allInitials.sort(() => Math.random()-0.5).slice(0,3);
+  const choices = [target.initial, ...wrongs].sort(() => Math.random()-0.5);
+  return { target, choices, answer: target.initial };
+};
+let _g6CurrentWord = null;
+function g6Start() {
+  GV.initState(6, G6.TOTAL);
+  GV.state.questions = Array.from({length: G6.TOTAL}, () => MathEng.genPhonics());
+  document.getElementById('vGame6').classList.add('active');
+  GV.updateProgress(6); GV.updateHearts(6); GV.updateScore(6);
+  GV.speak('Thỏ Con Dỏng Tai! Nghe âm và chọn chữ cái đúng nhé!');
+  setTimeout(() => g6ShowQ(0), 900);
+}
+function g6ShowQ(idx) {
+  const st = GV.state; if (!st || idx >= G6.TOTAL) { GV.showResult(); return; }
+  st.current = idx; st.answered = false; st._qStart = Date.now(); GV.updateProgress(6);
+  const q = st.questions[idx]; _g6CurrentWord = q.target;
+  document.getElementById('g6QuestionText').textContent = 'Hình ' + q.target.emoji + ' bắt đầu bằng âm nào?';
+  document.getElementById('g6Picture').textContent = q.target.emoji;
+  document.getElementById('g6BigLetter').textContent = q.target.word;
+  const ans = document.getElementById('g6Answers'); ans.innerHTML = '';
+  q.choices.forEach(ch => { const btn = document.createElement('button'); btn.className = 'g6-ans-btn'; btn.textContent = ch; btn.onclick = () => g6Answer(ch, q.answer, btn); ans.appendChild(btn); });
+  setTimeout(() => GV.speak(q.target.word), 300);
+}
+function g6PlaySound() { if (_g6CurrentWord) GV.speak(_g6CurrentWord.word); }
+function g6Answer(chosen, correct, btn) {
+  if (!GV.state || GV.state.answered) return;
+  GV.state.answered = true; document.querySelectorAll('.g6-ans-btn').forEach(b => b.disabled = true);
+  if (chosen === correct) {
+    btn.classList.add('correct'); GV.onCorrect(btn); GV.updateScore(6);
+    setTimeout(() => GV.speak(_g6CurrentWord ? _g6CurrentWord.initial + ', ' + _g6CurrentWord.word : correct), 400);
+    setTimeout(() => g6ShowQ(GV.state.current + 1), 1400);
+  } else {
+    btn.classList.add('wrong'); document.querySelectorAll('.g6-ans-btn').forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
+    GV.onWrong(); GV.updateHearts(6);
+    if (GV.state.lives <= 0) setTimeout(() => GV.showResult(), 1000);
+    else setTimeout(() => g6ShowQ(GV.state.current + 1), 1500);
+  }
+}
+const G7 = { TOTAL: 10 };
+MathEng.genSpelling = function() {
+  const target = SPELLING_DB[Math.floor(Math.random() * SPELLING_DB.length)];
+  const choices = [target.answer, ...target.dist].sort(() => Math.random()-0.5);
+  return { target, choices, answer: target.answer };
+};
+function g7Start() {
+  GV.initState(7, G7.TOTAL);
+  const pool = [...SPELLING_DB].sort(() => Math.random()-0.5);
+  GV.state.questions = pool.slice(0, G7.TOTAL).map(t => { const choices = [t.answer, ...t.dist].sort(() => Math.random()-0.5); return { target: t, choices, answer: t.answer }; });
+  document.getElementById('vGame7').classList.add('active');
+  GV.updateProgress(7); GV.updateHearts(7); GV.updateScore(7);
+  GV.speak('Thỏ Tìm Đường! Điền chữ còn thiếu để hoàn thành từ nhé!');
+  setTimeout(() => g7ShowQ(0), 900);
+}
+function g7ShowQ(idx) {
+  const st = GV.state; if (!st || idx >= G7.TOTAL) { GV.showResult(); return; }
+  st.current = idx; st.answered = false; st._qStart = Date.now(); GV.updateProgress(7);
+  const q = st.questions[idx]; const t = q.target;
+  document.getElementById('g7QuestionText').textContent = 'Điền chữ còn thiếu: ' + t.word;
+  document.getElementById('g7Picture').textContent = t.emoji;
+  const wrap = document.getElementById('g7WordWrap'); wrap.innerHTML = '';
+  t.display.split('').forEach(ch => {
+    if (ch === '_') { const blank = document.createElement('div'); blank.className = 'g7-blank'; blank.id = 'g7Blank'; blank.textContent = '_'; wrap.appendChild(blank); }
+    else { const letter = document.createElement('div'); letter.className = 'g7-letter'; letter.textContent = ch; wrap.appendChild(letter); }
+  });
+  document.getElementById('g7HintLabel').textContent = 'Từ này nghĩa là: ' + t.word;
+  const ans = document.getElementById('g7Answers'); ans.innerHTML = '';
+  q.choices.forEach(ch => { const btn = document.createElement('button'); btn.className = 'g7-ans-btn'; btn.textContent = ch; btn.onclick = () => g7Answer(ch, q.answer, btn); ans.appendChild(btn); });
+  setTimeout(() => GV.speak(t.word), 400);
+}
+function g7Answer(chosen, correct, btn) {
+  if (!GV.state || GV.state.answered) return;
+  GV.state.answered = true; document.querySelectorAll('.g7-ans-btn').forEach(b => b.disabled = true);
+  const blank = document.getElementById('g7Blank');
+  if (chosen === correct) {
+    if (blank) { blank.textContent = chosen; blank.classList.add('filled'); }
+    btn.classList.add('correct'); GV.onCorrect(btn); GV.updateScore(7);
+    const q = GV.state.questions[GV.state.current];
+    setTimeout(() => GV.speak(q.target.word + '! ' + q.target.emoji), 400);
+    setTimeout(() => g7ShowQ(GV.state.current + 1), 1500);
+  } else {
+    if (blank) { blank.textContent = chosen; blank.classList.add('wrong-blink'); }
+    btn.classList.add('wrong'); document.querySelectorAll('.g7-ans-btn').forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
+    GV.onWrong(); GV.updateHearts(7);
+    setTimeout(() => { if (blank) { blank.textContent = '_'; blank.className = 'g7-blank'; } }, 800);
+    if (GV.state.lives <= 0) setTimeout(() => GV.showResult(), 1200);
+    else setTimeout(() => g7ShowQ(GV.state.current + 1), 1600);
+  }
+}
+(function() {
+  const cat = typeof GAME_CATALOG !== 'undefined' ? GAME_CATALOG : [];
+  [{ id:6,emoji:'🐇',name:'Thỏ Con Dỏng Tai',desc:'Nhận biết âm và vần',theme:'purple',badge:'Mới',fn:'gvMoGame(6)',locked:false },
+   { id:7,emoji:'🗺️',name:'Thỏ Tìm Đường',desc:'Điền chữ còn thiếu',theme:'green',badge:'Mới',fn:'gvMoGame(7)',locked:false }]
+  .forEach(u => { const i = cat.findIndex(c => c.id === u.id); if (i >= 0) Object.assign(cat[i], u); else cat.push(u); });
+})();
+(function() {
+  const prev = typeof gvMoGame === 'function' ? gvMoGame : null;
+  window.gvMoGame = function(id) {
+    const hub = document.getElementById('vGameHub'); if (hub) { hub.classList.remove('active'); hub.style.display = ''; }
+    if (id === 6) g6Start(); else if (id === 7) g7Start(); else if (prev) prev(id);
+  };
+})();
+</script>
+
+<script>
+// ============================================================
+// VUON GAME — Phase 4 JavaScript
+// Game 8: So Vui (numbers 11-100)
+// Game 9: Dong Ho Ky Dieu (clock reading)
+// Author: Huy Tran | Cadence Design Systems Vietnam
+// ============================================================
+MathEng.genPlaceValue = function() {
+  const num = this.rnd(11,99); const tens = Math.floor(num/10); const ones = num%10;
+  const types = ['readNum','howManyTens','nextNum','prevNum'];
+  const qType = types[Math.floor(Math.random()*types.length)];
+  let question, answer, choices;
+  if (qType==='readNum') {
+    question='Số '+num+' gồm mấy chục và mấy đơn vị?'; answer=tens+' chục '+ones+' đơn vị';
+    const wrongs=[];
+    [[tens+1,ones],[tens-1,ones],[tens,ones+1]].filter(([t,o])=>t>0&&o>=0&&o<10&&!(t===tens&&o===ones)).forEach(([t,o])=>wrongs.push(t+' chục '+o+' đơn vị'));
+    while(wrongs.length<3) wrongs.push(this.rnd(1,9)+' chục '+this.rnd(0,9)+' đơn vị');
+    choices=[answer,...wrongs.slice(0,3)].sort(()=>Math.random()-0.5);
+  } else if (qType==='howManyTens') {
+    question='Số '+num+' có bao nhiêu chục?'; answer=tens;
+    const w=this.wrongs(tens,3,1,9); choices=[tens,...w].sort(()=>Math.random()-0.5);
+  } else if (qType==='nextNum') {
+    question='Số liền sau của '+num+' là số nào?'; answer=num+1;
+    choices=[num+1,num+2,num-1,num+5].filter(n=>n>0&&n<=100).sort(()=>Math.random()-0.5).slice(0,4);
+    if(!choices.includes(num+1)) choices[0]=num+1; choices=choices.sort(()=>Math.random()-0.5);
+  } else {
+    question='Số liền trước của '+num+' là số nào?'; answer=num-1;
+    choices=[num-1,num-2,num+1,num-5].filter(n=>n>0&&n<=100).sort(()=>Math.random()-0.5).slice(0,4);
+    if(!choices.includes(num-1)) choices[0]=num-1; choices=choices.sort(()=>Math.random()-0.5);
+  }
+  return { type:'placeVal', num, tens, ones, qType, question, answer, choices };
+};
+MathEng.genAdd100 = function() {
+  let a,b; do { a=this.rnd(11,89); b=this.rnd(1,99-a); } while((a%10+b%10)>=10||a+b>99);
+  const ans=a+b; const wrongs=this.wrongs(ans,3,Math.max(a+1,11),Math.min(ans+20,99));
+  return { type:'add100',a,b,answer:ans,display:a+' + '+b+' = ?',question:'Tính tổng (không nhớ):',choices:[ans,...wrongs].sort(()=>Math.random()-0.5) };
+};
+MathEng.genSub100 = function() {
+  let a,b; do { a=this.rnd(12,99); b=this.rnd(1,a-1); } while((a%10-b%10)<0);
+  const ans=a-b; const wrongs=this.wrongs(ans,3,Math.max(ans-20,1),Math.min(ans+20,a));
+  return { type:'sub100',a,b,answer:ans,display:a+' − '+b+' = ?',question:'Tính hiệu (không mượn):',choices:[ans,...wrongs].sort(()=>Math.random()-0.5) };
+};
+MathEng.genArith100 = function() { const r=Math.random(); if(r<0.4) return this.genPlaceValue(); if(r<0.7) return this.genAdd100(); return this.genSub100(); };
+MathEng.genClock = function() {
+  const hour=this.rnd(1,12); const minute=Math.random()>0.5?0:30;
+  const timeStr=minute===0?hour+' giờ':hour+' giờ 30 phút';
+  const timeDisplay=minute===0?hour+':00':hour+':30';
+  const hourAngle=(hour%12)*30+(minute/60)*30; const minAngle=minute*6;
+  const wrongs=[]; const altMinutes=minute===0?[30]:[0];
+  for(let i=0;i<3;i++){let wh,wm; do{wh=this.rnd(1,12);wm=altMinutes[Math.floor(Math.random()*altMinutes.length)];}while((wh===hour&&wm===minute)||wrongs.some(w=>w.h===wh&&w.m===wm)); wrongs.push({h:wh,m:wm});}
+  const choices=[{h:hour,m:minute,label:timeStr,display:timeDisplay},...wrongs.map(w=>({h:w.h,m:w.m,label:w.m===0?w.h+' giờ':w.h+' giờ 30 phút',display:w.m===0?w.h+':00':w.h+':30'}))].sort(()=>Math.random()-0.5);
+  return { type:'clock', hour, minute, hourAngle, minAngle, timeStr, timeDisplay, answer:timeStr, choices };
+};
+const G8 = { TOTAL: 10 };
+function g8Start() {
+  GV.initState(8,G8.TOTAL); GV.state.questions=Array.from({length:G8.TOTAL},()=>MathEng.genArith100());
+  document.getElementById('vGame8').classList.add('active'); GV.updateProgress(8); GV.updateHearts(8); GV.updateScore(8);
+  GV.speak('Số Vui! Học số từ 11 đến 100 nào!'); setTimeout(()=>g8ShowQ(0),800);
+}
+function g8ShowQ(idx) {
+  const st=GV.state; if(!st||idx>=G8.TOTAL){GV.showResult();return;}
+  st.current=idx; st.answered=false; st._qStart=Date.now(); GV.updateProgress(8);
+  const q=st.questions[idx];
+  document.getElementById('g8QuestionText').textContent=q.question||q.display;
+  if(q.type==='placeVal'){
+    document.getElementById('g8BigNum').textContent=q.num;
+    document.getElementById('g8TensBlocks').innerHTML=Array(q.tens).fill('<div class="g8-ten-block"></div>').join('');
+    document.getElementById('g8OnesBlocks').innerHTML=Array(q.ones).fill('<div class="g8-one-block"></div>').join('');
+    document.getElementById('g8PlaceInfo').textContent=q.num+' = '+q.tens+' chục + '+q.ones+' đơn vị';
+    setTimeout(()=>GV.speak('Số '+q.num+'. '+q.question),300);
+  } else {
+    document.getElementById('g8BigNum').textContent=q.display;
+    document.getElementById('g8TensBlocks').innerHTML=''; document.getElementById('g8OnesBlocks').innerHTML='';
+    document.getElementById('g8PlaceInfo').textContent=q.question;
+    setTimeout(()=>GV.speak(q.display.replace('−','trừ').replace('+','cộng').replace('?','bằng bao nhiêu?')),300);
+  }
+  const ans=document.getElementById('g8Answers'); ans.innerHTML='';
+  q.choices.forEach(ch=>{const btn=document.createElement('button');btn.className='g8-ans-btn';btn.textContent=ch;btn.onclick=()=>g8Answer(ch,q.answer,btn);ans.appendChild(btn);});
+}
+function g8Answer(chosen,correct,btn){
+  if(!GV.state||GV.state.answered)return; GV.state.answered=true;
+  document.querySelectorAll('.g8-ans-btn').forEach(b=>b.disabled=true);
+  if(String(chosen)===String(correct)){btn.classList.add('correct');GV.onCorrect(btn);GV.updateScore(8);setTimeout(()=>g8ShowQ(GV.state.current+1),1300);}
+  else{btn.classList.add('wrong');document.querySelectorAll('.g8-ans-btn').forEach(b=>{if(String(b.textContent)===String(correct))b.classList.add('correct');});GV.onWrong();GV.updateHearts(8);if(GV.state.lives<=0)setTimeout(()=>GV.showResult(),1000);else setTimeout(()=>g8ShowQ(GV.state.current+1),1500);}
+}
+const G9 = { TOTAL: 8 };
+function g9BuildClockFace(){
+  const clock=document.getElementById('g9Clock'); if(!clock)return;
+  clock.querySelectorAll('.g9-hour-num,.g9-tick').forEach(e=>e.remove());
+  [12,1,2,3,4,5,6,7,8,9,10,11].forEach((n,i)=>{
+    const angle=i*30; const rad=(angle-90)*Math.PI/180; const r=76;
+    const x=100+r*Math.cos(rad); const y=100+r*Math.sin(rad);
+    const el=document.createElement('div'); el.className='g9-hour-num'; el.textContent=n;
+    el.style.left=(x-8)+'px'; el.style.top=(y-8)+'px'; el.style.position='absolute'; el.style.fontSize=n===12?'.75rem':'.8rem';
+    clock.appendChild(el);
+  });
+  for(let i=0;i<60;i++){
+    const angle=i*6; const isHour=i%5===0; const rad=(angle-90)*Math.PI/180; const r=88;
+    const h=isHour?10:5; const x=100+r*Math.cos(rad); const y=100+r*Math.sin(rad);
+    const tick=document.createElement('div'); tick.className='g9-tick';
+    tick.style.left=x+'px'; tick.style.top=y+'px'; tick.style.height=h+'px'; tick.style.width=isHour?'3px':'2px';
+    tick.style.background=isHour?'#312e81':'#c7d2fe'; tick.style.position='absolute';
+    tick.style.transform='rotate('+angle+'deg)'; tick.style.transformOrigin='top center';
+    clock.appendChild(tick);
+  }
+}
+function g9Start(){
+  GV.initState(9,G9.TOTAL); GV.state.questions=Array.from({length:G9.TOTAL},()=>MathEng.genClock());
+  document.getElementById('vGame9').classList.add('active'); GV.updateProgress(9); GV.updateHearts(9); GV.updateScore(9);
+  g9BuildClockFace(); GV.speak('Đồng Hồ Kỳ Diệu! Học xem giờ nào!'); setTimeout(()=>g9ShowQ(0),900);
+}
+function g9ShowQ(idx){
+  const st=GV.state; if(!st||idx>=G9.TOTAL){GV.showResult();return;}
+  st.current=idx; st.answered=false; st._qStart=Date.now(); GV.updateProgress(9);
+  const q=st.questions[idx];
+  document.getElementById('g9QuestionText').textContent=q.minute===0?'Đồng hồ chỉ mấy giờ?':'Đồng hồ chỉ mấy giờ mấy phút?';
+  const hourHand=document.getElementById('g9HandHour'); const minHand=document.getElementById('g9HandMin');
+  if(hourHand)hourHand.style.transform='rotate('+q.hourAngle+'deg)'; if(minHand)minHand.style.transform='rotate('+q.minAngle+'deg)';
+  const ans=document.getElementById('g9Answers'); ans.innerHTML='';
+  q.choices.forEach(ch=>{const btn=document.createElement('button');btn.className='g9-ans-btn';btn.innerHTML='<span class="g9-big-time">'+ch.display+'</span>'+ch.label;btn.onclick=()=>g9Answer(ch.label,q.answer,btn);ans.appendChild(btn);});
+  setTimeout(()=>GV.speak('Đồng hồ chỉ mấy giờ?'),400);
+}
+function g9Answer(chosen,correct,btn){
+  if(!GV.state||GV.state.answered)return; GV.state.answered=true;
+  document.querySelectorAll('.g9-ans-btn').forEach(b=>b.disabled=true);
+  if(chosen===correct){btn.classList.add('correct');GV.onCorrect(btn);GV.updateScore(9);setTimeout(()=>GV.speak('Đúng rồi! '+correct),400);setTimeout(()=>g9ShowQ(GV.state.current+1),1400);}
+  else{btn.classList.add('wrong');document.querySelectorAll('.g9-ans-btn').forEach(b=>{const lbl=b.querySelector('span:last-child')?.textContent||b.textContent;if(lbl===correct)b.classList.add('correct');});GV.onWrong();GV.updateHearts(9);if(GV.state.lives<=0)setTimeout(()=>GV.showResult(),1000);else setTimeout(()=>g9ShowQ(GV.state.current+1),1500);}
+}
+(function(){
+  const cat=typeof GAME_CATALOG!=='undefined'?GAME_CATALOG:[];
+  [{id:8,emoji:'🔢',name:'Số Vui',desc:'Số 11-100, chục và đơn vị',theme:'blue',badge:'Mới',fn:'gvMoGame(8)',locked:false},
+   {id:9,emoji:'🕐',name:'Đồng Hồ Kỳ Diệu',desc:'Xem giờ, nửa tiếng',theme:'purple',badge:'Mới',fn:'gvMoGame(9)',locked:false}]
+  .forEach(u=>{const i=cat.findIndex(c=>c.id===u.id);if(i>=0)Object.assign(cat[i],u);else cat.push(u);});
+})();
+(function(){
+  const prev=typeof gvMoGame==='function'?gvMoGame:null;
+  window.gvMoGame=function(id){
+    const hub=document.getElementById('vGameHub');if(hub){hub.classList.remove('active');hub.style.display='';}
+    if(id===8)g8Start();else if(id===9)g9Start();else if(prev)prev(id);
+  };
+})();
 </script>
 </body>
 </html>
