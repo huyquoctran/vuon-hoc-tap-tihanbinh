@@ -11710,41 +11710,42 @@ function hpStep(){
     while(idx>=P.seq[k].length){idx-=P.seq[k].length;k++}
     if(!P.done[k]){P.done[k]=[];
       document.querySelectorAll('#hpNet li').forEach((x,i)=>x.classList.toggle('on',i===k));
-      if(k>0&&typeof SFX!=='undefined'&&SFX.tap)SFX.tap()}
+      if(k>0&&typeof SFX!=='undefined'&&SFX.tap)SFX.tap();
+      hpSpeakStroke(P.ch,k);}
     P.done[k].push(P.seq[k][idx]);P.i++;
   }
   hpDraw();P.raf=requestAnimationFrame(hpStep);
 }
 const HP_VOICE_GUIDES={
-  "a":"Chữ a gồm hai nét. Nét một là nét cong kín, đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét hai là nét móc ngược phải, từ điểm dừng bút của nét một, líp bút lên đường kẻ 3 rồi viết nét móc ngược phải, dừng bút ở đường kẻ 2.",
-  "ă":"Chữ ă gồm ba nét. Nét một là nét cong kín, đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét hai là nét móc ngược phải, líp bút lên đường kẻ 3 rồi viết nét móc ngược phải, dừng bút ở đường kẻ 2. Nét ba là nét cong dưới nhỏ, đặt ở trên đầu chữ a để tạo thành dấu á.",
-  "â":"Chữ â gồm bốn nét. Nét một là nét cong kín, đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét hai là nét móc ngược phải, líp bút lên đường kẻ 3 rồi viết nét móc ngược phải, dừng bút ở đường kẻ 2. Nét ba là nét xiên ngắn trái và nét bốn là nét xiên ngắn phải nối nhau tạo thành dấu mũ ở trên đầu chữ a.",
-  "b":"Chữ b gồm hai nét. Nét một là nét khuyết trên, đặt bút ở đường kẻ 2, viết nét khuyết trên cao 2 ô ly rưỡi. Nét hai là nét thắt trên, nối liền từ nét khuyết hướng lên đường kẻ 3, tạo vòng thắt nhỏ rồi dừng bút gần đường kẻ 3.",
-  "c":"Chữ c gồm một nét là nét cong trái. Đặt bút dưới đường kẻ 3 một chút, viết nét cong trái từ phải sang trái, dừng bút ở giữa đường kẻ 1 và đường kẻ 2.",
-  "d":"Chữ d gồm hai nét. Nét một là nét cong kín, đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét hai là nét móc ngược phải cao 2 ô ly, đặt bút ở đường kẻ 5, kéo thẳng xuống rồi móc ngược lên, dừng bút ở đường kẻ 2.",
-  "đ":"Chữ đ gồm ba nét. Nét một là nét cong kín, đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét hai là nét móc ngược phải cao 2 ô ly, đặt bút ở đường kẻ 5 kéo thẳng xuống rồi móc ngược lên, dừng bút ở đường kẻ 2. Nét ba là nét gạch ngang ngắn ở đường kẻ 4, cắt ngang thân nét móc ngược.",
-  "e":"Chữ e gồm một nét kết hợp giữa nét cong phải và nét cong trái. Đặt bút trên đường kẻ 1 một chút, viết nét cong xiên lên rồi chuyển hướng viết nét cong trái, dừng bút ở giữa đường kẻ 1 và đường kẻ 2.",
-  "ê":"Chữ ê gồm ba nét. Nét một là nét kết hợp giữa nét cong phải và nét cong trái, đặt bút trên đường kẻ 1 một chút, viết nét cong xiên lên rồi chuyển hướng viết nét cong trái, dừng bút ở giữa đường kẻ 1 và 2. Nét hai là nét xiên ngắn trái và nét ba là nét xiên ngắn phải nối nhau tạo thành dấu mũ ở trên đầu chữ e.",
-  "g":"Chữ g gồm hai nét. Nét một là nét cong kín, đặt bút dưới đường kẻ 3 một chút, viết nét cong kín. Nét hai là nét khuyết dưới, từ điểm dừng của nét một, líp bút lên đường kẻ 3, kéo thẳng xuống qua đường cơ sở 2 ô ly rồi lượn cong hất lên, dừng bút ở đường kẻ 2.",
-  "h":"Chữ h gồm hai nét. Nét một là nét khuyết trên cao 2 ô ly rưỡi, bắt đầu từ đường kẻ 2. Nét hai là nét móc hai đầu, từ điểm dừng nét một, rê bút lên gần đường kẻ 2 rồi viết nét móc hai đầu, dừng bút ở đường kẻ 2.",
-  "i":"Chữ i gồm ba nét. Nét một là nét hất ngắn từ đường kẻ 2 lên đường kẻ 3. Nét hai là nét móc ngược phải từ đường kẻ 3 xuống đường kẻ 1 rồi hất lên đường kẻ 2. Nét ba là một dấu chấm nhỏ đặt ngay trên đầu nét móc.",
-  "k":"Chữ k gồm hai nét. Nét một là nét khuyết trên cao 2 ô ly rưỡi, bắt đầu từ đường kẻ 2. Nét hai là nét thắt giữa, rê bút lên gần đường kẻ 2, viết nét móc hai đầu có vòng thắt ở giữa, dừng bút ở đường kẻ 2.",
-  "l":"Chữ l gồm một nét là sự kết hợp của nét khuyết trên và nét móc ngược phải. Đặt bút ở đường kẻ 2, viết nét khuyết trên cao 2 ô ly rưỡi, khi chạm đường cơ sở thì lượn móc lên, dừng bút ở đường kẻ 2.",
-  "m":"Chữ m gồm ba nét. Nét một là nét móc xuôi trái, đặt bút giữa đường kẻ 2 và 3. Nét hai là nét móc xuôi rộng hơn. Nét ba là nét móc hai đầu, dừng bút ở đường kẻ 2.",
-  "n":"Chữ n gồm hai nét. Nét một là nét móc xuôi trái, đặt bút giữa đường kẻ 2 và 3. Nét hai là nét móc hai đầu, rê bút lên gần đường kẻ 2 rồi viết tiếp, dừng bút ở đường kẻ 2.",
-  "o":"Chữ o gồm một nét cong kín. Đặt bút dưới đường kẻ 3 một chút, viết nét cong kín tròn đều từ phải sang trái, dừng bút tại điểm xuất phát.",
-  "ô":"Chữ ô gồm ba nét. Nét một là nét cong kín tròn đều từ phải sang trái, dừng bút tại điểm xuất phát. Nét hai là nét xiên ngắn trái và nét ba là nét xiên ngắn phải nối nhau tạo thành dấu mũ cân đối trên đầu chữ o.",
-  "ơ":"Chữ ơ gồm hai nét. Nét một là nét cong kín tròn đều từ phải sang trái, dừng bút tại điểm xuất phát. Nét hai là một dấu râu nhỏ đặt ở góc trên bên phải của chữ o.",
-  "p":"Chữ p gồm ba nét. Nét một là nét hất từ đường kẻ 2 lên đường kẻ 3. Nét hai là nét thẳng kéo dài xuống dưới đường cơ sở 1 ô ly. Nét ba là nét móc hai đầu, dừng bút ở đường kẻ 2.",
-  "q":"Chữ q gồm hai nét. Nét một là nét cong kín, đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét hai là nét thẳng đứng kéo dài xuống dưới đường cơ sở 1 ô ly.",
-  "r":"Chữ r gồm một nét kết hợp giữa nét thẳng xiên, nét thắt nhỏ và nét móc ngược phải. Đặt bút ở đường kẻ 1, viết nét xiên lên đường kẻ 3 tạo vòng thắt nhỏ, đi ngang nhẹ rồi chuyển hướng viết nét móc ngược phải, dừng bút ở đường kẻ 2.",
-  "s":"Chữ s gồm một nét kết hợp giữa nét thẳng xiên, nét thắt và nét cong trái. Đặt bút ở đường kẻ 1, viết nét xiên lên đường kẻ 3 tạo thắt nhỏ, lượn cong xuống dừng bút ở giữa đường kẻ 1 và đường kẻ 2.",
-  "t":"Chữ t gồm ba nét. Nét một là nét hất ngắn từ đường kẻ 2 lên đường kẻ 3. Nét hai là nét móc ngược phải cao 1 ô ly rưỡi, bắt đầu từ giữa đường kẻ 3 và 4 kéo thẳng xuống rồi hất lên đường kẻ 2. Nét ba là nét gạch ngang ngắn ở đường kẻ 3.",
-  "u":"Chữ u gồm ba nét. Nét một là nét hất ngắn từ đường kẻ 2 lên đường kẻ 3. Nét hai là nét móc ngược phải rộng. Nét ba là nét móc ngược phải hẹp, dừng bút ở đường kẻ 2.",
-  "ư":"Chữ ư gồm bốn nét. Nét một là nét hất ngắn từ đường kẻ 2 lên đường kẻ 3. Nét hai là nét móc ngược phải rộng. Nét ba là nét móc ngược phải hẹp, dừng bút ở đường kẻ 2. Nét bốn là một dấu râu nhỏ đặt ở góc trên bên phải nét móc ngược thứ hai.",
-  "v":"Chữ v gồm hai nét. Nét một là nét móc xuôi trái hơi lượn ở đầu, đặt bút giữa đường kẻ 2 và 3. Nét hai là nét thắt trên, rê bút nối tiếp lượn lên đường kẻ 3 tạo thắt nhỏ rồi dừng bút.",
-  "x":"Chữ x gồm hai nét là nét cong trái và nét cong phải đặt lưng tựa vào nhau. Đặt bút dưới đường kẻ 3 một chút, viết nét cong trái trước. Sau đó, bút viết tiếp nét cong phải từ phải sang trái.",
-  "y":"Chữ y gồm ba nét. Nét một là nét hất ngắn từ đường kẻ 2 lên đường kẻ 3. Nét hai là nét móc ngược phải rộng. Nét ba là nét khuyết dưới kéo dài xuống dưới đường cơ sở 1 ô ly rưỡi rồi hất lên, dừng bút ở đường kẻ 2."
+  "a":"Chữ a gồm hai nét. Nét 1 là nét cong kín. Đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét 2 là nét móc ngược phải. Từ điểm dừng bút của nét 1, lia bút lên đường kẻ 3, viết nét móc ngược phải sát nét cong kín, đến đường kẻ 2 thì dừng lại.",
+  "ă":"Chữ ă gồm ba nét. Nét 1 là nét cong kín. Nét 2 là nét móc ngược phải như chữ a. Nét 3 là nét cong dưới nhỏ. Từ điểm dừng bút của nét 2, lia bút lên viết nét cong dưới nhỏ trên đầu chữ a, nằm giữa đường kẻ 3 và đường kẻ 4.",
+  "â":"Chữ â gồm bốn nét. Nét 1 là nét cong kín. Nét 2 là nét móc ngược phải như chữ a. Nét 3 là nét thẳng xiên ngắn trái. Nét 4 nối tiếp nét 3, viết nét thẳng xiên ngắn phải tạo thành dấu mũ trên đầu chữ a, nằm giữa đường kẻ 3 và đường kẻ 4.",
+  "b":"Chữ b gồm hai nét. Nét 1 là nét khuyết xuôi. Đặt bút trên đường kẻ 2, viết nét khuyết xuôi, đầu nét chạm đường kẻ 6, dừng bút ở đường kẻ 1. Nét 2 là nét móc ngược phải có biến điệu. Từ điểm dừng bút của nét 1, viết tiếp nét móc ngược phải, kéo dài chân nét tới gần đường kẻ 3 rồi lượn sang trái, tạo vòng xoắn nhỏ ở cuối nét, dừng bút gần đường kẻ 3.",
+  "c":"Chữ c gồm một nét cong trái. Đặt bút dưới đường kẻ 3 một chút, viết nét cong trái, dừng bút ở khoảng giữa đường kẻ 1 và đường kẻ 2.",
+  "d":"Chữ d gồm hai nét. Nét 1 là nét cong kín. Đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái. Nét 2 là nét móc ngược phải. Từ điểm dừng bút của nét 1, lia bút lên đường kẻ 5, viết nét móc ngược phải sát nét cong kín, đến đường kẻ 2 thì dừng lại.",
+  "đ":"Chữ đ gồm ba nét. Nét 1 là nét cong kín. Nét 2 là nét móc ngược phải như chữ d. Nét 3 là nét ngang ngắn. Lia bút lên đường kẻ 4, viết nét ngang ngắn trùng đường kẻ để tạo thành chữ đ.",
+  "e":"Chữ e gồm một nét kết hợp giữa nét cong phải và nét cong trái. Đặt bút trên đường kẻ 1 một chút, viết nét cong phải tới đường kẻ 3 rồi chuyển hướng viết tiếp nét cong trái tạo vòng khuyết ở đầu chữ, dừng bút ở khoảng giữa đường kẻ 1 và đường kẻ 2.",
+  "ê":"Chữ ê gồm ba nét. Nét 1 giống chữ e. Nét 2 là nét thẳng xiên ngắn trái. Nét 3 là nét thẳng xiên ngắn phải tạo thành dấu mũ trên đầu chữ e, nằm giữa đường kẻ 3 và đường kẻ 4.",
+  "g":"Chữ g gồm hai nét. Nét 1 là nét cong kín. Nét 2 là nét khuyết ngược. Từ điểm dừng bút của nét 1, lia bút lên đường kẻ 3 rồi viết nét khuyết ngược, kéo dài xuống dưới bốn ô ly, dừng bút ở đường kẻ 2 phía trên.",
+  "h":"Chữ h gồm hai nét. Nét 1 là nét khuyết xuôi. Đặt bút trên đường kẻ 2, viết nét khuyết xuôi, đầu nét chạm đường kẻ 6, dừng bút ở đường kẻ 1. Nét 2 là nét móc hai đầu. Từ điểm dừng bút của nét 1, rê bút lên gần đường kẻ 2 để viết tiếp nét móc hai đầu, chạm đường kẻ 3, dừng bút ở đường kẻ 2.",
+  "i":"Chữ i gồm ba nét. Nét 1 là nét hất. Đặt bút trên đường kẻ 2, viết nét hất tới đường kẻ 3 thì dừng lại. Nét 2 là nét móc ngược phải. Từ điểm dừng bút của nét 1, viết tiếp nét móc ngược phải, dừng bút ở đường kẻ 2. Nét 3 là dấu chấm đặt phía trên đầu nét móc, giữa đường kẻ 3 và đường kẻ 4.",
+  "k":"Chữ k gồm hai nét. Nét 1 là nét khuyết xuôi. Đặt bút trên đường kẻ 2, viết nét khuyết xuôi, đầu nét chạm đường kẻ 6, dừng bút ở đường kẻ 1. Nét 2 là nét móc hai đầu có vòng xoắn nhỏ ở khoảng giữa, dừng bút ở đường kẻ 2.",
+  "l":"Chữ l gồm một nét khuyết xuôi. Đặt bút trên đường kẻ 2, viết nét khuyết xuôi, đầu nét chạm đường kẻ 6, lượn xuống đường kẻ 1 rồi hất lên, dừng bút ở đường kẻ 2.",
+  "m":"Chữ m gồm ba nét. Nét 1 là nét móc xuôi trái. Đặt bút giữa đường kẻ 2 và đường kẻ 3, viết nét móc xuôi trái chạm đường kẻ 3, dừng bút ở đường kẻ 1. Nét 2 là nét móc xuôi trái thứ hai rộng hơn nét 1. Nét 3 là nét móc hai đầu, độ rộng bằng nét 2, dừng bút ở đường kẻ 2.",
+  "n":"Chữ n gồm hai nét. Nét 1 là nét móc xuôi trái. Đặt bút giữa đường kẻ 2 và đường kẻ 3, viết nét móc xuôi trái chạm đường kẻ 3, dừng bút ở đường kẻ 1. Nét 2 là nét móc hai đầu. Từ điểm dừng bút của nét 1, rê bút lên gần đường kẻ 2 rồi viết tiếp nét móc hai đầu, dừng bút ở đường kẻ 2.",
+  "o":"Chữ o gồm một nét cong kín. Đặt bút dưới đường kẻ 3 một chút, viết nét cong kín từ phải sang trái, dừng bút ở điểm xuất phát. Nét cong kín cần cân đối, chiều rộng bằng khoảng ba phần tư chiều cao.",
+  "ô":"Chữ ô gồm ba nét. Nét 1 là nét cong kín như chữ o. Nét 2 là nét thẳng xiên ngắn trái. Nét 3 là nét thẳng xiên ngắn phải tạo thành dấu mũ trên đầu chữ o, nằm giữa đường kẻ 3 và đường kẻ 4.",
+  "ơ":"Chữ ơ gồm hai nét. Nét 1 là nét cong kín như chữ o. Nét 2 là nét râu. Đặt bút trên đường kẻ 3, viết nét râu nhỏ phía bên phải chữ o, đỉnh nét râu cao hơn đường kẻ 3 một chút.",
+  "p":"Chữ p gồm ba nét. Nét 1 là nét hất từ đường kẻ 2 lên đường kẻ 3. Nét 2 là nét thẳng đứng kéo dài xuống dưới đường cơ sở. Nét 3 là nét móc hai đầu chạm đường kẻ 3 phía trên, dừng bút ở đường kẻ 2 phía trên.",
+  "q":"Chữ q gồm hai nét. Nét 1 là nét cong kín như chữ o. Nét 2 là nét thẳng đứng. Từ điểm dừng bút của nét 1, lia bút lên đường kẻ 3 phía trên, viết nét thẳng đứng kéo dài xuống dưới đường cơ sở, dừng bút ở đường kẻ 3 phía dưới.",
+  "r":"Chữ r gồm một nét kết hợp giữa nét thẳng xiên và nét móc hai đầu có biến điệu. Đặt bút trên đường kẻ 1, viết nét thẳng xiên, phía trên hơi lượn sang trái tạo vòng xoắn nhỏ, sau đó nối liền nét móc hai đầu, dừng bút ở đường kẻ 2.",
+  "s":"Chữ s gồm một nét kết hợp giữa nét thẳng xiên và nét cong phải. Đặt bút trên đường kẻ 1, viết nét thẳng xiên, phía trên hơi lượn sang trái tạo vòng xoắn nhỏ rồi chuyển sang viết nét cong phải, dừng bút ở khoảng giữa đường kẻ 1 và đường kẻ 2.",
+  "t":"Chữ t gồm ba nét. Nét 1 là nét hất từ đường kẻ 2 lên đường kẻ 3. Nét 2 là nét móc ngược phải, bắt đầu từ đường kẻ 4 và dừng ở đường kẻ 2. Nét 3 là nét ngang ngắn viết trùng trên đường kẻ 3.",
+  "u":"Chữ u gồm ba nét. Nét 1 là nét hất từ đường kẻ 2 lên đường kẻ 3. Nét 2 là nét móc ngược phải thứ nhất. Nét 3 là nét móc ngược phải thứ hai. Dừng bút ở đường kẻ 2.",
+  "ư":"Chữ ư gồm bốn nét. Nét 1 là nét hất. Nét 2 và nét 3 là hai nét móc ngược phải như chữ u. Nét 4 là nét râu nhỏ phía trên đầu nét móc thứ hai, dừng bút khi chạm vào nét móc.",
+  "v":"Chữ v gồm một nét móc hai đầu có biến điệu. Đặt bút ở khoảng giữa đường kẻ 2 và đường kẻ 3, viết nét móc hai đầu, cuối nét kéo dài tới gần đường kẻ 3 rồi tạo vòng xoắn nhỏ ở cuối nét, dừng bút gần đường kẻ 3.",
+  "x":"Chữ x gồm hai nét. Nét 1 là nét cong phải. Đặt bút dưới đường kẻ 3 một chút, viết nét cong phải, dừng bút ở khoảng giữa đường kẻ 1 và đường kẻ 2. Nét 2 là nét cong trái cân đối với nét 1. Hai nét cong chạm lưng vào nhau tạo thành chữ x.",
+  "y":"Chữ y gồm ba nét. Nét 1 là nét hất từ đường kẻ 2 lên đường kẻ 3. Nét 2 là nét móc ngược phải. Nét 3 là nét khuyết ngược kéo dài xuống dưới đường cơ sở, dừng bút ở đường kẻ 2 phía trên."
 };
 
 // ── Giọng đọc hướng dẫn ─────────────────────────────────────
@@ -11795,6 +11796,41 @@ function _hpGoogleTTS(sentences,idx,fallbackTxt,pr){
   });
 }
 
+// Tách hướng dẫn thành mảng theo từng nét: [text_nét_1, text_nét_2, ...]
+function hpParseStrokes(ch){
+  const txt=HP_VOICE_GUIDES[ch];if(!txt)return[txt||''];
+  const parts=txt.split(/(?=Nét \d+)/).map(s=>s.trim()).filter(Boolean);
+  if(parts.length<=1)return[txt];
+  // parts[0] có thể là intro "Chữ X gồm N nét." không có prefix "Nét N"
+  let intro='',segs=parts;
+  if(!parts[0].match(/^Nét \d+/)){intro=parts[0];segs=parts.slice(1);}
+  if(!segs.length)return[intro];
+  return segs.map((s,i)=>i===0&&intro?intro+' '+s:s);
+}
+
+// Đọc hướng dẫn chỉ cho nét thứ k (0-indexed)
+function hpSpeakStroke(ch,k){
+  const segs=hpParseStrokes(ch);
+  const txt=k<segs.length?segs[k]:(k===0?HP_VOICE_GUIDES[ch]:null);
+  if(!txt)return;
+  if(_hpAudio){_hpAudio.pause();_hpAudio.currentTime=0;_hpAudio=null;}
+  if(window.speechSynthesis)speechSynthesis.cancel();
+  const mode=(document.getElementById('hpVoiceMode')||{}).value||'auto';
+  const rate=0.78;
+  const viVoice=window.speechSynthesis&&(
+    speechSynthesis.getVoices().find(v=>v.lang==='vi-VN')||
+    speechSynthesis.getVoices().find(v=>v.lang.startsWith('vi')))||null;
+  const sentences=txt.split(/(?<=\. )|(?<=\.$)/);
+  if(mode==='google'){_hpGoogleTTS(sentences,0,txt,rate);return;}
+  if(mode==='local'||viVoice){
+    if(!window.speechSynthesis)return;
+    const u=new SpeechSynthesisUtterance(txt);
+    u.lang='vi-VN';u.rate=rate;u.pitch=1.05;if(viVoice)u.voice=viVoice;
+    speechSynthesis.speak(u);return;
+  }
+  _hpGoogleTTS(sentences,0,txt,rate);
+}
+
 function hpSpeak(ch){
   const txt=HP_VOICE_GUIDES[ch];if(!txt)return;
   if(_hpAudio){_hpAudio.pause();_hpAudio.currentTime=0;_hpAudio=null;}
@@ -11815,7 +11851,7 @@ function hpSpeak(ch){
   _hpGoogleTTS(sentences,0,txt,rate);
 }
 
-function hpPlay(sp){const P=HPPlayer;if(sp!=null)P.speed=sp;hpReset();hpSpeak(P.ch);P.raf=requestAnimationFrame(hpStep)}
+function hpPlay(sp){const P=HPPlayer;if(sp!=null)P.speed=sp;hpReset();P.raf=requestAnimationFrame(hpStep)}
 
 function hpMount(ch){
   // Nạp skeleton_glyph v1 nếu chưa có (embed sẵn)
